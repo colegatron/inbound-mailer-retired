@@ -475,7 +475,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			self::add_countdown();
 			self::add_statistics();
 			self::add_email_settings();
-			self::add_preview();
 			self::add_email_send_settings();
 			echo '<div class="quick-launch-container bs-callout bs-callout-clear">';
 			self::add_variation_buttons();
