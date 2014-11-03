@@ -106,6 +106,10 @@ class Inbound_Email_Stats {
 		
 		$settings = Inbound_Email_Meta::get_settings( $email_id );
 		
+		if (!isset( $statistics ) ) {
+			return;
+		}
+		
 		/* V1 */
 		$settings['statistics']['variations'][0] = array(
 			'label' => Inbound_Mailer_Variations::vid_to_letter( $email_id , 0 ),

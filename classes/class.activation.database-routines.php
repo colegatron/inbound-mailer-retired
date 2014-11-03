@@ -52,7 +52,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create example email
 	*/
-	public static function create_example_emailxxxzzzzzaaaaas() {
+	public static function create_example_emailzz() {
 	
 		// Set the post ID so that we know the post was created successfully
 		$email_id = wp_insert_post(
@@ -66,15 +66,17 @@ class Inbound_Mailer_Activation_Update_Routines {
 		);
 			
 			
-		$email_settings = 'a:8:{s:10:"variations";a:2:{i:0;a:14:{s:7:"user_ID";i:2;s:10:"auto_draft";s:1:"1";s:16:"variation_status";s:6:"active";s:17:"selected_template";s:17:"simple-responsive";s:7:"content";s:0:"";s:2:"mm";s:2:"10";s:2:"jj";s:2:"31";s:2:"aa";s:4:"2014";s:2:"hh";s:2:"11";s:2:"mn";s:2:"48";s:2:"ss";s:2:"40";s:2:"ID";i:97098;s:6:"status";N;s:3:"acf";a:2:{s:19:"field_544ebf0aa4133";s:107:"http://inboundsoon.dev/wp-content/plugins/inbound-mailer/templates/simple-responsive/images/logo-wide-3.png";s:19:"field_544ebfe4a4135";s:108:"Dear {{first-name}},
+		$email_settings = 'a:8:{s:10:"variations";a:2:{i:0;a:14:{s:7:"user_ID";i:2;s:10:"auto_draft";s:1:"1";s:16:"variation_status";s:6:"active";s:17:"selected_template";s:17:"simple-responsive";s:7:"content";s:0:"";s:2:"mm";s:2:"10";s:2:"jj";s:2:"31";s:2:"aa";s:4:"2014";s:2:"hh";s:2:"11";s:2:"mn";s:2:"48";s:2:"ss";s:2:"40";s:2:"ID";i:97098;s:6:"status";N;s:3:"acf";a:2:{s:19:"field_544ebf0aa4133";s:107:"http://inboundsoon.dev/wp-content/plugins/inbound-mailer/templates/simple-responsive/images/logo-wide-3.png";s:19:"field_544ebfe4a4135";s:108:"Dear  [lead-fields id=\"first-name\"],
 
 Thank you for taking the time to read this email.
 
-Warm regards from {{site-name}}";}}i:1;a:13:{s:7:"user_ID";i:2;s:16:"variation_status";s:6:"active";s:17:"selected_template";s:17:"simple-responsive";s:7:"content";s:0:"";s:2:"mm";s:2:"10";s:2:"jj";s:2:"31";s:2:"aa";s:4:"2014";s:2:"hh";s:2:"11";s:2:"mn";s:2:"48";s:2:"ss";s:2:"40";s:3:"acf";a:2:{s:19:"field_544ebf0aa4133";s:107:"http://inboundsoon.dev/wp-content/plugins/inbound-mailer/templates/simple-responsive/images/logo-wide-3.png";s:19:"field_544ebfe4a4135";s:118:"Dear {{first-name}},
+Warm regards from [sitename] ";}}i:1;a:13:{s:7:"user_ID";i:2;s:16:"variation_status";s:6:"active";s:17:"selected_template";s:17:"simple-responsive";s:7:"content";s:0:"";s:2:"mm";s:2:"10";s:2:"jj";s:2:"31";s:2:"aa";s:4:"2014";s:2:"hh";s:2:"11";s:2:"mn";s:2:"48";s:2:"ss";s:2:"40";s:3:"acf";a:2:{s:19:"field_544ebf0aa4133";s:107:"http://inboundsoon.dev/wp-content/plugins/inbound-mailer/templates/simple-responsive/images/logo-wide-3.png";s:19:"field_544ebfe4a4135";s:118:"Dear [lead-fields id=\"first-name\"],
 
 Thank you for taking the time to read this email. Version B
 
-Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inbound_subject";s:35:"Welcome to the new email component.";s:17:"inbound_from_name";s:11:"Inbound Now";s:18:"inbound_from_email";s:22:"noreply@inboundnow.com";s:25:"inbound_batch_send_nature";s:5:"ready";s:21:"inbound_send_datetime";s:0:"";s:18:"inbound_email_type";s:5:"batch";s:18:"inbound_recipients";s:3:"110";}';S
+Warm regards from [sitename]";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inbound_subject";s:35:"Welcome to the new email component.";s:17:"inbound_from_name";s:11:"Inbound Now";s:18:"inbound_from_email";s:22:"noreply@inboundnow.com";s:25:"inbound_batch_send_nature";s:5:"ready";s:21:"inbound_send_datetime";s:0:"";s:18:"inbound_email_type";s:5:"batch";s:18:"inbound_recipients";s:3:"110";}';
+		
+		$email_settings = unserialize( $email_settings );
 		
 		/* Insert required acf field maps */
 		update_post_meta( $email_id , '_logo_url' , 'field_544ebf0aa4133');
