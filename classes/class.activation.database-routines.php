@@ -52,7 +52,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create example email
 	*/
-	public static function create_example_emailxxxzzzzzaaaa() {
+	public static function create_example_emailxxxzzzzzaaaaa() {
 	
 		// Set the post ID so that we know the post was created successfully
 		$email_id = wp_insert_post(

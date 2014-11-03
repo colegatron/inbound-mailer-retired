@@ -18,7 +18,7 @@ class Inbound_Email_Stats {
 		$settings = Inbound_Email_Meta::get_settings( $email_id );
 	
 		/* get email type */
-		$email_type = $settings['inbound_email_type'];
+		$email_type = (isset($settings['inbound_email_type'])) ? $settings['inbound_email_type'] : 'batch';
 
 		/* for band new emails set stats empty */
 		if ( $email_type == 'new' ) {
@@ -103,6 +103,7 @@ class Inbound_Email_Stats {
 	*  Prepare dummy stats - populates an email with dummy statistics
 	*/
 	public static function prepare_dummy_stats( $email_id ) {
+		
 		$settings = Inbound_Email_Meta::get_settings( $email_id );
 		
 		/* V1 */
