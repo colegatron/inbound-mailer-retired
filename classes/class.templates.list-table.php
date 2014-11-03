@@ -3,7 +3,7 @@
 /**
  * List table for visualizing 4rd party installed templates
  *
- * @package	Inbouns Mailer
+ * @package	Inbound Mailer
  * @subpackage	Templates
 */
 
@@ -20,12 +20,12 @@ if ( !class_exists('Inbound_Mailer_Template_Manager_List') ) {
 		private $plural;
 
 		function __construct() {
-			
+
 			$Inbound_Mailer_Load_Extensions = Inbound_Mailer_Load_Extensions();
 			$inbound_email_data = $Inbound_Mailer_Load_Extensions->template_definitions;
-			
+
 			$final_data = array();
-			
+
 			foreach ($inbound_email_data as $key=>$data)
 			{
 				$array_core_templates = array('auto-focus' , 'thumbnail-cta' , 'breathing' , 'clean-cta' , 'blank-template','call-out-box','cta-one','demo', 'flat-cta', 'peek-a-boo', 'popup-ebook', 'facebook-like-button', 'facebook-like-to-download', 'feedburner-subscribe-to-download', 'linkedin-share-to-download', 'tweet-to-download', 'follow-to-download', 'ebook-call-out');
@@ -55,7 +55,7 @@ if ( !class_exists('Inbound_Mailer_Template_Manager_List') ) {
 				} else {
 					$thumbnail = INBOUND_EMAIL_UPLOADS_URLPATH.$key."/thumbnail.png";
 				}
-				
+
 				//echo $thumbnail;
 
 				$this_data['ID']  = $key;

@@ -1,11 +1,11 @@
 <?php
 
-if ( ! class_exists( 'Inbound_Maildrill' ) ) {
-	
-	class Inbound_Maildrill {
-		
-	
+if ( ! class_exists( 'Inbound_Mandrill' ) ) {
+
+	class Inbound_Mandrill {
+
+
 	}
 
-	
+
 }
