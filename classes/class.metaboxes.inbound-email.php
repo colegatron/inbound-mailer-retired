@@ -4,7 +4,7 @@
 /**
  * Metaboxes that apply to strictly to the inbound-email post type.
  *
- * @package	Inbouns Mailer
+ * @package	Inbound Mailer
  * @subpackage	Metaboxes
 */
 
@@ -481,7 +481,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			self::add_variation_buttons();
 			self::add_quick_launch_buttons();
 			echo '</div>';
-
+			self::add_preview();
 			echo '</div>';
 		}
 
@@ -722,9 +722,28 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		*  Adds quick preview container
 		*/
 		public static function add_preview() {
+			global $post;
+			$url = get_permalink( $post->ID );
+			
+			$pass = array( 'scheduled' , 'sent' , 'automation' );
+			
+			if ( !in_array( $post->post_status , $pass ) ) {
+				return;
+			}
+			
 			?>
+			<script>
+			function iframeLoaded() {
+				  var iFrameID = document.getElementById('iframe-email-preview');
+				  if(iFrameID) {
+						iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
+				  }   
+			}
+			</script>
 			<div class="preview-container bs-callout bs-callout-clear">
-				preview can go here
+				<h4><?php _e('Preview' , 'inbound-mailer') ; ?></h4>
+
+				<iframe src="<?php echo $url; ?>" id='iframe-email-preview' onload="iframeLoaded()"></iframe>
 			</div>
 			<?php
 		}
