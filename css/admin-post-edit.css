@@ -52,6 +52,8 @@
 	padding-top:20px;
  }
 
+
+ 
 #titlediv #title, #inbound-mailer-notes-area input {
 	background-color: #fff;
 	border: none;
@@ -358,6 +360,11 @@ padding-top: 6px !important; }
 
 .countdown-container, .preview-container {
 	display:none;
+}
+
+.preview-container iframe{
+	width:100%;
+	
 }
 
 #main-title-area #inbound-mailer-main-headline {
