@@ -52,7 +52,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create example email
 	*/
-	public static function create_example_emailxxxzzzzzaaaaa() {
+	public static function create_example_emailxxxzzzzzaaaaas() {
 	
 		// Set the post ID so that we know the post was created successfully
 		$email_id = wp_insert_post(
@@ -74,9 +74,7 @@ Warm regards from {{site-name}}";}}i:1;a:13:{s:7:"user_ID";i:2;s:16:"variation_s
 
 Thank you for taking the time to read this email. Version B
 
-Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inbound_subject";s:35:"Welcome to the new email component.";s:17:"inbound_from_name";s:11:"Inbound Now";s:18:"inbound_from_email";s:22:"noreply@inboundnow.com";s:25:"inbound_batch_send_nature";s:5:"ready";s:21:"inbound_send_datetime";s:0:"";s:18:"inbound_email_type";s:5:"batch";s:18:"inbound_recipients";s:3:"110";}';
-		
-		$email_settings = unserialize( $email_settings );
+Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inbound_subject";s:35:"Welcome to the new email component.";s:17:"inbound_from_name";s:11:"Inbound Now";s:18:"inbound_from_email";s:22:"noreply@inboundnow.com";s:25:"inbound_batch_send_nature";s:5:"ready";s:21:"inbound_send_datetime";s:0:"";s:18:"inbound_email_type";s:5:"batch";s:18:"inbound_recipients";s:3:"110";}';S
 		
 		/* Insert required acf field maps */
 		update_post_meta( $email_id , '_logo_url' , 'field_544ebf0aa4133');
