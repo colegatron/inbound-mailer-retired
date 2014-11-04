@@ -106,7 +106,7 @@ class Inbound_Email_Stats {
 		
 		$settings = Inbound_Email_Meta::get_settings( $email_id );
 		
-		if (!isset( $statistics ) ) {
+		if (!isset( $settings ) ) {
 			return;
 		}
 		
