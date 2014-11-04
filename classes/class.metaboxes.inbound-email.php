@@ -475,7 +475,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			self::add_countdown();
 			self::add_statistics();
 			self::add_email_settings();
-			self::add_preview();
 			self::add_email_send_settings();
 			echo '<div class="quick-launch-container bs-callout bs-callout-clear">';
 			self::add_variation_buttons();
@@ -1278,12 +1277,13 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 						switch (post_status) {
 							case 'sent':
-								jQuery('#action-preview').show();
+								jQuery('#action-preview').show();								
 								Settings.show_graphs();
+								Settings.show_preview();
 								Settings.show_header_settings();
-								Settings.show_email_send_settings();
+								Settings.hide_email_send_settings();
 								Settings.show_quick_launch_container();
-								Settings.show_template_settings();
+								Settings.hide_template_settings();
 								break;
 							case 'scheduled':
 								jQuery('#action-preview').show();
@@ -1344,6 +1344,12 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 					},
 					hide_graphs: function() {
 						jQuery('.statistics-reporting-container').hide();
+					},
+					show_preview: function() {
+						jQuery('.preview-container').show();
+					},
+					hide_preview: function() {
+						jQuery('.preview-container').hide();
 					},
 					show_template_settings: function() {
 						jQuery('#postbox-container-2').show();
