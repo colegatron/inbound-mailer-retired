@@ -1683,7 +1683,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			Inbound_Email_Meta::update_settings( $post->ID , $email_settings );
 			
 			/* Save email type */
-			$term = get_term_by( 'slug' , $_POST['email_type'] , 'inbound_email_type' , OBJECT );
+			$term = get_term_by( 'slug' , $_POST['inbound_email_type'] , 'inbound_email_type' , OBJECT );
 			wp_set_post_terms( $inbound_email_id,	array( $term->term_id ) , 'inbound_email_type' , false );
 
 		}

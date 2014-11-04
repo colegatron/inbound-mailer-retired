@@ -10,9 +10,6 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 
 		public static function load_hooks() {
 			
-			/* Builds variation object on CTA save */
-			add_action( 'save_post', array( __CLASS__ , 'save_variation_object_data' ) );
-			
 			/* Filter to add variation id to end of meta key */
 			add_filter( 'inbound_email_prepare_input_id' , array( __CLASS__ , 'prepare_input_id' ) );
 			
@@ -97,41 +94,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 
 			self::update_variations( $inbound_email_id , $variations );
 		}
-		
-		/* Updates variation object data on post save
-		*
-		* @param INT $inbound_email_id of call to action id
-		*
-		*/
-		public static function save_variation_object_data( $inbound_email_id )
-		{
-			
-			global $post;
 
-			if ( wp_is_post_revision( $inbound_email_id ) ) {
-				return;
-			}
-			
-			if (	!isset($_POST['post_type']) || $_POST['post_type'] != 'inbound-email' ) {
-				return;
-			}
-
-			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
-				return;
-			}
-
-			$current_variation = (isset($_POST['inbvid'])) ? $_POST['inbvid'] : '0';
-			$variations = self::get_variations( $inbound_email_id );
-		
-			/* Set current variation status */		
-			$variations[ $current_variation ]['status'] = apply_filters( 'inbound_email_save_variation_status' ,  $_POST['inbound-mailer-variation-status'][ $current_variation ] );
-			
-			/* Update variation meta object */
-			self::update_variations( $inbound_email_id , $variations );
-			
-		}
-
-		
 
 		/**
 		* Returns array of variation data given a call to action id
