@@ -10,19 +10,6 @@
 class Inbound_Mailer_Activation_Update_Routines {
 
 	/**
-	*  Creates the email categories for 'inbound-email' post type
-	*/
-	public static function create_email_types() {
-
-		/* batch */
-		wp_insert_term( 'batch' , 'inbound_email_type' );
-
-		/* automated */
-		wp_insert_term( 'automated' , 'inbound_email_type' );
-	}
-
-
-	/**
 	*  Create default Unsubscribe page
 	*/
 	public static function create_default_unsubscribe_page_x() {
@@ -52,7 +39,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create example email
 	*/
-	public static function create_example_email_x() {
+	public static function create_example_email_xx() {
 
 		// Set the post ID so that we know the post was created successfully
 		$email_id = wp_insert_post(
@@ -64,7 +51,6 @@ class Inbound_Mailer_Activation_Update_Routines {
 				'post_type'			=>	'inbound-email'
 			)
 		);
-
 
 		$email_settings = 'a:8:{s:10:"variations";a:2:{i:0;a:14:{s:7:"user_ID";i:2;s:10:"auto_draft";s:1:"1";s:16:"variation_status";s:6:"active";s:17:"selected_template";s:17:"simple-responsive";s:7:"content";s:0:"";s:2:"mm";s:2:"10";s:2:"jj";s:2:"31";s:2:"aa";s:4:"2014";s:2:"hh";s:2:"11";s:2:"mn";s:2:"48";s:2:"ss";s:2:"40";s:2:"ID";i:97098;s:6:"status";N;s:3:"acf";a:2:{s:19:"field_544ebf0aa4133";s:107:"http://inboundsoon.dev/wp-content/plugins/inbound-mailer/templates/simple-responsive/images/logo-wide-3.png";s:19:"field_544ebfe4a4135";s:108:"Dear {{first-name}},
 

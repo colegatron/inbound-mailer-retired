@@ -798,7 +798,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function add_email_type_select_toggle() {
 
 			$email_type = self::get_email_type();
-
+			
 			?>
 			<select class='form-control' name='inbound_email_type' id='email_type'>
 				<option value='batch' <?php ($email_type == 'batch') ? print 'selected="true"' : print '' ; ?>>Batch Email</option>
@@ -857,11 +857,12 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		*/
 		public static function get_email_type() {
 			global $post;
-			$terms = get_the_terms( $post->ID, 'inbound_email_type' );
-
-			if ( $terms && ! is_wp_error( $terms ) ) {
-				$term = $terms[0];
-				return $term->slug;
+		
+			$setting = Inbound_Email_Meta::get_settings( $post->ID );
+			$vid = Inbound_Mailer_Variations::get_current_variation_id();
+			
+			if ( isset( $settings['variations'][$vid]['inbound_email_type'] ) ) {
+				return $settings['variations'][$vid]['inbound_email_type'];
 			} else {
 				return 'batch';
 			}
@@ -1682,11 +1683,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			
 			Inbound_Email_Meta::update_settings( $post->ID , $email_settings );
 			
-			/* Save email type */
-			$term = get_term_by( 'slug' , $_POST['inbound_email_type'] , 'inbound_email_type' , OBJECT );
-			if ($term) {
-				wp_set_post_terms( $inbound_email_id,	array( $term->term_id ) , 'inbound_email_type' , false );
-			}
+
 		}
 		
 		/**
