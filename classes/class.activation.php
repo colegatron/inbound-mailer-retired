@@ -39,9 +39,27 @@ class Inbound_Mailer_Activation {
 		
 		/* Activate shared components */
 		self::activate_shared();
+
+		/* Toggle activation database flag */
+		Inbound_Options_API::update_option( 'inbound-email' , 'activated' , false );	
+	}
+	
+	/**
+	*  Rebuilds permalinks
+	*/
+	public static function flush_rules() {
+
+		if ( Inbound_Options_API::get_option( 'inbound-email' , 'activated' ,  true ) ) {
+			return;
+		}
 		
-		/* Flush permalinks */
-		flush_rewrite_rules();
+		/* reset permalinks */
+		global $wp_rewrite;		
+		$wp_rewrite->flush_rules();
+
+		/* Toggle activation database flag */
+		Inbound_Options_API::update_option( 'inbound-email' , 'activated' , true );	
+		
 	}
 	
 	/**
@@ -218,5 +236,8 @@ register_deactivation_hook( INBOUND_EMAIL_FILE , array( 'Inbound_Mailer_Activati
 
 /* Add listener for uncompleted upgrade routines */
 add_action( 'admin_init' , array( 'Inbound_Mailer_Activation' , 'run_upgrade_routine_checks' ) );
+
+/* Add listener for Permalink refresh */
+add_action( 'admin_init' , array( 'Inbound_Mailer_Activation' , 'flush_rules' ) );
 
 }
