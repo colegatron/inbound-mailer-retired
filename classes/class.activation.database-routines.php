@@ -25,7 +25,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create default Unsubscribe page
 	*/
-	public static function create_default_unsubscribe_page() {
+	public static function create_default_unsubscribe_page_x() {
 
 		$title = __( 'Unsubscribe' , 'inbound-mailer' );
 
@@ -52,7 +52,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create example email
 	*/
-	public static function create_example_emailxxxzzzzzaaaaascss() {
+	public static function create_example_email_x() {
 
 		// Set the post ID so that we know the post was created successfully
 		$email_id = wp_insert_post(
