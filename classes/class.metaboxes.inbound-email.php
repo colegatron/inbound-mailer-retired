@@ -1243,7 +1243,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 						/* Rename save button */
 						jQuery('#publish').val("<?php _e('Save' , 'inbound-mailer'); ?>");
 						
-						/* Move titlediv below variations menu */
+						/* Move publsihing actions  */
 						var clone = jQuery('#major-publishing-actions');
 						clone.appendTo('#email-send-actions');
 						jQuery('#submitdiv').hide();
@@ -1257,16 +1257,10 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 						/* Removes Permalink edit option */
 						//jQuery('#edit-slug-box').hide();
 
-						/* Removes handle from templates option box */
-						jQuery('#postbox-container-2 .handlediv').hide();
-
 						/* Initiate variation tooltips */
 						jQuery('.btn-group a').tooltip();
 						jQuery('.inbound_email_tooltip').tooltip();
 						jQuery('#selected-template-image').tooltip();
-
-						/* Set loaded variation tooltip
-						jQuery('.selected-variation').tooltip('show'); */
 
 						/* Change 'Publish' to 'Save' */
 						jQuery('#submitdiv h3 span').text('<?php _e('Save', 'inbound-email'); ?>');

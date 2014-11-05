@@ -15,11 +15,13 @@ $post_id = get_the_ID();
 $logo_url = get_field('logo_url', $post_id);
 $main_content = get_field('main_email_content', $post_id);
 
-/*
+/**
 $settings = Inbound_Email_Meta::get_settings( $post_id );
 print_r($settings);exit;
-*/
+/**/
 
+//echo $main_content;
+//exit;
 ?>
 <style type='css/text'>
 @media only screen and (max-width : 640px) {

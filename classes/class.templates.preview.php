@@ -29,7 +29,9 @@ class Inbound_Email_Preview {
 		if ( $post->post_type!= "inbound-email" ) {
 			return;
 		}
-
+		
+		Inbound_Mailer_Load_Extensions();
+		
 		$vid = $Inbound_Mailer_Variations->get_current_variation_id();
 		$template = $Inbound_Mailer_Variations->get_current_template( $post->ID , $vid );
 

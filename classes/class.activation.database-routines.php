@@ -39,7 +39,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	/**
 	*  Create example email
 	*/
-	public static function create_example_email_xx() {
+	public static function create_example_email_xxxxx() {
 
 		// Set the post ID so that we know the post was created successfully
 		$email_id = wp_insert_post(
@@ -64,9 +64,6 @@ Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inboun
 
 		$email_settings = unserialize( $email_settings ); 
 		
-		/* Insert required acf field maps */
-		update_post_meta( $email_id , '_logo_url' , 'field_544ebf0aa4133');
-		update_post_meta( $email_id , '_main_email_content' , 'field_544ebfe4a4135');
 
 		/* Save Email Settings */
 		Inbound_Email_Meta::update_settings( $email_id , $email_settings );
@@ -74,6 +71,11 @@ Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inboun
 		/* add statistics */
 		Inbound_Email_Stats::prepare_dummy_stats( $email_id );
 
+		/* Insert required acf field maps */
+		update_post_meta( $email_id , '_logo_url' , 'field_544ebf0aa4133');
+		update_post_meta( $email_id , '_main_email_content' , 'field_544ebfe4a4135');
+		
+		
 		/* add tags */
 
 	}

@@ -10,7 +10,7 @@ Text Domain: inbound-email
 Domain Path: lang
 */
 
-if (!class_exists('Inbound_Mailer_Plugin')) {
+if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 
 	final class Inbound_Mailer_Plugin {
 

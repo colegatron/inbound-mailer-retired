@@ -228,6 +228,15 @@ class Inbound_Mailer_Activation {
 		
 
 	}
+	
+	/**
+	*  Require Leads support.
+	*/
+	public static function require_leads() {
+		if ( !class_exists('Inbound_Leads') ) {
+			deactivate_plugins( INBOUND_EMAIL_FILE );
+		}
+	}
 }
 
 /* Add Activation Hook */
@@ -239,5 +248,8 @@ add_action( 'admin_init' , array( 'Inbound_Mailer_Activation' , 'run_upgrade_rou
 
 /* Add listener for Permalink refresh */
 add_action( 'admin_init' , array( 'Inbound_Mailer_Activation' , 'flush_rules' ) );
+
+/* Make sure supporting Inbound Now plugins are activated */
+add_action( 'admin_init' , array( 'Inbound_Mailer_Activation' , 'require_leads' ) );
 
 }
