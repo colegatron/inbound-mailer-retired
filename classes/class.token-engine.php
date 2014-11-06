@@ -32,7 +32,12 @@ class Inbound_Mailer_Tokens {
 	*  Displays token select button
 	*/
 	public static function token_button() {
-
+		global $post;
+		
+		if ( $post->post_type!='inbound-email' ) {
+			return;
+		}
+		
 		$html = '<a href="#TB_inline?width=300&height=250&inlineId=lead_fields_popup_container" class="thickbox button" title="' . __('Generate a Lead Field Shortcode' , 'inbound-email' ) .'" style="padding-left: .4em;"><span class="wp-media-buttons-icon" id="inbound_lead_fields_button"></span>'. __( 'Lead Fields' , 'inbound-email' ) .'</a>';
 
 		return $html;
@@ -42,6 +47,12 @@ class Inbound_Mailer_Tokens {
 	*  Token/Shortcode generation script
 	*/
 	public static function token_generation() {
+		global $post;
+		
+		if ( $post->post_type!='inbound-email' ) {
+			return;
+		}
+		
 		$fields = Leads_Field_Map::build_map_array();
 		?>
 		<div id="lead_fields_popup_container" style="display:none;">
@@ -84,6 +95,12 @@ class Inbound_Mailer_Tokens {
 	*  Loads JS to support the token generation thickbox
 	*/
 	public static function token_generation_js() {
+		global $post;
+		
+		if ( $post->post_type!='inbound-email' ) {
+			return;
+		}
+		
 		?>
 		<script type='text/javascript'>
 		jQuery( document ).ready( function() {
