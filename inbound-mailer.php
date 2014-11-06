@@ -119,6 +119,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.extension.wp-lead.php');
 					include_once('classes/class.extension.wordpress-seo.php');
 					include_once('classes/class.metaboxes.inbound-email.php');
+					include_once('classes/class.token-engine.php');
 					include_once('classes/class.menus.php');
 					include_once('classes/class.ajax.listeners.php');
 					include_once('classes/class.enqueues.php');
