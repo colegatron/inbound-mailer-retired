@@ -26,40 +26,32 @@ if ( !class_exists('Inbound_Mailer_Template_Manager_List') ) {
 
 			$final_data = array();
 
-			foreach ($inbound_email_data as $key=>$data)
+			foreach ($inbound_email_data as $template_id=>$data)
 			{
-				$array_core_templates = array('auto-focus' , 'thumbnail-cta' , 'breathing' , 'clean-cta' , 'blank-template','call-out-box','cta-one','demo', 'flat-cta', 'peek-a-boo', 'popup-ebook', 'facebook-like-button', 'facebook-like-to-download', 'feedburner-subscribe-to-download', 'linkedin-share-to-download', 'tweet-to-download', 'follow-to-download', 'ebook-call-out');
+				$array_core_templates = array( 'simple-responsive' );
+				$array_core_templates = array( );
 
-				if ($key == 'wp-cta' || substr($key,0,4) == 'ext-' )
-					continue;
 
-				if (isset($data['info']['data_type']) && $data['info']['data_type']=='metabox') {
-					continue;
-				}
-
-				if (in_array($key,$array_core_templates)) {
+				if (in_array($template_id,$array_core_templates)) {
 					continue;
 				}
 
-				//echo "<br>";
+
 				if (isset($_POST['s'])&&!empty($_POST['s'])) {
 					if (!stristr($data['info']['label'],$_POST['s'])) {
 						continue;
 					}
 				}
 
-				if (isset($data['thumbnail'])) {
-					$thumbnail = $data['thumbnail'];
-				} else if ($key=='default') {
-					$thumbnail =  get_bloginfo('template_directory')."/screenshot.png";
+				/* Get Thumbnail */
+				if (file_exists(INBOUND_EMAIL_PATH.'templates/'.$template_id."/thumbnail.png")) {
+					$thumbnail = INBOUND_EMAIL_URLPATH.'templates/'.$template_id."/thumbnail.png";
 				} else {
-					$thumbnail = INBOUND_EMAIL_UPLOADS_URLPATH.$key."/thumbnail.png";
+					$thumbnail = INBOUND_EMAIL_UPLOADS_URLPATH.$template_id."/thumbnail.png";
 				}
 
-				//echo $thumbnail;
-
-				$this_data['ID']  = $key;
-				$this_data['template']  = $key;
+				$this_data['ID']  = $template_id;
+				$this_data['template']  = $template_id;
 				( array_key_exists('info',$data) ) ? $this_data['name'] = $data['info']['label'] :  $this_data['name'] = $data['label'];
 				( array_key_exists('info',$data) ) ? $this_data['category'] = $data['info']['category'] :  $this_data['category'] = $data['category'];
 				( array_key_exists('info',$data) ) ? $this_data['description'] = $data['info']['description'] :  $this_data['description'] = $data['description'];
@@ -179,7 +171,7 @@ if ( !class_exists('Inbound_Mailer_Template_Manager_List') ) {
 				case 'description':
 					return $item[ $column_name ];
 				case 'version':
-					echo Inbound_Mailer_Template_Manager::check_template_for_update($item);
+					echo Inbound_Mailer_Template_Manager::api_check_template_for_updates($item);
 					return;
 				case 'actions':
 					//echo inbound_email_templates_print_delete_button($item);
@@ -213,9 +205,4 @@ if ( !class_exists('Inbound_Mailer_Template_Manager_List') ) {
 		}
 
 	}
-
-
-
-
-
 }
