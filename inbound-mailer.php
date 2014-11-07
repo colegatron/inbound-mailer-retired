@@ -153,7 +153,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.unsubscribe.php');					
 					include_once('classes/class.acf-integration.php');
 					include_once('modules/module.utils.php');
-					include_once('classes/class.customizer.php');
+					include_once('classes/class.customizer.php');					
+					include_once('classes/class.token-engine.php');
 
 					BREAK;
 			endswitch;

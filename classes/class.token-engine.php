@@ -31,6 +31,8 @@ class Inbound_Mailer_Tokens {
 		/* Add supportive css */
 		add_action( 'admin_footer' , array( __CLASS__ , 'token_generation_css' ) );
 		
+		/* Add shortcode handler */
+		add_shortcode( 'lead-field', array( __CLASS__, 'process_lead_field_shortcode' ) );
 
 	}
 
@@ -169,7 +171,7 @@ class Inbound_Mailer_Tokens {
 				*  Generates html shortcode from given inputs
 				*/
 				generate_shortcode: function() {
-					this.shortcode = '[inbound-field id="' 
+					this.shortcode = '[lead-field id="' 
 					+ this.field_id 
 					+ '" default="' 
 					+ this.add_slashes(this.field_default) 
@@ -222,6 +224,43 @@ class Inbound_Mailer_Tokens {
 		}
 		</style>
 		<?php		
+	}
+	
+	/**
+	*  Process [lead-field] shortcode
+	*  @param ARRAY $params
+	*/
+	public static function process_lead_field_shortcode( $params ) {
+		global $post;
+		
+		$lead_id = null; 
+		$params = shortcode_atts( array( 'default' => '' , 'id' => '' ), $params );
+		$fields = Leads_Field_Map::build_map_array();
+		
+		/* check to see if lead id is set as a REQUEST */
+		if ( isset($GLOBALS['wp_lead_id']) ) {
+			$lead_id = $GLOBALS['wp_lead_id'];
+		} else if ( isset($_REQUEST['wp_lead_id']) ) {
+			$lead_id = $_REQUEST['wp_lead_id'];
+		}else if ( isset($_COOKIE['wp_lead_id']) ) {
+			$lead_id = $_COOKIE['wp_lead_id'];
+		}
+
+		/* return default if no lead id discovered */
+		if (!$lead_id) {
+			return $params['default'];
+		}
+		
+		/* get lead value */
+		$value = Leads_Field_Map::get_field( $lead_id , $params['id'] );
+		
+		/* return lead field value if it exists */
+		if ($value) { 
+			return $value;
+		} else {
+			return $params['default'];
+		} 
+		
 	}
 }
 

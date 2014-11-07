@@ -30,7 +30,11 @@ class Inbound_Email_Preview {
 			return;
 		}
 		
+		/* Load email templates */
 		Inbound_Mailer_Load_Extensions();
+		
+		/* Load token engine */
+		$Inbound_Mailer_Tokens = new Inbound_Mailer_Tokens();
 		
 		$vid = $Inbound_Mailer_Variations->get_current_variation_id();
 		$template = $Inbound_Mailer_Variations->get_current_template( $post->ID , $vid );

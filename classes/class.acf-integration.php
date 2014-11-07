@@ -90,8 +90,8 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			var_dump($new);
 			echo "\r\n";echo "\r\n";echo "\r\n";
 			/**/
-
 			return $value;
+
 		}
 
 
