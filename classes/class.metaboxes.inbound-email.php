@@ -1078,9 +1078,11 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 							break;
 							// select
 							case 'select2':
-								echo '<select name="'.$field_id.'" id="'.$field_id.'" class="'.$field['id'].' select2 select-lists" multiple="true">';
+								echo '<select name="'.$field_id.'[]" id="'.$field_id.'" class="'.$field['id'].' select2 select-lists" multiple>';
 								foreach ($field['options'] as $value=>$label) {
-									echo '<option', $meta == $value ? ' selected="selected"' : '', ' value="'.$value.'">'.$label.'</option>';
+								$selected = ( in_array( $value, $meta) ) ? 'selected="true"' : ''; 
+									
+									echo '<option value="'.$value.'" '.$selected.' >'.$label.'</option>';
 								}
 								echo '</select><div class="inbound_email_tooltip" title="'.$field['description'].'"></div>';
 							break;
