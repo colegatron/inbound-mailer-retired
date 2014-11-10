@@ -1,14 +1,27 @@
 jQuery(document).ready(function($) {
 
-	jQuery('.nav-tab-wrapper.a_b_tabs a').each(function(){
+	jQuery('.variation-group a').each(function(){
 		var permalink = jQuery(this).attr('data-permalink');
 
 		jQuery(this).attr('href', permalink + "&frontend=true&email-customizer=on");
 
 	});	
+
+	/* remove addressing */
+	jQuery('.mail-headers-container').remove();
 	
+	/* remove send settings */	
+	jQuery('.mail-send-settings-container').remove();
+	
+	/* remove ability to add new tab */
 	jQuery('#tabs-add-variation').remove();
-	jQuery('#inbound-mailer-notes-area').hide();
+	
+	/* move save button down to bottom */
+	jQuery('#publish').appendTo('#postbox-container-2');
+	
+	/* remove unused send buttons */
+	jQuery('#postbox-container-1').remove();
+	
 	jQuery('.wrap h2:first').hide();
 	jQuery('#inbound-mailer-change-template-button').hide();
 	

@@ -8,6 +8,9 @@
 /* Declare Template Key */
 $key = basename(dirname(__FILE__));
 
+/* do global action */
+do_action('inbound_mail_header');
+
 /* Load post */
 if (have_posts()) : while (have_posts()) : the_post();
 
