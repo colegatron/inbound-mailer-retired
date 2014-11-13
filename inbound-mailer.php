@@ -134,6 +134,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.customizer.php');
 					include_once('classes/class.tracking.php');
 					include_once('classes/class.statistics.php');
+					include_once('classes/class.scheduling.php');
 
 					BREAK;
 

@@ -70,7 +70,7 @@ class Inbound_Mailer_Tokens {
 	public static function token_generation_popup() {
 		global $post;
 		
-		if ( $post->post_type!='inbound-email' ) {
+		if (  !isset($post) || $post->post_type!='inbound-email' ) {
 			return;
 		}
 		
@@ -118,7 +118,7 @@ class Inbound_Mailer_Tokens {
 	public static function token_generation_js() {
 		global $post;
 		
-		if ( $post->post_type!='inbound-email' ) {
+		if ( isset($post) && $post->post_type!='inbound-email' ) {
 			return;
 		}
 		
@@ -204,7 +204,7 @@ class Inbound_Mailer_Tokens {
 	public static function token_generation_css() {
 		global $post;
 		
-		if ( $post->post_type!='inbound-email' ) {
+		if ( isset($post) && $post->post_type!='inbound-email' ) {
 			return;
 		}
 		

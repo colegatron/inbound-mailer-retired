@@ -337,7 +337,7 @@ padding-top: 6px !important; }
 	width:auto;
 }
 
-#action-schedule, #action-send , #action-unschedule, #action-unarchive, #action-preview {
+.send-action {
 	display:none;
 }
 
@@ -350,6 +350,10 @@ padding-top: 6px !important; }
 	text-align:right;
 }
 
+.quick-launch-container {
+	min-height:33px;
+}
+
 .mail-settings-container #action-unschedule {
 	margin: 10px;
 }
@@ -358,7 +362,7 @@ padding-top: 6px !important; }
 	max-width:100%;
 }
 
-.countdown-container, .preview-container {
+.countdown-container, .preview-container{
 	display:none;
 }
 

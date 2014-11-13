@@ -79,4 +79,38 @@ Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inboun
 		/* add tags */
 
 	}
+	
+	/**
+	* @migration-type: db modification 
+	* @mirgration: creates wp_inbound_email_queue table
+	*/
+	public static function create_email_queue_tablex() {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . "inbound_email_queue"; 
+	   
+		$charset_collate = '';
+
+		if ( ! empty( $wpdb->charset ) ) {
+		  $charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
+		}
+
+		if ( ! empty( $wpdb->collate ) ) {
+		  $charset_collate .= " COLLATE {$wpdb->collate}";
+		}
+
+		$sql = "CREATE TABLE $table_name (
+			`id` mediumint(9) NOT NULL AUTO_INCREMENT,
+			`email_id` mediumint(9) NOT NULL,
+			`variation_id` mediumint(9) NOT NULL,
+			`lead_id` mediumint(9) NOT NULL,
+			`type` tinytext NOT NULL,
+			`status` tinytext NOT NULL,
+			UNIQUE KEY id (id)
+		) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+	}
 }
