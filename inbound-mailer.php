@@ -135,6 +135,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.tracking.php');
 					include_once('classes/class.statistics.php');
 					include_once('classes/class.scheduling.php');
+					include_once('classes/class.cron-api.php');					
+					include_once('classes/class.sending.php');
 
 					BREAK;
 
@@ -156,6 +158,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('modules/module.utils.php');
 					include_once('classes/class.customizer.php');					
 					include_once('classes/class.token-engine.php');
+					include_once('classes/class.cron-api.php');
+					include_once('classes/class.sending.php');
 
 					BREAK;
 			endswitch;

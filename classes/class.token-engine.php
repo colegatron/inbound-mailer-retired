@@ -235,14 +235,13 @@ class Inbound_Mailer_Tokens {
 		
 		$lead_id = null; 
 		$params = shortcode_atts( array( 'default' => '' , 'id' => '' ), $params );
+		
 		$fields = Leads_Field_Map::build_map_array();
 		
 		/* check to see if lead id is set as a REQUEST */
-		if ( isset($GLOBALS['wp_lead_id']) ) {
-			$lead_id = $GLOBALS['wp_lead_id'];
-		} else if ( isset($_REQUEST['wp_lead_id']) ) {
-			$lead_id = $_REQUEST['wp_lead_id'];
-		}else if ( isset($_COOKIE['wp_lead_id']) ) {
+		if ( isset($_REQUEST['lead_id']) ) {
+			$lead_id = $_REQUEST['lead_id'];
+		} else if ( isset($_COOKIE['wp_lead_id']) ) {
 			$lead_id = $_COOKIE['wp_lead_id'];
 		}
 
@@ -250,6 +249,7 @@ class Inbound_Mailer_Tokens {
 		if (!$lead_id) {
 			return $params['default'];
 		}
+		
 		
 		/* get lead value */
 		$value = Leads_Field_Map::get_field( $lead_id , $params['id'] );
