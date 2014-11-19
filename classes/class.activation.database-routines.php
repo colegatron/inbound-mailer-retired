@@ -84,7 +84,7 @@ Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inboun
 	* @migration-type: db modification 
 	* @mirgration: creates wp_inbound_email_queue table
 	*/
-	public static function create_email_queue_tablex() {
+	public static function create_email_queue_table_xx() {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . "inbound_email_queue"; 
@@ -106,6 +106,7 @@ Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inboun
 			`lead_id` mediumint(9) NOT NULL,
 			`type` tinytext NOT NULL,
 			`status` tinytext NOT NULL,
+			`datetime` DATETIME NOT NULL
 			UNIQUE KEY id (id)
 		) $charset_collate;";
 

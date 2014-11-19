@@ -1789,10 +1789,10 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			switch( $_POST['email_action'] ) {
 			
 				case 'unschedule':
-					Inbound_Mailer_Scheduling::unschedule_email();
+					Inbound_Mailer_Scheduling::unschedule_email( $post->ID );
 					break;
 				case 'schedule': 
-					Inbound_Mailer_Scheduling::schedule_email();
+					Inbound_Mailer_Scheduling::schedule_email( $post->ID );
 					break;
 					
 				
