@@ -106,62 +106,48 @@ class Inbound_Mailer_Clone_Post {
 
 		$status = $post->post_status;
 
-		if ($post->post_type == 'revision') {
+		if ($post->post_type == 'revision' || $post->post_type == 'attachment' ) {
 			return;
 		}
 
-		if ($post->post_type != 'attachment'){
-			$prefix = "Copy of ";
-			$suffix = "";
-			$status = 'pending';
-		}
+
+		$prefix = __( "Copy of " , 'inbound-mailer' );
+		$suffix = "";
+		$status = 'unsent';
+		
 
 		$new_post_author = wp_get_current_user();
 
-		if ($blank==false)
-		{
-			$new_post = array(
-				'menu_order' => $post->menu_order,
-				'comment_status' => $post->comment_status,
-				'ping_status' => $post->ping_status,
-				'post_author' => $new_post_author->ID,
-				'post_content' => $post->post_content,
-				'post_excerpt' =>	$post->post_excerpt ,
-				'post_mime_type' => $post->post_mime_type,
-				'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
-				'post_password' => $post->post_password,
-				'post_status' => $status,
-				'post_title' => $prefix.$post->post_title.$suffix,
-				'post_type' => $post->post_type,
-			);
 
-			$new_post['post_date'] = $new_post_date =	$post->post_date ;
-			$new_post['post_date_gmt'] = get_gmt_from_date($new_post_date);
-		}
-		else
-		{
-			$new_post = array(
-				'menu_order' => $post->menu_order,
-				'comment_status' => $post->comment_status,
-				'ping_status' => $post->ping_status,
-				'post_author' => $new_post_author->ID,
-				'post_content' => "",
-				'post_excerpt' =>	"" ,
-				'post_mime_type' => $post->post_mime_type,
-				'post_status' => $status,
-				'post_title' => "New Blank Landing Page",
-				'post_type' => $post->post_type,
-				'post_date' => date('Y-m-d H:i:s')
-			);
-		}
+		$new_post = array(
+			'menu_order' => $post->menu_order,
+			'comment_status' => $post->comment_status,
+			'ping_status' => $post->ping_status,
+			'post_author' => $new_post_author->ID,
+			'post_content' => $post->post_content,
+			'post_excerpt' =>	$post->post_excerpt ,
+			'post_mime_type' => $post->post_mime_type,
+			'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
+			'post_password' => $post->post_password,
+			'post_status' => $status,
+			'post_title' => $prefix.$post->post_title.$suffix,
+			'post_type' => $post->post_type,
+		);
+
+		$new_post['post_date'] = $new_post_date =	$post->post_date ;
+		$new_post['post_date_gmt'] = get_gmt_from_date($new_post_date);
 
 		$new_post_id = wp_insert_post($new_post);
 
-		$meta_data = self::get_post_meta($post->ID);
-		foreach ($meta_data as $key=>$value)
-		{
-			update_post_meta($new_post_id,$key,$value);
+		$meta_data = get_post_meta($post->ID);
+
+		foreach ($meta_data as $key=>$value) {
+			if ($key=='inbound_settings') {
+				$value[0] = unserialize( $value[0] );
+			}
+			update_post_meta($new_post_id , $key , $value[0]);
 		}
+
 
 		return $new_post_id;
 	}

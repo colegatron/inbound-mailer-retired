@@ -55,8 +55,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function load_metaboxes() {
 			global $post , $Inbound_Mailer_Variations;
 
-			$CTAExtensions = Inbound_Mailer_Load_Extensions();
-
 			if ($post->post_type!='inbound-email') {
 				return;
 			}
@@ -375,13 +373,13 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function add_template_select() {
 			global $inbound_email_data, $post, $current_url, $Inbound_Mailer_Variations;
 
-			$CTAExtensions = Inbound_Mailer_Load_Extensions();
+			$Templates = Inbound_Mailer_Load_Templates();
 
 			if (isset($post)&&$post->post_type!='inbound-email'||!isset($post)){ return false; }
 
 			( !strstr( $current_url, 'post-new.php')) ?	$toggle = "display:none" : $toggle = "";
 
-			$extension_data = $CTAExtensions->definitions;
+			$extension_data = $Templates->definitions;
 			unset($extension_data['inbound-mailer-controller']);
 
 			if ( isset($_GET['new-variation'] ) ){
@@ -401,7 +399,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 				echo '<ul id="template-filter" >';
 					echo '<li><a href="#" data-filter=".template-item-boxes">All</a></li>';
 					$categories = array();
-					foreach ( $CTAExtensions->template_categories as $cat)
+					foreach ( $Templates->template_categories as $cat)
 					{
 
 						$category_slug = str_replace(' ','-',$cat['value']);
@@ -491,8 +489,8 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function add_email_settings() {
 			global $post;
 
-			$CTAExtensions = Inbound_Mailer_Load_Extensions();
-			$email_settings = $CTAExtensions->definitions['email-settings'];
+			$Inbound_Mailer_Common_Settings = Inbound_Mailer_Common_Settings();
+			$email_settings = $Inbound_Mailer_Common_Settings->settings['email-settings'];
 
 			?>
 			<div class="mail-headers-container bs-callout bs-callout-clear">
@@ -771,8 +769,8 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function add_batch_send_settings() {
 			global $post;
 
-			$CTAExtensions = Inbound_Mailer_Load_Extensions();
-			$settings = $CTAExtensions->definitions['batch-send-settings'];
+			$Inbound_Mailer_Common_Settings = Inbound_Mailer_Common_Settings();
+			$settings = $Inbound_Mailer_Common_Settings->settings['batch-send-settings'];
 
 			?>
 			<div class="send-settings batch-send-settings-container">
@@ -831,6 +829,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 					<button type="button" class="btn btn-success btn-mediums send-action action-schedule" id="action-schedule"><?php _e('Schedule' , 'inbound-email' );?></button>
 					<button type="button" class="btn btn-warning btn-medium send-action action-unschedule" id="action-unschedule"><?php _e('Unschedule' , 'inbound-email' );?></button>
 					<button type="button" class="btn btn-success btn-medium send-action action-send" id="action-send"><?php _e('Send' , 'inbound-email' );?></button>
+					<button type="button" class="btn btn-primary btn-medium send-action action-clone" id="action-clone"><?php _e('Clone this email' , 'inbound-email' );?></button>
 					<button type="button" class="btn btn-danger btn-medium send-action action-cancel" id="action-cancel-sending"><?php _e('Abort Send' , 'inbound-email' );?></button>
 					<button type="button" class="btn btn-warning btn-medium send-action action-unarchive" id="action-unarchive"><?php _e('Unarchive' , 'inbound-email' );?></button>
 				</div>
@@ -1205,6 +1204,11 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 				});
 
 				/* Add listener to prompt sweet alert on send */
+				jQuery('#action-clone').on('click', function(e) {
+					Settings.clone_email();
+				});
+
+				/* Add listener to prompt sweet alert on send */
 				jQuery('#action-cancel-sending').on('click', function(e) {
 					Settings.cancel_send();
 				});
@@ -1260,7 +1264,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 						/* Move publsihing actions	*/
 						var clone = jQuery('#major-publishing-actions');
 						clone.appendTo('#email-send-actions');
-						jQuery('#submitdiv').hide();
+						//jQuery('#submitdiv').hide();
 
 						/* Hide screen options */
 						jQuery('#show-settings-link').hide();
@@ -1288,11 +1292,13 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 							case 'sent':
 								Settings.show_graphs();
 								Settings.show_preview();
+								Settings.show_quick_lauch_buttons();
+								Settings.show_clone_buttons();
 								Settings.hide_header_settings();
 								Settings.hide_email_send_settings();
-								Settings.show_quick_lauch_buttons();
 								Settings.hide_template_settings();
 								Settings.hide_save_buttons();
+								Settings.hide_send_buttons();
 								break;
 							case 'sending':														
 								Settings.show_preview();
@@ -1402,6 +1408,18 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 					},
 					hide_cancel_buttons: function() {
 						jQuery('#action-cancel-sending').hide();
+					},
+					show_send_buttons: function() {
+						jQuery('#action-send').show();
+					},
+					hide_send_buttons: function() {
+						jQuery('#action-send').hide();
+					},
+					show_clone_buttons: function() {
+						jQuery('#action-clone').show();
+					},
+					hide_clone_buttons: function() {
+						jQuery('#action-clone').hide();
 					},
 					/**
 					* Populate countdown ticket
@@ -1560,7 +1578,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 						/* Throw confirmation for scheduling */
 						swal({
-							title: "Are you sure?",
+							title: "<?php _e( 'Are you sure?' , 'inbound-mailer' ); ?>",
 							text: "<?php _e( 'Are you sure you want to unschedule this email?' , 'inbound-mailer' ); ?>",
 							type: "info",
 							showCancelButton: true,
@@ -1590,7 +1608,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 						/* Throw confirmation for scheduling */
 						swal({
-							title: "Are you sure?",
+							title: "<?php _e( 'Are you sure?' , 'inbound-mailer' ); ?>",
 							text: "<?php _e( 'Are you sure you want to schedule this email?' , 'inbound-mailer' ); ?>",
 							type: "info",
 							showCancelButton: true,
@@ -1607,6 +1625,35 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 							jQuery('#email_action').val('schedule');
 							jQuery('#post_status').val('scheduled');
 							jQuery('#post').submit();
+						});
+
+					},
+					/**
+					*	Validates and Schedules Email Immediately
+					*/
+					clone_email: function() {
+						
+						/* Throw confirmation for scheduling */
+						swal({
+							title: "Are you sure?",
+							text: "<?php _e( 'Are you sure you want to clone this email?' , 'inbound-mailer' ); ?>",
+							type: "info",
+							showCancelButton: true,
+							confirmButtonColor: "#2ea2cc",
+							confirmButtonText: "<?php _e( 'Yes, clone it!' , 'inbound-mailer' ); ?>",
+							closeOnConfirm: false
+						}, function(){
+
+
+							swal( {
+								title: "<?php _e('Please wait' , 'inbound-mailer' ); ?>",
+								text: "<?php _e('We are cloning your email now.' , 'inbound-mailer' ); ?>",
+								imageUrl: '<?php echo INBOUND_EMAIL_URLPATH; ?>/images/loading_colorful.gif'
+							} );
+
+							/* redirect page */
+							var redirect_url = "<?php echo admin_url('admin.php?action=inbound_email_clone_post&post=' . $post->ID ); ?>";
+							window.location = redirect_url;
 						});
 
 					},

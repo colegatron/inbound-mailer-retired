@@ -91,7 +91,11 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 		*
 		*/
 		private static function define_constants() {
-
+			
+			/* this is for testing - the real api key will be served by inboundnow */
+			define('MANDRILL_APIKEY', 'A3QGwjtrBOR6cRrdxoG3AQ' );
+			
+			
 			define('INBOUND_EMAIL_CURRENT_VERSION', '2.2.1' );
 			define('INBOUND_EMAIL_URLPATH', WP_PLUGIN_URL.'/'.plugin_basename( dirname(__FILE__) ).'/' );
 			define('INBOUND_EMAIL_PATH', WP_PLUGIN_DIR.'/'.plugin_basename( dirname(__FILE__) ).'/' );
@@ -112,7 +116,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 				case true :
 					/* loads admin files */
 					include_once('classes/class.activation.php');
-					include_once('classes/class.activation.database-routines.php');
+					include_once('classes/class.activation.database-routines.php');					
+					include_once('classes/class.inboundnow.php');
 					include_once('classes/class.options-api.php');					
 					include_once('classes/class.postmeta.php');
 					include_once('classes/class.post-type.inbound-email.php');
@@ -127,7 +132,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.clone-post.php');
 					include_once('classes/class.acf-integration.php');
 					include_once('classes/class.variations.php');
-					include_once('classes/class.load-extensions.php');
+					include_once('classes/class.load.email-settings.php');
+					include_once('classes/class.load.email-templates.php');
 					include_once('classes/class.templates.list-table.php');
 					include_once('classes/class.templates.manage.php');
 					include_once('modules/module.utils.php');
@@ -137,6 +143,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.scheduling.php');
 					include_once('classes/class.cron-api.php');					
 					include_once('classes/class.sending.php');
+					include_once('classes/class.mandrill.php');
 
 					BREAK;
 
@@ -144,7 +151,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					/* load front-end files */
 					include_once('classes/class.options-api.php');
 					include_once('classes/class.postmeta.php');
-					include_once('classes/class.load-extensions.php');
+					include_once('classes/class.inboundnow.php');
+					include_once('classes/class.load.email-templates.php');
 					include_once('classes/class.post-type.inbound-email.php');
 					include_once('classes/class.extension.wp-lead.php');
 					include_once('classes/class.extension.wordpress-seo.php');
@@ -160,6 +168,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.token-engine.php');
 					include_once('classes/class.cron-api.php');
 					include_once('classes/class.sending.php');
+					include_once('classes/class.mandrill.php');
 
 					BREAK;
 			endswitch;

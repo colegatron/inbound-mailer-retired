@@ -2,12 +2,17 @@
 
 
 class Inbound_Mailer_Tokens {
+	
 
 	/**
 	*  Initialize class
 	*/
 	public function __construct() {
-
+		
+		if ( isset($_GET['disable_shortcodes']) ) {
+			return;
+		}
+		
 		self::load_hooks();
 	}
 
@@ -233,17 +238,20 @@ class Inbound_Mailer_Tokens {
 	public static function process_lead_field_shortcode( $params ) {
 		global $post;
 		
-		$lead_id = null; 
-		$params = shortcode_atts( array( 'default' => '' , 'id' => '' ), $params );
+		$lead_id = null;
+		
+		$params = shortcode_atts( array( 'default' => '' , 'id' => '' , 'lead_id' => null ), $params );
 		
 		$fields = Leads_Field_Map::build_map_array();
-		
+
 		/* check to see if lead id is set as a REQUEST */
-		if ( isset($_REQUEST['lead_id']) ) {
+		if ( isset($params['lead_id']) ) {
+			$lead_id = $params['lead_id'];
+		} else if ( isset($_REQUEST['lead_id']) ) {
 			$lead_id = $_REQUEST['lead_id'];
 		} else if ( isset($_COOKIE['wp_lead_id']) ) {
 			$lead_id = $_COOKIE['wp_lead_id'];
-		}
+		} 
 
 		/* return default if no lead id discovered */
 		if (!$lead_id) {
@@ -270,4 +278,4 @@ class Inbound_Mailer_Tokens {
 function inbound_load_token_engine() {
 	$Inbound_Mailer_Tokens = new Inbound_Mailer_Tokens();
 }
-add_action( 'admin_init' , 'inbound_load_token_engine' ); 
+add_action( 'init' , 'inbound_load_token_engine' , 1 ); 
