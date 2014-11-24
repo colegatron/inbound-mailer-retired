@@ -147,12 +147,12 @@ class Inbound_Mailer_Load_Extensions {
 	}
 
 
-	
+
 	/**
 	*  Adds default mail settings
 	*/
 	function add_addressing_settings($inbound_email_data){
-	
+
 
 		$inbound_email_data['email-settings']['inbound_subject'] =  array(
 			'label' => __( 'Subject Line' , 'inbound-mailer' ),
@@ -164,7 +164,7 @@ class Inbound_Mailer_Load_Extensions {
 			'context'  => 'priority',
 			'global' => true
 		);
-		
+
 		$inbound_email_data['email-settings']['inbound_from_name'] =  array(
 			'label' => __( 'From Name' , 'inbound-mailer' ),
 			'description' => __( 'The name of the sender.' , 'inbound-mailer' ) ,
@@ -175,7 +175,7 @@ class Inbound_Mailer_Load_Extensions {
 			'context'  => 'priority',
 			'global' => true
 		);
-		
+
 		$inbound_email_data['email-settings']['inbound_from_email'] =  array(
 			'label' => __( 'From Email' , 'inbound-mailer' ),
 			'description' => __( 'The email address of the sender.' , 'inbound-mailer' ) ,
@@ -185,49 +185,49 @@ class Inbound_Mailer_Load_Extensions {
 			'class' => '',
 			'context'  => 'priority',
 			'global' => true
-		);			
+		);
 
 		return $inbound_email_data;
 	}
 
-	
-		
+
+
 	/**
 	* adds batch send settings
 	*/
 	function add_batch_send_settings($data) {
-		
+
 		$data['batch-send-settings']['inbound_batch_send_nature'] = array(
 			'id'  => 'inbound_batch_send_nature',
 			'label' => __( 'Queue Setting' , 'inbound-email' ),
 			'description' => __( 'Would you like to schedule this email or send it manually?' , 'inbound-email' ),
-			'type'  => 'dropdown', 
+			'type'  => 'dropdown',
 			'default' => '',
 			'global' => true,
-			'options' => array( 
-				'ready' => __( 'Manual Send' , 'inbound-mailer' ) ,
-				'schedule' => __( 'Scheduled Send' , 'inbound-mailer' )
+			'options' => array(
+				'ready' => __( 'Send Immediately' , 'inbound-mailer' ) ,
+				'schedule' => __( 'Scheduled Email' , 'inbound-mailer' )
 			)
 		);
-		
+
 		$lead_lists = Inbound_Leads::get_lead_lists_as_array();
-		
+
 		$data['batch-send-settings']['inbound_recipients'] = array(
 			'id'  => 'inbound_recipients',
 			'label' => __( 'Select recipients' , 'inbound-email' ),
 			'description' => __( 'This option provides a placeholder for the selected template data.' , 'inbound-email' ),
-			'type'  => 'select2', 
+			'type'  => 'select2',
 			'default' => '',
 			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
 			'options' => $lead_lists,
 			'global' => true
 		);
-		
+
 		$data['batch-send-settings']['inbound_send_datetime'] = array(
 			'id'  => 'inbound_send_datetime',
 			'label' => __( 'Send Date/Time' , 'inbound-email' ),
 			'description' => __( 'Select the date and time you would like this message to send.' , 'inbound-email' ),
-			'type'  => 'datepicker', 
+			'type'  => 'datepicker',
 			'default' => '',
 			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
 			'options' => $lead_lists,
@@ -237,7 +237,7 @@ class Inbound_Mailer_Load_Extensions {
 		return $data;
 
 	}
-	
+
 
 
 	function read_template_categories()
