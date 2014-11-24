@@ -21,7 +21,7 @@ class Inbound_Email_Stats {
 		$email_type = (isset($settings['inbound_email_type'])) ? $settings['inbound_email_type'] : 'batch';
 
 		/* for band new emails set stats empty */
-		if ( $email_type == 'new' ) {
+		if ( $email_type == 'new' || !isset($settings['statistics']) ) {
 			$stats['variations'][0] =  Inbound_Email_Stats::prepare_empty_stats();
 		} 
 		

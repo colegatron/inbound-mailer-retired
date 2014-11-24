@@ -21,8 +21,8 @@ if ( !class_exists('Inbound_Mailer_Template_Manager_List') ) {
 
 		function __construct() {
 
-			$Inbound_Mailer_Load_Extensions = Inbound_Mailer_Load_Extensions();
-			$inbound_email_data = $Inbound_Mailer_Load_Extensions->template_definitions;
+			$Inbound_Mailer_Load_Templates = Inbound_Mailer_Load_Templates();
+			$inbound_email_data = $Inbound_Mailer_Load_Templates->template_definitions;
 
 			$final_data = array();
 

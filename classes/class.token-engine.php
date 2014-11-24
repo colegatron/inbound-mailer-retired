@@ -2,12 +2,17 @@
 
 
 class Inbound_Mailer_Tokens {
+	
 
 	/**
 	*  Initialize class
 	*/
 	public function __construct() {
-
+		
+		if ( isset($_GET['disable_shortcodes']) ) {
+			return;
+		}
+		
 		self::load_hooks();
 	}
 
@@ -70,7 +75,7 @@ class Inbound_Mailer_Tokens {
 	public static function token_generation_popup() {
 		global $post;
 		
-		if ( $post->post_type!='inbound-email' ) {
+		if (  !isset($post) || $post->post_type!='inbound-email' ) {
 			return;
 		}
 		
@@ -118,7 +123,7 @@ class Inbound_Mailer_Tokens {
 	public static function token_generation_js() {
 		global $post;
 		
-		if ( $post->post_type!='inbound-email' ) {
+		if ( isset($post) && $post->post_type!='inbound-email' ) {
 			return;
 		}
 		
@@ -204,7 +209,7 @@ class Inbound_Mailer_Tokens {
 	public static function token_generation_css() {
 		global $post;
 		
-		if ( $post->post_type!='inbound-email' ) {
+		if ( isset($post) && $post->post_type!='inbound-email' ) {
 			return;
 		}
 		
@@ -233,23 +238,26 @@ class Inbound_Mailer_Tokens {
 	public static function process_lead_field_shortcode( $params ) {
 		global $post;
 		
-		$lead_id = null; 
-		$params = shortcode_atts( array( 'default' => '' , 'id' => '' ), $params );
-		$fields = Leads_Field_Map::build_map_array();
+		$lead_id = null;
 		
+		$params = shortcode_atts( array( 'default' => '' , 'id' => '' , 'lead_id' => null ), $params );
+		
+		$fields = Leads_Field_Map::build_map_array();
+
 		/* check to see if lead id is set as a REQUEST */
-		if ( isset($GLOBALS['wp_lead_id']) ) {
-			$lead_id = $GLOBALS['wp_lead_id'];
-		} else if ( isset($_REQUEST['wp_lead_id']) ) {
-			$lead_id = $_REQUEST['wp_lead_id'];
-		}else if ( isset($_COOKIE['wp_lead_id']) ) {
+		if ( isset($params['lead_id']) ) {
+			$lead_id = $params['lead_id'];
+		} else if ( isset($_REQUEST['lead_id']) ) {
+			$lead_id = $_REQUEST['lead_id'];
+		} else if ( isset($_COOKIE['wp_lead_id']) ) {
 			$lead_id = $_COOKIE['wp_lead_id'];
-		}
+		} 
 
 		/* return default if no lead id discovered */
 		if (!$lead_id) {
 			return $params['default'];
 		}
+		
 		
 		/* get lead value */
 		$value = Leads_Field_Map::get_field( $lead_id , $params['id'] );
@@ -270,4 +278,4 @@ class Inbound_Mailer_Tokens {
 function inbound_load_token_engine() {
 	$Inbound_Mailer_Tokens = new Inbound_Mailer_Tokens();
 }
-add_action( 'admin_init' , 'inbound_load_token_engine' ); 
+add_action( 'init' , 'inbound_load_token_engine' , 1 ); 

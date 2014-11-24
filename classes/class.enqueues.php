@@ -74,7 +74,7 @@ class Inbound_Mailer_Enqueues {
 	public static function load_inbound_email_post_type_enqueues( $hook ) {
 		global $post;
 
-		$CTAExtensions = Inbound_Mailer_Load_Extensions();
+		$Templates = Inbound_Mailer_Load_Templates();
 		$screen = get_current_screen();
 
 		if ( ( isset($screen) && $screen->post_type != 'inbound-email' ) ){
@@ -126,7 +126,7 @@ class Inbound_Mailer_Enqueues {
 
 			/* Enqueue supportive js for template switching */
 			wp_enqueue_script('inbound-mailer-js-metaboxes', INBOUND_EMAIL_URLPATH . 'js/admin/admin.metaboxes.js');
-			$template_data = $CTAExtensions->definitions;
+			$template_data = $Templates->definitions;
 			$template_data = json_encode($template_data);
 			$template = get_post_meta($post->ID, 'inbound-mailer-selected-template', true);
 			$template = apply_filters('inbound_email_selected_template',$template);
