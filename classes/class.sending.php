@@ -332,7 +332,7 @@ class Inbound_Mail_Daemon {
 			//		'type' => 'image/png',
 			//		'name' => 'IMAGECID',
 			//		'content' => 'ZXhhbXBsZSBmaWxl'
-			//	)
+			//	) 
 			//)
 		);
 		$async = false;
