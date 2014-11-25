@@ -39,37 +39,44 @@ class Inbound_Mailer_Common_Settings {
 	function add_addressing_settings(){
 	
 
-		self::$instance->settings['email-settings']['inbound_subject'] =  array(
+		self::$instance->settings['email-settings']['subject'] =  array(
 			'label' => __( 'Subject Line' , 'inbound-mailer' ),
 			'description' => __( 'Subject line of the email' , 'inbound-mailer' ) ,
-			'id'  => 'inbound_subject',
+			'id'  => 'subject',
 			'type'  => 'text',
 			'default'  => '',
 			'class' => '',
-			'context'  => 'priority',
-			'global' => true
+			'disable_variants' => false
 		);
 		
-		self::$instance->settings['email-settings']['inbound_from_name'] =  array(
+		self::$instance->settings['email-settings']['from_name'] =  array(
 			'label' => __( 'From Name' , 'inbound-mailer' ),
 			'description' => __( 'The name of the sender.' , 'inbound-mailer' ) ,
-			'id'  => 'inbound_from_name',
+			'id'  => 'from_name',
 			'type'  => 'text',
 			'default'  => '',
 			'class' => '',
-			'context'  => 'priority',
-			'global' => true
+			'disable_variants' => true
 		);
 		
-		self::$instance->settings['email-settings']['inbound_from_email'] =  array(
+		self::$instance->settings['email-settings']['from_email'] =  array(
 			'label' => __( 'From Email' , 'inbound-mailer' ),
 			'description' => __( 'The email address of the sender.' , 'inbound-mailer' ) ,
-			'id'  => 'inbound_from_email',
+			'id'  => 'from_email',
 			'type'  => 'text',
 			'default'  => '',
 			'class' => '',
-			'context'  => 'priority',
-			'global' => true
+			'disable_variants' => true
+		);	
+		
+		self::$instance->settings['email-settings']['reply_email'] =  array(
+			'label' => __( 'Reply Email' , 'inbound-mailer' ),
+			'description' => __( 'The email address recipients can reply to.' , 'inbound-mailer' ) ,
+			'id'  => 'reply_email',
+			'type'  => 'text',
+			'default'  => '',
+			'class' => '',
+			'disable_variants' => true
 		);			
 
 	}
@@ -81,13 +88,13 @@ class Inbound_Mailer_Common_Settings {
 	*/
 	function add_batch_send_settings() {
 		
-		self::$instance->settings['batch-send-settings']['inbound_batch_send_nature'] = array(
-			'id'  => 'inbound_batch_send_nature',
+		self::$instance->settings['batch-send-settings']['batch_send_nature'] = array(
+			'id'  => 'batch_send_nature',
 			'label' => __( 'Queue Setting' , 'inbound-email' ),
 			'description' => __( 'Would you like to schedule this email or send it manually?' , 'inbound-email' ),
 			'type'  => 'dropdown', 
 			'default' => '',
-			'global' => true,
+			'disable_variants' => true,
 			'options' => array( 
 				'ready' => __( 'Manual Send' , 'inbound-mailer' ) ,
 				'schedule' => __( 'Scheduled Send' , 'inbound-mailer' )
@@ -96,26 +103,26 @@ class Inbound_Mailer_Common_Settings {
 		
 		$lead_lists = Inbound_Leads::get_lead_lists_as_array();
 		
-		self::$instance->settings['batch-send-settings']['inbound_recipients'] = array(
-			'id'  => 'inbound_recipients',
+		self::$instance->settings['batch-send-settings']['recipients'] = array(
+			'id'  => 'recipients',
 			'label' => __( 'Select recipients' , 'inbound-email' ),
 			'description' => __( 'This option provides a placeholder for the selected template data.' , 'inbound-email' ),
 			'type'  => 'select2', 
 			'default' => '',
 			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
 			'options' => $lead_lists,
-			'global' => true
+			'disable_variants' => true
 		);
 		
-		self::$instance->settings['batch-send-settings']['inbound_send_datetime'] = array(
-			'id'  => 'inbound_send_datetime',
+		self::$instance->settings['batch-send-settings']['send_datetime'] = array(
+			'id'  => 'send_datetime',
 			'label' => __( 'Send Date/Time' , 'inbound-email' ),
 			'description' => __( 'Select the date and time you would like this message to send.' , 'inbound-email' ),
 			'type'  => 'datepicker', 
 			'default' => '',
 			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
 			'options' => $lead_lists,
-			'global' => true
+			'disable_variants' => true
 		);
 
 

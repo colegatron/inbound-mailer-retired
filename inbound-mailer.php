@@ -115,6 +115,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 			switch (is_admin()) :
 				case true :
 					/* loads admin files */
+					include_once('classes/class.inboundnow.php');
 					include_once('classes/class.activation.php');
 					include_once('classes/class.activation.database-routines.php');					
 					include_once('classes/class.inboundnow.php');
@@ -149,9 +150,9 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 
 				case false :
 					/* load front-end files */
-					include_once('classes/class.options-api.php');
-					include_once('classes/class.postmeta.php');
 					include_once('classes/class.inboundnow.php');
+					include_once('classes/class.options-api.php');
+					include_once('classes/class.postmeta.php');;
 					include_once('classes/class.load.email-templates.php');
 					include_once('classes/class.post-type.inbound-email.php');
 					include_once('classes/class.extension.wp-lead.php');
