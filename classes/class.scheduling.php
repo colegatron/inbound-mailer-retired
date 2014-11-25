@@ -18,7 +18,7 @@ class Inbound_Mailer_Scheduling {
 		$variations = $settings['variations'];
 		$variation_count = count($variations);
 		
-		$recipients = $settings['inbound_recipients']; 
+		$recipients = $settings['recipients']; 
 
 		$params = array( 
 			'include_lists' => $recipients,
@@ -76,7 +76,7 @@ class Inbound_Mailer_Scheduling {
 			$query_prefix .= "VALUES";
 			
 			foreach ($leads as $ID) {
-				$query_values_array[] = "( {$email_id} , {$vid} , {$ID} , '".Inbound_Mailer_Scheduling::$settings['inbound_email_type']."' , 'scheduled' , '{$timestamp}')";
+				$query_values_array[] = "( {$email_id} , {$vid} , {$ID} , '".Inbound_Mailer_Scheduling::$settings['email_type']."' , 'scheduled' , '{$timestamp}')";
 			}
 			
 			$value_batches = array_chunk( $query_values_array , 500);
@@ -105,7 +105,7 @@ class Inbound_Mailer_Scheduling {
 	public static function get_timestamp() {
 		
 		$settings = Inbound_Mailer_Scheduling::$settings;
-		$send_type = $settings['inbound_batch_send_nature'];
+		$send_type = $settings['batch_send_nature'];
 
 		switch( $send_type ) {
 			
@@ -115,7 +115,7 @@ class Inbound_Mailer_Scheduling {
 				$timestamp = gmdate( "Y-m-d\\TG:i:s\\Z", strtotime( $current ) + 1 * 60 );
 				break;
 			case 'schedule':
-				$timestamp = gmdate( "Y-m-d\\TG:i:s\\Z" ,  strtotime($settings['inbound_send_datetime']) );
+				$timestamp = gmdate( "Y-m-d\\TG:i:s\\Z" ,  strtotime($settings['send_datetime']) );
 				break;
 		
 		}

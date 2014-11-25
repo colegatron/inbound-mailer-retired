@@ -864,8 +864,8 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			$setting = Inbound_Email_Meta::get_settings( $post->ID );
 			$vid = Inbound_Mailer_Variations::get_current_variation_id();
 
-			if ( isset( $settings['variations'][$vid]['inbound_email_type'] ) ) {
-				return $settings['variations'][$vid]['inbound_email_type'];
+			if ( isset( $settings['email_type'] ) ) {
+				return $settings['email_type'];
 			} else {
 				return 'batch';
 			}
@@ -945,7 +945,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 			foreach ($custom_fields as $field) {
 
-				$field_id = apply_filters('inbound_email_prepare_input_id', $settings_key . "-" .$field['id'] );
+				$field_id = $field['id'] ;
 
 				$label_class = $field['id'] . "-label";
 				$type_class = " inbound-" . $field['type'];
@@ -963,19 +963,9 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 				}
 
 				// Remove prefixes on global => true template options
-				if ( isset($field['global']) && $field['global']	) {
-					$field_id = $field['id'];
-					$meta =	( isset( $settings[ $field_id ] ) ) ? $settings[ $field_id ] :	$field['default'];
-				}
-
-				/* Set setting value to cloned value if clone command is enabled */
-				if ( isset($_GET['clone']) ) {
-
-					if (isset($field['global']) && $field['global'] === true) {
-						$meta = get_post_meta($post->ID,	$field['id'] . '-'. $_GET['clone'] , true);
-					} else {
-						$meta = get_post_meta($post->ID,	$settings_key . '-' . $field['id'] . '-'. $_GET['clone'] , true);
-					}
+				if ( isset($field['disable_variants']) && $field['disable_variants']	) {
+					$field_id = 'inbound_' . $field['id'];
+					$meta =	( isset( $settings[ $field['id'] ] ) ) ? $settings[ $field['id'] ] :	$field['default'];
 				}
 
 				// begin a table row with
@@ -1810,6 +1800,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			/* save all post vars as meta */
 			foreach ($_POST as $key => $value) {
 				if ( substr( $key , 0 , 8 ) == 'inbound_' ){
+					$key = str_replace( 'inbound_' , '' , $key );
 					$email_settings[ $key ] = $value;
 				} else {
 					if (self::check_whitelist( $key )) {
@@ -1905,4 +1896,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 	$GLOBALS['Inbound_Mailer_Metaboxes'] = new Inbound_Mailer_Metaboxes;
 }
 
-
+//delete_post_meta( 97079 , 'inbound_settings' );
+//$settings = get_post_meta( 97079 , 'inbound_settings' ,true );
+//print_r($settings);exit;
