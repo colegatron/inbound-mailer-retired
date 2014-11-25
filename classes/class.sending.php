@@ -333,7 +333,7 @@ class Inbound_Mail_Daemon {
 			//		'name' => 'IMAGECID',
 			//		'content' => 'ZXhhbXBsZSBmaWxl'
 			//	)
-			)
+			//)
 		);
 		$async = false;
 		$ip_pool = 'Main Pool';
