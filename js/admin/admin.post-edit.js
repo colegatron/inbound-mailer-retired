@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-	
+
 	/* Check to See if cookies are on */
 	var cookies = (typeof (jQuery.cookie) != "undefined" ? true : false); // Check for JQuery Cookie
 	function cookie_notice() {

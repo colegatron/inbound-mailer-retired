@@ -487,3 +487,7 @@ ul#template-filter a.current{
 	background-position: 0.15em 50%;
 	padding-left: 10px;
 }
+
+#ui-datepicker-div {
+	background-color:#fff;
+}

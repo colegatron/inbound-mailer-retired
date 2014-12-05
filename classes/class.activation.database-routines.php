@@ -84,34 +84,30 @@ Warm regards from {{site-name}}";}s:2:"ID";i:97098;s:6:"status";N;}}s:15:"inboun
 	* @migration-type: db modification 
 	* @mirgration: creates wp_inbound_email_queue table
 	*/
-	public static function create_email_queue_table_xx() {
+	public static function create_email_queue_table_aaa() {
 		global $wpdb;
-
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		
 		$table_name = $wpdb->prefix . "inbound_email_queue"; 
 	   
-		$charset_collate = '';
+		$charset_collate = $wpdb->get_charset_collate();
 
-		if ( ! empty( $wpdb->charset ) ) {
-		  $charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
-		}
-
-		if ( ! empty( $wpdb->collate ) ) {
-		  $charset_collate .= " COLLATE {$wpdb->collate}";
-		}
-
+		$sql = "DROP TABLE $table_name";
+		dbDelta( $sql );
+		
 		$sql = "CREATE TABLE $table_name (
 			`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 			`email_id` mediumint(9) NOT NULL,
 			`variation_id` mediumint(9) NOT NULL,
 			`lead_id` mediumint(9) NOT NULL,
+			`token` tinytext NOT NULL,
 			`type` tinytext NOT NULL,
 			`status` tinytext NOT NULL,
-			`datetime` DATETIME NOT NULL
+			`datetime` DATETIME NOT NULL,
 			UNIQUE KEY id (id)
 		) $charset_collate;";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		
 		dbDelta( $sql );
-
 	}
 }

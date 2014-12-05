@@ -1,6 +1,6 @@
 <?php
 
-if ( !class_exists('Inbound_Mandrill') ) {
+if ( !class_exists('Mandrill') ) {
 
 	require_once 'Mandrill/Templates.php';
 	require_once 'Mandrill/Exports.php';
@@ -19,7 +19,7 @@ if ( !class_exists('Inbound_Mandrill') ) {
 	require_once 'Mandrill/Metadata.php';
 	require_once 'Mandrill/Exceptions.php';
 
-	class Inbound_Mandrill {
+	class Mandrill {
 		
 		public $apikey;
 		public $ch;
@@ -59,7 +59,7 @@ if ( !class_exists('Inbound_Mandrill') ) {
 		);
 
 		public function __construct($apikey=null) {
-			if(!$apikey) $apikey = getenv('MANDRILL_APIKEY');
+			if(!$apikey) $apikey = MANDRILL_APIKEY;
 			if(!$apikey) $apikey = $this->readConfigs();
 			if(!$apikey) throw new Mandrill_Error('You must provide a Mandrill API key');
 			$this->apikey = $apikey;
@@ -72,6 +72,8 @@ if ( !class_exists('Inbound_Mandrill') ) {
 			curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($this->ch, CURLOPT_TIMEOUT, 600);
+			curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 			$this->root = rtrim($this->root, '/') . '/';
 

@@ -252,12 +252,11 @@ class Inbound_Mailer_Tokens {
 		} else if ( isset($_COOKIE['wp_lead_id']) ) {
 			$lead_id = $_COOKIE['wp_lead_id'];
 		} 
-
+		
 		/* return default if no lead id discovered */
 		if (!$lead_id) {
 			return $params['default'];
 		}
-		
 		
 		/* get lead value */
 		$value = Leads_Field_Map::get_field( $lead_id , $params['id'] );

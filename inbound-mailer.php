@@ -93,7 +93,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 		private static function define_constants() {
 			
 			/* this is for testing - the real api key will be served by inboundnow */
-			define('MANDRILL_APIKEY', 'A3QGwjtrBOR6cRrdxoG3AQ' );
+			define('MANDRILL_APIKEY', 'pQrhb6UM1EFJ2sB_ikLVXA' );
 			
 			
 			define('INBOUND_EMAIL_CURRENT_VERSION', '2.2.1' );

@@ -105,7 +105,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function load_statistics() {
 			global $post;
 
-			$stats = Inbound_Email_Stats::get_email_stats( $post->ID , true );
+			$stats = Inbound_Email_Stats::get_email_stats( );
 
 			self::$statistics = $stats;
 			self::$campaign_stats = $stats['totals'];
@@ -115,7 +115,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		/**
 		*	Load Statistics
 		*/
-		public static function load_graphs() {
+		public static function load_graphs_JS() {
 			global $post;
 
 			$stats_json = json_encode( (object) self::$statistics );
@@ -132,15 +132,15 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 					var App = {
 						init: function ( json ) {
 							this.stats = JSON.parse(json);
+							
 							console.log( 'Statistics Loaded!');
 							console.log(this.stats);
-							/* Only load bar chart if sends recorded */
-
-
-								console.log( 'Variation Stats:' );
-								console.log( this.stats );
-								Email_Graphs.load_bar_graph();
-								Email_Graphs.load_circle_graphs();
+							console.log( 'Variation Stats:' );
+							console.log( this.stats.variations );
+							
+							Email_Graphs.load_bar_graph();
+							Email_Graphs.load_totals();
+							Email_Graphs.load_circle_graphs();
 
 
 						},
@@ -206,34 +206,41 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 								chart.update();
 							});
 						},
+
 						/**
 						*	Runs graph setup and executes
 						*/
 						load_circle_graphs: function() {
-							Email_Graphs.populate_circle_graphs();
 							Email_Graphs.setup_circle_graphs();
 						},
 						/***
 						*	Populates Circle Graphs with data
 						*/
-						populate_circle_graphs: function() {
+						load_totals: function() {
 
 							/* Set totals */
-							if ( this.stats.totals.sends > 0 ) {
-								jQuery('#sends-percentage').text( '100%' );
+							if ( this.stats.totals.sent > 0 ) {
+								jQuery('.sent-percentage').text( '100%' );
 							} else {
-								jQuery('#sends-percentage').text( '0%' );
+								jQuery('.sent-percentage').text( '0%' );
 							}
 
-							jQuery('#opens-percentage').text( this.get_percentage( this.stats.totals.opens , this.stats.totals.sends ) + '%' );
-							jQuery('#clicks-percentage').text( this.get_percentage( this.stats.totals.clicks , this.stats.totals.sends ) + '%' )
-							jQuery('#unopened-percentage').text( this.get_percentage( this.stats.totals.unopened , this.stats.totals.sends ) + '%' )
+							/* set percentages */
+							jQuery('.opens-percentage').text( this.get_percentage( this.stats.totals.opens , this.stats.totals.sent ) + '%' );
+							jQuery('.clicks-percentage').text( this.get_percentage( this.stats.totals.clicks , this.stats.totals.sent ) + '%' )
+							jQuery('.unopened-percentage').text( this.get_percentage( this.stats.totals.unopened , this.stats.totals.sent ) + '%' )
+							jQuery('.bounces-percentage').text( this.get_percentage( this.stats.totals.bounces , this.stats.totals.sent ) + '%' )
+							jQuery('.rejects-percentage').text( this.get_percentage( this.stats.totals.rejects , this.stats.totals.sent ) + '%' )
+							jQuery('.unsubs-percentage').text( this.get_percentage( this.stats.totals.unsubs , this.stats.totals.sent ) + '%' )
 
 							/* Set totals */
-							jQuery('#sends-label-bottom').text(this.stats.totals.sends);
-							jQuery('#opens-label-bottom').text(this.stats.totals.opens);
-							jQuery('#clicks-label-bottom').text(this.stats.totals.clicks);
-							jQuery('#unopened-label-bottom').text(this.stats.totals.unopened);
+							jQuery('.sent-number').text(this.stats.totals.sent);
+							jQuery('.opens-number').text(this.stats.totals.opens);
+							jQuery('.clicks-number').text(this.stats.totals.clicks);
+							jQuery('.unopened-number').text(this.stats.totals.unopened);
+							jQuery('.bounces-number').text(this.stats.totals.bouces);
+							jQuery('.rejects-number').text(this.stats.totals.rejects);
+							jQuery('.unsubs-number').text(this.stats.totals.unsubs);
 
 						},
 						/**
@@ -530,9 +537,10 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 			self::load_statistics();
 			self::add_chart_bars();
-			self::add_chart_totals();
-			self::load_graphs();
-			/* self::add_numbers_graph(); */
+			//self::add_chart_totals();
+			self::add_numbers_totals(); 
+			self::load_graphs_JS();
+			
 			echo '</div>';
 		}
 
@@ -574,69 +582,119 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 			<div class='circle-stats stat-row'>
 				<div class="stat-group-container">
 					<div class="stat-group">
-						<div class="label-top" id='sends-label-top'><?php _e( 'Sends' , 'inbound-mailer' ); ?></div>
-						<div class="per" id ='sends-percentage'>0%</div>
+						<div class="label-top" id='sent-label-top'><?php _e( 'Sends' , 'inbound-mailer' ); ?></div>
+						<div class="per sent-percentage">0%</div>
 						<svg class="svg"></svg>
-						<div class="label-bottom" id='sends-label-bottom'>0</div>
+						<div class="label-bottom sent-number">0</div>
 					</div>
 				</div>
 				<div class="stat-group-container">
 					<div class="stat-group">
-						<div class="label-top" id='opens-label-top'><?php _e( 'Opens' , 'inbound-mailer' ); ?></div>
-						<div class="per" id='opens-percentage'>0%</div>
+						<div class="label-top opens-label-top"><?php _e( 'Opens' , 'inbound-mailer' ); ?></div>
+						<div class="per opens-percentage">0%</div>
 						<svg class="svg"></svg>
-						<div class="label-bottom" id='opens-label-bottom'>0</div>
+						<div class="label-bottom opens-number">0</div>
 					</div>
 				</div>
 				<div class="stat-group-container featured">
 					<div class="stat-group">
-						<div class="label-top" id='clicks-label-top'><?php _e( 'Clicks' , 'inbound-mailer' ); ?></div>
-						<div class="per" id='clicks-percentage'>0%</div>
+						<div class="label-top clicks-label-top"><?php _e( 'Clicks' , 'inbound-mailer' ); ?></div>
+						<div class="per clicks-percentage">0%</div>
 						<svg class="svg"></svg>
-						<div class="label-bottom" id='clicks-label-bottom'>0</div>
+						<div class="label-bottom clicks-number">0</div>
 					</div>
 				</div>
 				<div class="stat-group-container">
 					<div class="stat-group">
-						<div class="label-top" id='unopened-label-top'>Unopened</div>
-						<div class="per" id='unopened-percentage'>0%</div>
+						<div class="label-top unopened-label-top"><?php _e( 'Unopened' , 'inbound-mailer' ); ?></div>
+						<div class="per unopened-percentage">0%</div>
 						<svg class="svg"></svg>
-						<div class="label-bottom" id="unopened-label-bottom">0</div>
+						<div class="label-bottom unopened-number">0</div>
+					</div>
+				</div>
+				<div class="stat-group-container">
+					<div class="stat-group">
+						<div class="label-top bounces-label-top"><?php _e( 'Bounces' , 'inbound-mailer' ); ?></div>
+						<div class="per bounces-percentage">0%</div>
+						<svg class="svg"></svg>
+						<div class="label-bottom bounces-number">0</div>
+					</div>
+				</div>
+				<div class="stat-group-container">
+					<div class="stat-group">
+						<div class="label-top rejects-label-top"><?php _e( 'Rejects' , 'inbound-mailer' ); ?></div>
+						<div class="per rejects-percentage">0%</div>
+						<svg class="svg"></svg>
+						<div class="label-bottom rejects-number">0</div>
+					</div>
+				</div>
+				<div class="stat-group-container">
+					<div class="stat-group">
+						<div class="label-top unsubs-label-top"><?php _e( 'Unsubscribed' , 'inbound-mailer' ); ?></div>
+						<div class="per unsubs-percentage">0%</div>
+						<svg class="svg"></svg>
+						<div class="label-bottom unsubs-number">0</div>
 					</div>
 				</div>
 			</div>
 			<?php
 		}
 
-		public static function add_numbers_graph() {
+		public static function add_numbers_totals() {
 			?>
+			<style>
+			.stat-number {
+				font-weight:600;
+			}
+			</style>
 			<div class='big-number-stats'>
 				<div class="statistic-container">
 					<div class="stat-number-container">
-						<label class="stat-number-top-label">Total Sent</label>
-						<h1 class="stat-number">100%</h1>
-						<label class="stat-number-bottom-label">1800</label>
+						<label class="stat-label sent-label" ><?php _e('Sent' , 'inbound-mailer'); ?></label>
+						<div class="stat-number sent-number">0</div>
+						<h1 class="stat-percentage sent-percentage">0%</h1>
 					</div>
 				</div>
 				<div class="statistic-container">
 					<div class="stat-number-container">
-						<label class="stat-number-top-label">Total Opens</label>
-						<h1 class="stat-number">65%</h1>
-						<label class="stat-number-bottom-label">1172</label>
+						<label class="stat-label opens-label"><?php _e('Opens' , 'inbound-mailer'); ?></label>
+						<div class="stat-number opens-number">0</div>
+						<h1 class="stat-percentage opens-percentage">0%</h1>
 					</div>
 				</div>
 				<div class="statistic-container feature">
 					<div class="stat-number-container">
-						<label class="stat-number-top-label">Total Clicks</label>
-						<h1 class="stat-number">7.1%</h1>
-						<label class="stat-number-bottom-label">129</label>
+						<label class="stat-label clicks-label"><?php _e('Clicks' , 'inbound-mailer'); ?></label>
+						<div class="stat-number clicks-number">0</div>
+						<h1 class="stat-percentage">0%</h1>
 					</div>
 				</div>
 				<div class="statistic-container">
 					<div class="stat-number-container">
-						<label class="stat-number-top-label">Total Unopened</label>
-						<h1 class="stat-number">34%</h1>
-						<label class="stat-number-bottom-label">628</label>
+						<label class="stat-label unopened-label"><?php _e('Unopened' , 'inbound-mailer'); ?></label>
+						<div class="stat-number unopened-number">0</div>
+						<h1 class="stat-percentage unopened-percentage">0%</h1>
+					</div>
+				</div>
+				<div class="statistic-container">
+					<div class="stat-number-container">
+						<label class="stat-label bounces-label"><?php _e('Bounces' , 'inbound-mailer'); ?></label>
+						<div class="stat-number rejects-number">0</div>
+						<h1 class="stat-percentage bounces-percentage">0%</h1>
+					</div>
+				</div>
+				<div class="statistic-container">
+					<div class="stat-number-container">
+						<label class="stat-label rejects-label"><?php _e('Rejects' , 'inbound-mailer'); ?></label>
+						<div class="stat-number rejects-number">0</div>
+						<h1 class="stat-percentage rejects-percentage">0%</h1>
+					</div>
+				</div>
+				<div class="statistic-container">
+					<div class="stat-number-container">
+						<label class="stat-label unsubs-label"><?php _e('Unsubscribes' , 'inbound-mailer'); ?></label>	
+						<div class="stat-number unsubs-number">0</div>
+						<h1 class="stat-percentage unsubs-percentage">0%</h1>
 					</div>
 				</div>
 			</div>
@@ -990,13 +1048,27 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 										<div class="inbound_email_tooltip tool_color" title="'.$field['description'].'"></div>';
 								break;
 							case 'datepicker':
-								echo '<div class="jquery-date-picker inbound-datepicker" id="date-picking" data-field-type="text">
-								<span class="datepair" data-language="javascript">
-										<input type="text" id="date-picker-'.$settings_key.'" class="date start form-control" placeholder="' . __('Select Date','inbound-mailer') . '"/></span>
-										<input id="time-picker-'.$settings_key.'" type="text" class="time time-picker form-control" placeholder =" ' . __( 'Select Time' , 'inbound-mailer' ) . '" />
-										<input type="hidden" name="'.$field_id.'" id="'.$field_id.'" value="'.$meta.'" class="new-date" value="" >
-
-									</div>';
+								$timezones = Inbound_Mailer_Scheduling::get_timezones();
+								
+								$tz =( isset( $settings['timezone'] ) ) ?  $settings['timezone'] : $field['default_timezone_abbr'];
+	
+								echo 	'<div class="jquery-date-picker inbound-datepicker" id="date-picking" data-field-type="text">
+											<span class="datepair" data-language="javascript">
+												<input type="text" id="date-picker-'.$settings_key.'" class="date start form-control" placeholder="' . __('Select Date','inbound-mailer') . '"/></span>
+												<input id="time-picker-'.$settings_key.'" type="text" class="time time-picker form-control" placeholder =" ' . __( 'Select Time' , 'inbound-mailer' ) . '" />
+												<input type="hidden" name="'.$field_id.'" id="'.$field_id.'" value="'.$meta.'" class="new-date" value="" >
+										';
+								echo 	'</div>';
+								echo	'<select name="inbound_timezone" id="" class="form-control" >';
+								
+								foreach ( $timezones as $key => $timezone ) {
+									$tz_value = $timezone['abbr'].'-'.$timezone['utc'];
+									$selected = ( $tz == $tz_value ) ? 'selected="true"' : '' ;
+										
+									echo '<option value="'.$tz_value.'" '.$selected.'> ('. $timezone['utc'] .') '. $timezone['name'] .'</option>';
+								}
+								echo 	'</select>';
+								
 								break;
 							case 'text':
 								echo '<input type="text" class="'.$option_class.' form-control" name="'.$field_id.'" id="'.$field_id.'" value="'.$meta.'" size="30" />
@@ -1111,7 +1183,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 				return;
 			}
 
-			wp_enqueue_style('inbound-mailer-ab-testing-admin-css', INBOUND_EMAIL_URLPATH . 'css/admin-ab-testing.css');
 			wp_enqueue_script('jquery-ui-core');
 
 			/* load BootStrap */
@@ -1169,14 +1240,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 				/* Initialize CPT UI default changes */
 				Settings.init();
-
-				/* Add listener to hide datepicker */
-				jQuery('#inbound_batch_send_nature').on('change' , function() {
-					Settings.load_batch_send_nature();
-				});
-
-				/* Fire datepicker toggle on load */
-				Settings.load_batch_send_nature();
 
 				/* Add listener to prompt sweet alert on schedule */
 				jQuery('#action-schedule').on('click', function(e) {
@@ -1320,6 +1383,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 							default: /* unsent */						
 								jQuery('#action-preview').show();
 								Settings.hide_graphs();
+								Settings.show_send_buttons();
 								Settings.show_header_settings();
 								Settings.show_email_send_settings();
 								Settings.show_quick_lauch_buttons();
@@ -1445,25 +1509,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
 						}, 1000);
 					},
-					/**
-					*	Changes UI based on batch send type
-					*/
-					load_batch_send_nature: function() {
-						var batch_send_type = jQuery('#inbound_batch_send_nature option:selected').val();
-
-						jQuery('.send-action').hide();
-
-						switch (batch_send_type) {
-							case 'schedule':
-								jQuery('.inbound-datepicker-row').show();
-								jQuery('#action-schedule').show();
-								break;
-							default:
-								jQuery('.inbound-datepicker-row').hide();
-								jQuery('#action-send').show();
-								break;
-						}
-					},
 					load_email_type: function() {
 						var send_nature = jQuery('#email_type option:selected').val();
 						jQuery('.send-settings').hide();
@@ -1476,7 +1521,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 								jQuery('#email-status-display').text('<?php _e('Automated' , 'inbound-mailer'); ?>');
 								break;
 							default:
-								Settings.load_batch_send_nature();
 								jQuery('.batch-send-settings-container').show();
 								break;
 						}
@@ -1505,7 +1549,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 						return true;
 					},
 					validate_headers: function() {
-						if ( !jQuery('#inbound_subject').val() ) {
+						if ( !jQuery('#subject').val() ) {
 							swal("<?php _e('Email requires subject to send.' , 'inbound-mailer'); ?>");
 							return false;
 						}
@@ -1538,27 +1582,11 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 					*/
 					validate_schedule_date: function () {
 
-						/* Check if scheduling if not validate true */
-						if ( jQuery('#inbound_batch_send_nature').val() != 'schedule' ) {
-							return true;
-						}
-
-
 						/* check if date is set into future and throw warning if not */
 						var selectedDate = jQuery('#inbound_send_datetime').val();
 
-						/* build a date string for current datetime */
-						var date = new Date();
-						var y = date.getFullYear();
-						var mo = date.getMonth() + 1;
-						var d = date.getDate();
-						var h = date.getHours();
-						var mi = date.getMinutes();
-						var current = y + '-' + mo + '-' + d + ' ' + h + ':' + mi;
-
-						/* compare dates and return fase if selected date is located in past */
-						if ( new Date(selectedDate) < new Date(current) ) {
-							swal("<?php _e('Please select a date/time in the future.' , 'inbound-mailer'); ?>");
+						if ( !selectedDate ) {
+							swal("<?php _e('Please select a date/time.' , 'inbound-mailer'); ?>");
 							return false;
 						} else {
 							return true;

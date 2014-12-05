@@ -87,20 +87,7 @@ class Inbound_Mailer_Common_Settings {
 	* adds batch send settings
 	*/
 	function add_batch_send_settings() {
-		
-		self::$instance->settings['batch-send-settings']['batch_send_nature'] = array(
-			'id'  => 'batch_send_nature',
-			'label' => __( 'Queue Setting' , 'inbound-email' ),
-			'description' => __( 'Would you like to schedule this email or send it manually?' , 'inbound-email' ),
-			'type'  => 'dropdown', 
-			'default' => '',
-			'disable_variants' => true,
-			'options' => array( 
-				'ready' => __( 'Manual Send' , 'inbound-mailer' ) ,
-				'schedule' => __( 'Scheduled Send' , 'inbound-mailer' )
-			)
-		);
-		
+
 		$lead_lists = Inbound_Leads::get_lead_lists_as_array();
 		
 		self::$instance->settings['batch-send-settings']['recipients'] = array(
@@ -113,13 +100,16 @@ class Inbound_Mailer_Common_Settings {
 			'options' => $lead_lists,
 			'disable_variants' => true
 		);
-		
+
+		$tz = Inbound_Mailer_Scheduling::get_current_timezone();
+
 		self::$instance->settings['batch-send-settings']['send_datetime'] = array(
 			'id'  => 'send_datetime',
 			'label' => __( 'Send Date/Time' , 'inbound-email' ),
 			'description' => __( 'Select the date and time you would like this message to send.' , 'inbound-email' ),
 			'type'  => 'datepicker', 
 			'default' => '',
+			'default_timezone_abbr' =>  $tz['abbr'] . '-UTC' . $tz['offset'] ,
 			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
 			'options' => $lead_lists,
 			'disable_variants' => true
