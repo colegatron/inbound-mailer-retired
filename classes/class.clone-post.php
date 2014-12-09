@@ -140,7 +140,10 @@ class Inbound_Mailer_Clone_Post {
 		$new_post_id = wp_insert_post($new_post);
 
 		$meta_data = get_post_meta($post->ID);
-
+		
+		/* destroy any past statistics */
+		unset($meta_data['inbound_statistics']);
+		
 		foreach ($meta_data as $key=>$value) {
 			if ($key=='inbound_settings') {
 				$value[0] = unserialize( $value[0] );

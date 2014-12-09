@@ -39,7 +39,7 @@ class Inbound_Mail_Daemon {
 		global $wpdb;
 
 		/* Set send limit */
-		self::$send_limit = 120;
+		self::$send_limit = 200;
 
 		/* Set target mysql table name */
 		self::$table_name = $wpdb->prefix . "inbound_email_queue";
@@ -223,9 +223,11 @@ class Inbound_Mail_Daemon {
 			$send_count++;
 		}
 		
-		/* mark batch email as sent */
-		self::mark_email_sent();
-		
+		/* mark batch email as sent if no more emails with this email id exists */
+		$user_count = $wpdb->get_var( "SELECT COUNT(*) FROM ". self::$table_name ." where email_id = '". self::$row->email_id ."'");
+		if ($count<1) {
+			self::mark_email_sent();
+		}
 	}
 	
 	/**

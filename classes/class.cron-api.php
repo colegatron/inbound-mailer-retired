@@ -38,7 +38,7 @@ class Inbound_Heartbeat {
 		/* Adds 'Every Two Minutes' to System Cron */
 		add_filter( 'cron_schedules', array( __CLASS__ , 'add_ping_interval' ) );
 		
-		wp_schedule_event( time(), '3min', 'inbound_heartbeat' );
+		wp_schedule_event( time(), '2min', 'inbound_heartbeat' );
 		add_option( 'inbound_automation_queue' , null , null , 'no' );
 	}	
 	
@@ -55,7 +55,7 @@ class Inbound_Heartbeat {
 	*/
 	public static function add_ping_interval( $schedules ) {
 		$schedules['3min'] = array(
-			'interval' => 60 * 3,
+			'interval' => 60 * 2,
 			'display' => __( 'Every Three Minutes' , 'inbound-mailer' )
 		);
 		
