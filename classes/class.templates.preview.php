@@ -40,6 +40,7 @@ class Inbound_Email_Preview {
 			return;
 		}
 
+		
 		if (file_exists(INBOUND_EMAIL_PATH.'templates/'.$template.'/index.php')) {
 			return INBOUND_EMAIL_PATH . 'templates/' . $template . '/index.php';
 		} else {

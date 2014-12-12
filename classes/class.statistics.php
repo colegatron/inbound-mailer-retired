@@ -191,6 +191,9 @@ class Inbound_Email_Stats {
 
 			/* add label */
 			self::$stats[ 'variations' ][ $vid ][ 'label' ] =	Inbound_Mailer_Variations::vid_to_letter( self::$email_id , $vid );
+			
+			/* add subject line */
+			self::$stats[ 'variations' ][ $vid ][ 'subject' ] = self::$settings['variations'][ $vid ][ 'subject' ];
 
 		}
 

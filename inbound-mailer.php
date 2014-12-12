@@ -2,7 +2,7 @@
 /*
 Plugin Name: Inbound Mailer
 Plugin URI: http://www.inboundnow.com/
-Description: Email marketing component developed for Inbound Now tools. 
+Description: Email marketing component developed for Inbound Now tools.
 Version: 1.0.1
 Author: Inbound Now
 Author URI: http://www.inboundnow.com/
@@ -10,7 +10,7 @@ Text Domain: inbound-email
 Domain Path: lang
 */
 
-if ( !class_exists('Inbound_Mailer_Plugin')  ) {
+if ( !class_exists('Inbound_Mailer_Plugin')	) {
 
 	final class Inbound_Mailer_Plugin {
 
@@ -70,7 +70,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 		 */
 		public static function admin_notices() {
 			foreach ( self::$notices as $notice ) {
-				$class_name   = empty( $notice['is_error'] ) ? 'updated' : 'error';
+				$class_name	= empty( $notice['is_error'] ) ? 'updated' : 'error';
 				$html_message = sprintf( '<div class="%s">%s</div>', esc_attr( $class_name ), wpautop( $notice['message'] ) );
 				echo wp_kses_post( $html_message );
 			}
@@ -91,11 +91,11 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 		*
 		*/
 		private static function define_constants() {
-			
+
 			/* this is for testing - the real api key will be served by inboundnow */
 			define('MANDRILL_APIKEY', 'pQrhb6UM1EFJ2sB_ikLVXA' );
-			
-			
+
+
 			define('INBOUND_EMAIL_CURRENT_VERSION', '2.2.1' );
 			define('INBOUND_EMAIL_URLPATH', WP_PLUGIN_URL.'/'.plugin_basename( dirname(__FILE__) ).'/' );
 			define('INBOUND_EMAIL_PATH', WP_PLUGIN_DIR.'/'.plugin_basename( dirname(__FILE__) ).'/' );
@@ -117,9 +117,9 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					/* loads admin files */
 					include_once('classes/class.inboundnow.php');
 					include_once('classes/class.activation.php');
-					include_once('classes/class.activation.database-routines.php');					
+					include_once('classes/class.activation.database-routines.php');
 					include_once('classes/class.inboundnow.php');
-					include_once('classes/class.options-api.php');					
+					include_once('classes/class.options-api.php');
 					include_once('classes/class.postmeta.php');
 					include_once('classes/class.post-type.inbound-email.php');
 					include_once('classes/class.extension.wp-lead.php');
@@ -142,9 +142,10 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.tracking.php');
 					include_once('classes/class.statistics.php');
 					include_once('classes/class.scheduling.php');
-					include_once('classes/class.cron-api.php');					
+					include_once('classes/class.cron-api.php');
 					include_once('classes/class.sending.php');
 					include_once('classes/class.mandrill.php');
+					include_once('classes/class.unsubscribe.php');
 
 					BREAK;
 
@@ -159,13 +160,13 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 					include_once('classes/class.extension.wordpress-seo.php');
 					include_once('classes/class.enqueues.php');
 					include_once('classes/class.tracking.php');
-					include_once('classes/class.ajax.listeners.php');	
+					include_once('classes/class.ajax.listeners.php');
 					include_once('classes/class.variations.php');
-					include_once('classes/class.templates.preview.php');					
-					include_once('classes/class.unsubscribe.php');					
+					include_once('classes/class.templates.preview.php');
+					include_once('classes/class.unsubscribe.php');
 					include_once('classes/class.acf-integration.php');
 					include_once('modules/module.utils.php');
-					include_once('classes/class.customizer.php');					
+					include_once('classes/class.customizer.php');
 					include_once('classes/class.token-engine.php');
 					include_once('classes/class.cron-api.php');
 					include_once('classes/class.sending.php');
@@ -176,7 +177,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')  ) {
 		}
 
 		/**
-		*  Loads the correct .mo file for this plugin
+		*	Loads the correct .mo file for this plugin
 		*
 		*/
 		private static function load_text_domain_init() {

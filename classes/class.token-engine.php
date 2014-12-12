@@ -38,6 +38,9 @@ class Inbound_Mailer_Tokens {
 		
 		/* Add shortcode handler */
 		add_shortcode( 'lead-field', array( __CLASS__, 'process_lead_field_shortcode' ) );
+		
+		/* Add shortcode handler */
+		add_shortcode( 'unsubscribe-link', array( __CLASS__, 'process_unsubscribe_link' ) );
 
 	}
 
@@ -241,8 +244,6 @@ class Inbound_Mailer_Tokens {
 		$lead_id = null;
 		
 		$params = shortcode_atts( array( 'default' => '' , 'id' => '' , 'lead_id' => null ), $params );
-		
-		$fields = Leads_Field_Map::build_map_array();
 
 		/* check to see if lead id is set as a REQUEST */
 		if ( isset($params['lead_id']) ) {
@@ -267,7 +268,31 @@ class Inbound_Mailer_Tokens {
 		} else {
 			return $params['default'];
 		} 
+	}
+	
+	/**
+	*  Process unsubscribe link
+	*/
+	public static function process_unsubscribe_link( $params ) {
+
+		$params = shortcode_atts( array( 
+			'lead_id' => null,
+			'list_ids' => '-1',
+		), $params );
+
+		/* check to see if lead id is set as a REQUEST */
+		if ( isset($params['lead_id']) ) {
+			$params['lead_id'] = $params['lead_id'];
+		} else if ( isset($_REQUEST['lead_id']) ) {
+			$params['lead_id'] = $_REQUEST['lead_id'];
+		} else if ( isset($_COOKIE['wp_lead_id']) ) {
+			$params['lead_id'] = $_COOKIE['wp_lead_id'];
+		} 
 		
+		/* generate unsubscribe link */
+		$unsubscribe_link =  Inbound_Mailer_Unsubscribe::generate_unsubscribe_link( $params['lead_id'] , $params['list_ids'] );
+
+		return $unsubscribe_link;
 	}
 }
 

@@ -31,6 +31,9 @@ class Inbound_Mailer_Ajax_Listeners {
 		
 		/* Adds listener for email variation send statistics */
 		add_action( 'wp_ajax_inbound_load_email_stats' , array( __CLASS__ , 'get_email_statistics' ) );
+		
+		/* Adds listener to send test email */
+		add_action( 'wp_ajax_inbound_send_test_email' , array( __CLASS__ , 'send_test_email' ) );
 	}
 	
 	/**
@@ -120,7 +123,18 @@ class Inbound_Mailer_Ajax_Listeners {
 		exit;
 	}
 
+	/**
+	*  Sends test email
+	*/
+	public static function send_test_email() {
+		$mailer = new Inbound_Mail_Daemon();
+		//error_log( print_r($_REQUEST , true));
 		
+		$mailer->send_test_email( $_REQUEST['email_address'] , $_REQUEST['email_id'] , $_REQUEST['variation_id'] ); 
+		
+		header('HTTP/1.1 200 OK');
+		exit;
+	}
 }
 
 /* Loads Inbound_Mailer_Ajax_Listeners pre init */

@@ -16,8 +16,6 @@ class Inbound_Mail_Daemon {
 	static $email; /* arg array of email being processed */
 	static $results; /* results from sql query */
 	static $response; /* return result after send */
-	
-
 
 	/**
 	*	Initialize class
@@ -103,8 +101,9 @@ class Inbound_Mail_Daemon {
 	*  Rebuild links with tracking params
 	*/
 	public static function rebuild_links( $html ) {
-		
+
 		@self::$dom->loadHTML($html);
+		
 		$links = self::$dom->getElementsByTagName('a');
 
 		//Iterate over the extracted links and display their URLs
@@ -164,7 +163,7 @@ class Inbound_Mail_Daemon {
 
 			self::get_email();
 
-			self::$response = self::send_email( 'mandrill' );
+			self::$response = self::send_mandrill_email( 'mandrill' );
 
 		}
 	}
@@ -216,7 +215,7 @@ class Inbound_Mail_Daemon {
 
 			self::get_email();
 
-			self::send_email();
+			self::send_mandrill_email();
 			
 			self::update_email_status();
 			
@@ -231,32 +230,45 @@ class Inbound_Mail_Daemon {
 	}
 	
 	/**
-	*	Sends email
-	*	@param STRING $mode toggles a wp_mail send or a mandrill send
+	*	Sends scheduled batch emails
 	*/
-	public static function send_email( $mode = 'mandrill' ) {
-
-		switch ( $mode ) {
-
-			case 'wp_mail':
-				self::$response = self::send_wp_email( );
-				break;
-			case 'mandrill':
-				self::$response = self::send_mandrill_email();
-				break;
-
-		}
-
-	}
-
-	/**
-	*	Sends email using wp_mail()
-	*/
-	public static function send_wp_email( ) {
+	public static function send_test_email( $email_address , $email_id , $vid  ) {
+		global $wpdb;
 		
-		$headers = 'From: '. self::$email['from_name'] .' <'.self::$email['from_email'].'>' . "\r\n";
-		self::$response = wp_mail( self::$email['send_address'] , self::$email['subject'] , self::$email['body'] , $headers	);
-
+		if ( !$email_id || !$email_address ) {
+			return;
+		}
+		
+		/* setup test tags */
+		self::$tags = array();
+		self::$tags[ $email_id ] = array('test');
+		
+		/* setup email send params */
+		self::$row = new stdClass();
+		self::$row->email_id = $email_id;
+		self::$row->variation_id = $vid;
+		self::$row->lead_id = 'test';
+		self::$row->datetime = gmdate( 'Y-m-d h:i:s \G\M\T');
+		
+		/* load extras */
+		self::$email_settings = Inbound_Email_Meta::get_settings( self::$row->email_id );
+		self::get_templates();
+		self::toggle_dom_parser();
+		
+		/* build email */
+		self::$email['send_address'] = $email_address;
+		self::$email['subject'] = self::get_variation_subject();
+		self::$email['from_name'] = self::$email_settings['from_name'];
+		self::$email['from_email'] = self::$email_settings['from_email'];
+		self::$email['email_title'] = get_the_title( self::$row->email_id );
+		self::$email['reply_email'] = self::$email_settings['reply_email'];
+		self::$email['body'] = self::get_email_body();
+		
+		/* send email */
+		self::send_mandrill_email();
+	
+		/* output response */
+		print_r(self::$response);
 	}
 
 	/**
@@ -440,19 +452,24 @@ class Inbound_Mail_Daemon {
 	*  Generates targeted email body html
 	*/
 	public static function get_email_body() {
-		
+
 		$html = self::$templates[ self::$row->email_id ][ self::$row->variation_id ];
-		
+
 		/* add lead id to all shortcodes before processing */
 		$html = str_replace('[lead-field ' , '[lead-field lead_id="'. self::$row->lead_id .'" ' , $html );
+		
+		/* add lead id & list ids to unsubscribe shortcode */
+		$html = str_replace('[unsubscribe-link]' , '[unsubscribe-link lead_id="'. self::$row->lead_id .'" list_ids="'.implode( ',' , self::$email_settings['recipients'] ) .'"]' , $html );
+		
+		/* clean mal formatted quotations */
 		$html = str_replace('&#8221;', '"' , $html);
 		
 		/* process shortcodes */
 		$html = do_shortcode( $html );
-		
+
 		/* add tracking params to links */
 		$html = self::rebuild_links( $html );
-		
+
 		return $html;
 	
 	}

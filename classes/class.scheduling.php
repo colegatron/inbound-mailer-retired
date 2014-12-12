@@ -42,6 +42,7 @@ class Inbound_Mailer_Scheduling {
 			$i++;
 		}
 
+
 		return $batch_array;
 
 	}

@@ -47,7 +47,9 @@ class Inbound_Mailer_Unsubscribe {
 		/* loop through lists and show unsubscribe inputs */
 		if ( isset($unsubscribe['list_ids']) ) {
 			foreach ($unsubscribe['list_ids'] as $list_id ) {
-				
+				if ($list_id == '-1') {
+					continue;
+				}	
 				$html .= "<input type='checkbox' name='list_id[]' value='".$list_id."'> " . $lead_lists[ $list_id ];
 				
 			}
@@ -62,15 +64,20 @@ class Inbound_Mailer_Unsubscribe {
 	/**
 	*  Generates unsubscribe link given lead id and lists
 	*  @param INT $lead_id ID of lead
-	*  @param ARRAY $list_ids array of list ids
+	*  @param MIXED $list_ids array of list ids or commas delimited list of list ids
 	*  @return STRING $unsubscribe_link
 	*/
-	public static function generate_unsubscribe_link( $lead_id , $list_ids ) {
+	public static function generate_unsubscribe_link( $lead_id = '-1' , $list_ids = '-1' ) {
+		
+		if (!is_array($list_ids)) {
+			$list_ids = explode( ',' , $list_ids);
+		}
 		
 		$token = Inbound_Mailer_Unsubscribe::encode_unsubscribe_token( $lead_id , $list_ids );
-		$base_url = Inbound_Options_API::get_option( 'inbound-email' , 'unsubscribe-page' , null);
+		$unsubscribe_page_id = Inbound_Options_API::get_option( 'inbound-email' , 'unsubscribe-page' , null);
+		$base_url = get_permalink( $unsubscribe_page_id );
 		
-		return $base_url . '?token=' . $token;
+		return add_query_arg( array( 'token'=>$token ) , $base_url );
 		
 	}
 	
@@ -81,9 +88,22 @@ class Inbound_Mailer_Unsubscribe {
 	*  @return INT $token
 	*/
 	public static function encode_unsubscribe_token( $lead_id , $list_ids ) {
-		$prepare = array( 'SECURE_AUTH_KEY' => SECURE_AUTH_KEY , 'lead_id' => $lead_id , 'list_ids' => $list_ids );
+		$prepare = array( 'lead_id' => $lead_id , 'list_ids' => $list_ids );
 		$json = json_encode($prepare);
-		return base64_encode( $json );
+		
+		
+		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+		$encrypted_string = 
+		base64_encode( 
+			trim(
+				mcrypt_encrypt(
+					MCRYPT_RIJNDAEL_256, substr( SECURE_AUTH_KEY , 0 , 24 )  , $json, MCRYPT_MODE_ECB, $iv
+				)
+			)
+		);
+
+		return  str_replace(array('+', '/'), array('-', '_'), $encrypted_string);
 	}
 	
 	/**
@@ -93,8 +113,16 @@ class Inbound_Mailer_Unsubscribe {
 	*/
 	public static function decode_unsubscribe_token( $token ) {
 		
-		$unsubscribe = json_decode( base64_decode( $token ) , true );
-		return $unsubscribe;
+		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+		$decrypted_string = 		
+		trim(
+			mcrypt_decrypt( 
+					MCRYPT_RIJNDAEL_256 ,  substr( SECURE_AUTH_KEY , 0 , 24 )   ,  base64_decode( str_replace(array('-', '_'), array('+', '/'), $token ) ) , MCRYPT_MODE_ECB, $iv
+			)
+		);
+
+		return json_decode($decrypted_string , true);
 		
 	}
 	

@@ -86,10 +86,6 @@ if ( !class_exists('Inbound_Mailer_Template_Manager') ) {
 				wp_enqueue_script('inbound-mailer-js-templates', INBOUND_EMAIL_URLPATH . 'js/admin/admin.templates.js');
 			}
 			
-			/* Load assets for store search */
-			if ( ( isset($screen) && $screen->base == 'inbound-email_page_inbound_email_store' ) ){
-					wp_enqueue_script('easyXDM', INBOUND_EMAIL_URLPATH . 'js/libraries/easyXDM.debug.js');
-			}
 		}
 		
 		/**
