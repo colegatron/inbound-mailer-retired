@@ -459,7 +459,7 @@ class Inbound_Mail_Daemon {
 		$html = str_replace('[lead-field ' , '[lead-field lead_id="'. self::$row->lead_id .'" ' , $html );
 		
 		/* add lead id & list ids to unsubscribe shortcode */
-		$html = str_replace('[unsubscribe-link]' , '[unsubscribe-link lead_id="'. self::$row->lead_id .'" list_ids="'.implode( ',' , self::$email_settings['recipients'] ) .'"]' , $html );
+		$html = str_replace('[unsubscribe-link]' , '[unsubscribe-link lead_id="'. self::$row->lead_id .'" list_ids="'.implode( ',' , self::$email_settings['recipients'] ) .'" email_id="'.self::$row->email_id.'"]' , $html );
 		
 		/* clean mal formatted quotations */
 		$html = str_replace('&#8221;', '"' , $html);

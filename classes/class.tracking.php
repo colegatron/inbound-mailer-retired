@@ -1,6 +1,6 @@
 <?php
 
-class Inbound_Email_Tracking {
+class Inbound_Mailer_Tracking {
 	
 	/**
 	*  Initializes Class
@@ -41,7 +41,7 @@ class Inbound_Email_Tracking {
 		$args['urlparams'] = $_GET;
 		
 		/* record click event */
-		Inbound_Email_Tracking::add_click_event( $args );
+		Inbound_Mailer_Tracking::add_click_event( $args );
 		
 		
 	}
@@ -52,11 +52,11 @@ class Inbound_Email_Tracking {
 	*/
 	public static function add_click_event( $args ) {
 		
-		$events = Inbound_Email_Tracking::get_click_events( $_GET['lead_id'] );
+		$events = Inbound_Mailer_Tracking::get_click_events( $_GET['lead_id'] );
 	
 		$events[] = $args;
 		
-		Inbound_Email_Tracking::update_events_meta(  $_GET['lead_id'] , $events );
+		Inbound_Mailer_Tracking::update_events_meta(  $_GET['lead_id'] , $events );
 	}
 	
 	
@@ -86,4 +86,4 @@ class Inbound_Email_Tracking {
 	}
 }
 
-$Inbound_Email_Tracking = new Inbound_Email_Tracking();
+$Inbound_Mailer_Tracking = new Inbound_Mailer_Tracking();

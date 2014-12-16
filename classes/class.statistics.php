@@ -205,8 +205,9 @@ class Inbound_Email_Stats {
 	*/
 	public static function prepare_date_ranges() {
 
-		/* If we've already processed time then start from last processing point */
-		if (isset(self::$stats['date_to'] ) ) {
+		
+		/* If we've already processed time & stats already exits then start from last processing point */
+		if ( isset(self::$stats['date_to'] ) && self::$stats['totals'] ) {
 
 			/* get today's datetimestamp */
 			$today = self::get_mandrill_timestamp( gmdate( "Y-m-d\\TG:i:s\\Z" ) );

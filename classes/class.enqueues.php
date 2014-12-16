@@ -32,13 +32,25 @@ class Inbound_Mailer_Enqueues {
 			return;
 		}
 
-		wp_enqueue_script('jquery');
-
+		self::load_frontend_global_enqueue();
 		self::load_frontend_inbound_email_enqueue();
 	}
 
 	/**
-	 *  Loads frontend enqueues when call to action post type is being loaded
+	 *  Loads frontend enqueues for global frontend
+	 */
+	public static function load_frontend_global_enqueue() {
+		global $post;
+
+		/* Enqueues css for unsubscribe page */
+		wp_enqueue_style('inbound-mailer-unsubsribe-css', INBOUND_EMAIL_URLPATH . 'css/frontend/style-unsubscribe.css');
+		
+		/* Enqueues js for unsubscribe page */
+		wp_enqueue_script('inbound-mailer-unsubsribe-js', INBOUND_EMAIL_URLPATH . 'js/frontend/unsubscribe.js');
+	}
+
+	/**
+	 *  Loads frontend enqueues when inbound-email post type is being loaded
 	 */
 	public static function load_frontend_inbound_email_enqueue() {
 		global $post;

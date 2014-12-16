@@ -278,6 +278,7 @@ class Inbound_Mailer_Tokens {
 		$params = shortcode_atts( array( 
 			'lead_id' => null,
 			'list_ids' => '-1',
+			'email_id' => '-1'
 		), $params );
 
 		/* check to see if lead id is set as a REQUEST */
@@ -290,7 +291,7 @@ class Inbound_Mailer_Tokens {
 		} 
 		
 		/* generate unsubscribe link */
-		$unsubscribe_link =  Inbound_Mailer_Unsubscribe::generate_unsubscribe_link( $params['lead_id'] , $params['list_ids'] );
+		$unsubscribe_link =  Inbound_Mailer_Unsubscribe::generate_unsubscribe_link( $params );
 
 		return $unsubscribe_link;
 	}

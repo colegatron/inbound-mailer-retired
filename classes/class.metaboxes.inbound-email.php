@@ -1426,6 +1426,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 								Settings.hide_save_buttons();
 								Settings.hide_send_buttons();
 								Settings.hide_send_test_email_button();
+								Settings.hide_email_send_type();
 								break;
 							case 'sending':
 								Settings.hide_preview();
@@ -1455,7 +1456,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 								Settings.show_email_send_settings();
 								Settings.show_template_settings();
 								Settings.show_graphs();
-
 								break;
 							default: /* unsent */
 								jQuery('#action-preview').show();
@@ -1482,6 +1482,12 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 					},
 					hide_email_send_settings: function() {
 						jQuery('.mail-send-settings-container').hide();
+					},
+					show_email_send_type: function() {
+						jQuery('.mail-send-settings-container').show();
+					},
+					hide_email_send_type: function() {
+						jQuery('#email-send-type').hide();
 					},
 					show_quick_lauch_container: function() {
 						jQuery('.quick-launch-container').show();
