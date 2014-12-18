@@ -34,6 +34,12 @@ class Inbound_Mailer_Unsubscribe {
 			return __( 'Invalid token' , 'inbound-email' );
 		}
 		
+		if ( isset( $_GET['unsubscribed'] ) ) {
+			$unsubscribed_confirmation_message = apply_filters( 'inbound_mailer_unsubscribe_message' , __('Thank you!' , 'inbound-mailer' ) );
+			return "<span class='unsubscribed-message'>". $unsubscribed_confirmation_message ."</span>";
+		}
+
+		
 		/* get all lead lists */
 		$lead_lists = Inbound_Leads::get_lead_lists_as_array(); 
 		
@@ -41,7 +47,7 @@ class Inbound_Mailer_Unsubscribe {
 		$params = self::decode_unsubscribe_token( $_GET['token'] );
 		
 		/* Begin unsubscribe html inputs */
-		$html = "<form action='' name='unsubscribe' method='post'>";
+		$html = "<form action='?unsubscribed=true' name='unsubscribe' method='post'>";
 		$html .= "<input type='hidden' name='token' value='".$_GET['token']."' >";
 		
 		/* loop through lists and show unsubscribe inputs */
@@ -227,7 +233,7 @@ class Inbound_Mailer_Unsubscribe {
 			$stop_rules = array();
 		}
 		
-		return $stop_rules
+		return $stop_rules;
 	}
 	
 	/**
