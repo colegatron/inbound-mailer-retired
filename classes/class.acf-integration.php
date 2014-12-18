@@ -62,8 +62,8 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			if ( !isset($post) || $post->post_type != 'inbound-email' ) {
 				return $value;
 			}
-		
-			
+
+
 			$vid = Inbound_Mailer_Variations::get_current_variation_id();
 			$settings = get_post_meta( $post_id , 'inbound_settings' , true);
 			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : null;
@@ -229,8 +229,11 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 	/**
 	*	Initialize ACF Integrations
 	*/
-	add_action( 'init' , 'inbound_load_acf_integration' );
-	function inbound_load_acf_integration() {
-		$GLOBALS['Inbound_Mailer_ACF'] = new Inbound_Mailer_ACF();
+	if (!function_exists('inbound_load_acf_integration')) {
+		add_action( 'init' , 'inbound_load_acf_integration' );
+
+		function inbound_load_acf_integration() {
+			$GLOBALS['Inbound_Mailer_ACF'] = new Inbound_Mailer_ACF();
+		}
 	}
 }
