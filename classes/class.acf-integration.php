@@ -198,7 +198,12 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 		*	@returns BOOL declaring if current page is a landing page with an ACF template loaded or not
 		*/
 		public static function load_acf_on_template( $allow , $rule, $args ) {
-
+			global $post;
+			
+			if ($post->post_type != 'inbound-email' ) {
+				return;
+			}
+			
 			$template =	Inbound_Mailer_Variations::get_current_template( $args['post_id'] );
 
 			if ($template == $rule['value']) {
@@ -218,7 +223,7 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 					jQuery('#publish').on('click', function() {
 					jQuery('#publish').removeClass('disabled');
 					jQuery('.spinner').show();
-					jQuery('#publish').val('".__('Saving','inbound-mailer')."');
+					jQuery('#publish').val('".__('Saving','inbound-email')."');
 					});
 					</script>
 				";

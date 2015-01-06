@@ -56,7 +56,7 @@ class Inbound_Heartbeat {
 	public static function add_ping_interval( $schedules ) {
 		$schedules['3min'] = array(
 			'interval' => 60 * 2,
-			'display' => __( 'Every Three Minutes' , 'inbound-mailer' )
+			'display' => __( 'Every Three Minutes' , 'inbound-email' )
 		);
 		
 		return $schedules;

@@ -35,7 +35,7 @@ class Inbound_Mailer_Unsubscribe {
 		}
 		
 		if ( isset( $_GET['unsubscribed'] ) ) {
-			$unsubscribed_confirmation_message = apply_filters( 'inbound_mailer_unsubscribe_message' , __('Thank you!' , 'inbound-mailer' ) );
+			$unsubscribed_confirmation_message = apply_filters( 'inbound_mailer_unsubscribe_message' , __('Thank you!' , 'inbound-email' ) );
 			return "<span class='unsubscribed-message'>". $unsubscribed_confirmation_message ."</span>";
 		}
 
@@ -61,12 +61,12 @@ class Inbound_Mailer_Unsubscribe {
 			}
 		}
 		
-		$html .= "<span class='unsubscribe-span'><label class='lead-list-label'><input name='unsubscribe_all' type='checkbox' value='all'> " . __( 'Usubscribe from all emails' , 'inbound-mailer' ) .'</label></span>';
+		$html .= "<span class='unsubscribe-span'><label class='lead-list-label'><input name='unsubscribe_all' type='checkbox' value='all'> " . __( 'Usubscribe from all emails' , 'inbound-email' ) .'</label></span>';
 		$html .= "<div class='unsubscribe-div unsubsribe-comments'>";
-		$html .= "	<span class='unsubscribe-comments-message'>". __( 'Please help us improve by letting us know why you are unsubscribing.' , 'inbound-mailer' ) ."</span>";
-		$html .= "	<span class='unsubscribe-comments-label'>". __('Comments:' , 'inbound-mailer') ."<br><textarea rows='8' cols='60' name='comments'></textarea></span>";
+		$html .= "	<span class='unsubscribe-comments-message'>". __( 'Please help us improve by letting us know why you are unsubscribing.' , 'inbound-email' ) ."</span>";
+		$html .= "	<span class='unsubscribe-comments-label'>". __('Comments:' , 'inbound-email') ."<br><textarea rows='8' cols='60' name='comments'></textarea></span>";
 		$html .= "</div>";
-		$html .= "<span class='unsubscribe-span'><label class='unsubscribe-label'><input name='unsubscribe' type='submit' value='". __( 'Usubscribe' , 'inbound-mailer' ) ."'></label></span>";
+		$html .= "<span class='unsubscribe-span'><label class='unsubscribe-label'><input name='unsubscribe' type='submit' value='". __( 'Usubscribe' , 'inbound-email' ) ."'></label></span>";
 		$html .= "</form>";
 		return $html;
 		
@@ -191,7 +191,7 @@ class Inbound_Mailer_Unsubscribe {
 		/* check if unsubscribe all is selected */
 		if (isset($_POST['unsubscribe_all'])) {
 			self::unsubscribe_from_all_lists( $params['lead_id'] );
-			Inbound_Mailer_Unsubscribe::add_unsubscribe_event( $params['lead_id'] , __( 'all' , 'inbound-mailer') );
+			Inbound_Mailer_Unsubscribe::add_unsubscribe_event( $params['lead_id'] , __( 'all' , 'inbound-email') );
 		}
 
 		/* determine if anything is selected */

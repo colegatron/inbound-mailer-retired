@@ -337,16 +337,34 @@ padding-top: 6px !important; }
 	width:auto;
 }
 
-.send-action {
+.action-preview i {
+	padding:0px;
+	height:28px;	
+	width:30px;
+}
+
+.email-action {
 	display:none;
+	padding: 6px 12px;
+	min-width:40px;
 }
 
 #action-preview {
 	text-decoration:none;
+	padding:6px;
 }
 
 .email-actions {
 	padding-top:10px;
+	text-align:right;
+}
+
+#email-actions-continued .ladda-button .ladda-spinner {
+	margin-top:0px;
+	left:93px;
+}
+
+#email-actions-continued {
 	text-align:right;
 }
 

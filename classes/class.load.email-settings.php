@@ -40,8 +40,8 @@ class Inbound_Mailer_Common_Settings {
 	
 
 		self::$instance->settings['email-settings']['subject'] =  array(
-			'label' => __( 'Subject Line' , 'inbound-mailer' ),
-			'description' => __( 'Subject line of the email' , 'inbound-mailer' ) ,
+			'label' => __( 'Subject Line' , 'inbound-email' ),
+			'description' => __( 'Subject line of the email' , 'inbound-email' ) ,
 			'id'  => 'subject',
 			'type'  => 'text',
 			'default'  => '',
@@ -50,8 +50,8 @@ class Inbound_Mailer_Common_Settings {
 		);
 		
 		self::$instance->settings['email-settings']['from_name'] =  array(
-			'label' => __( 'From Name' , 'inbound-mailer' ),
-			'description' => __( 'The name of the sender.' , 'inbound-mailer' ) ,
+			'label' => __( 'From Name' , 'inbound-email' ),
+			'description' => __( 'The name of the sender.' , 'inbound-email' ) ,
 			'id'  => 'from_name',
 			'type'  => 'text',
 			'default'  => '',
@@ -60,8 +60,8 @@ class Inbound_Mailer_Common_Settings {
 		);
 		
 		self::$instance->settings['email-settings']['from_email'] =  array(
-			'label' => __( 'From Email' , 'inbound-mailer' ),
-			'description' => __( 'The email address of the sender.' , 'inbound-mailer' ) ,
+			'label' => __( 'From Email' , 'inbound-email' ),
+			'description' => __( 'The email address of the sender.' , 'inbound-email' ) ,
 			'id'  => 'from_email',
 			'type'  => 'text',
 			'default'  => '',
@@ -70,8 +70,8 @@ class Inbound_Mailer_Common_Settings {
 		);	
 		
 		self::$instance->settings['email-settings']['reply_email'] =  array(
-			'label' => __( 'Reply Email' , 'inbound-mailer' ),
-			'description' => __( 'The email address recipients can reply to.' , 'inbound-mailer' ) ,
+			'label' => __( 'Reply Email' , 'inbound-email' ),
+			'description' => __( 'The email address recipients can reply to.' , 'inbound-email' ) ,
 			'id'  => 'reply_email',
 			'type'  => 'text',
 			'default'  => '',
@@ -96,7 +96,7 @@ class Inbound_Mailer_Common_Settings {
 			'description' => __( 'This option provides a placeholder for the selected template data.' , 'inbound-email' ),
 			'type'  => 'select2', 
 			'default' => '',
-			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
+			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-email' ),
 			'options' => $lead_lists,
 			'disable_variants' => true
 		);
@@ -110,7 +110,7 @@ class Inbound_Mailer_Common_Settings {
 			'type'  => 'datepicker', 
 			'default' => '',
 			'default_timezone_abbr' =>  $tz['abbr'] . '-UTC' . $tz['offset'] ,
-			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-mailer' ),
+			'placeholder' => __( 'Select lists to send mail to.' , 'inbound-email' ),
 			'options' => $lead_lists,
 			'disable_variants' => true
 		);

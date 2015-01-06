@@ -317,7 +317,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		}
 		
 		/* 
-		* Gets id of template given cta id 
+		* Gets string id of template given email id 
 		*
 		* @param INT $inbound_email_id of call to action
 		* @param INT $vid of variation id

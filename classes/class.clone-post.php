@@ -111,7 +111,7 @@ class Inbound_Mailer_Clone_Post {
 		}
 
 
-		$prefix = __( "Copy of " , 'inbound-mailer' );
+		$prefix = __( "Copy of " , 'inbound-email' );
 		$suffix = "";
 		$status = 'unsent';
 		

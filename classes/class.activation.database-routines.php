@@ -14,7 +14,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 	*/
 	public static function create_default_unsubscribe_page_x() {
 
-		$title = __( 'Unsubscribe' , 'inbound-mailer' );
+		$title = __( 'Unsubscribe' , 'inbound-email' );
 
 		// If the page doesn't already exist, then create it
 		if( null == get_page_by_title( $title ) ) {

@@ -56,7 +56,7 @@ if ( !class_exists('Inbound_Mailer_Global_Settings') ) {
 				array(
 					'id'  => 'unsubscribe-page',
 					'label'  => 'Unsubscribe Location',
-					'description'  => __( 'Where to send readers to unsubscribe. We auto create an unsubscribe page on activation, but you can use our shortcode on any page [inbound-email-unsubscribe]. ' , 'inbound-mailer' ),
+					'description'  => __( 'Where to send readers to unsubscribe. We auto create an unsubscribe page on activation, but you can use our shortcode on any page [inbound-email-unsubscribe]. ' , 'inbound-email' ),
 					'option_name'  => 'unsubscribe-page',
 					'type'  => 'dropdown',
 					'default'  => '',

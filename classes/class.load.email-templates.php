@@ -114,7 +114,7 @@ class Inbound_Mailer_Load_Templates {
 		foreach (self::$instance->definitions as $key=>$val)
 		{
 
-			if (strstr($key,'inbound-mailer') || !isset($val['info']['category']))
+			if (strstr($key,'inbound-email') || !isset($val['info']['category']))
 				continue;
 
 			/* allot for older lp_data model */
