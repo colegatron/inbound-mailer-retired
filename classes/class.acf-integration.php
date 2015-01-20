@@ -234,10 +234,10 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 	/**
 	*	Initialize ACF Integrations
 	*/
-	if (!function_exists('inbound_load_acf_integration')) {
-		add_action( 'init' , 'inbound_load_acf_integration' );
+	if (!function_exists('inbound_mailer_acf_integration')) {
+		add_action( 'init' , 'inbound_mailer_acf_integration' );
 
-		function inbound_load_acf_integration() {
+		function inbound_mailer_acf_integration() {
 			$GLOBALS['Inbound_Mailer_ACF'] = new Inbound_Mailer_ACF();
 		}
 	}

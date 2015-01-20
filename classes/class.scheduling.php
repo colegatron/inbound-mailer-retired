@@ -6,22 +6,34 @@
 
 class Inbound_Mailer_Scheduling {
 
-	static $settings;
+	static $email_id; /* placeholder for email id */
+	static $settings; /* placeholder for email settings */
+	static $batches; /* placeholder for lead batches */
+	static $recipients; /* placeholder will allow manually defining recipents */
 
 	/**
 	*	Determine batching patterns
 	*	@param INT $email_id
 	*/
 	public static function create_batches( $email_id ) {
-
+		$params = array();
+		
+		/* get settings */
 		$settings = Inbound_Mailer_Scheduling::$settings;
+		
+		/* get variations */
 		$variations = $settings['variations'];
+		
+		/* count variations */
 		$variation_count = count($variations);
-
-		$recipients = $settings['recipients'];
-
-		$params = array(
-			'include_lists' => $recipients,
+		
+		if (isset(nbound_Mailer_Scheduling::$recipients)) {
+			$settings['recipients'] = Inbound_Mailer_Scheduling::$recipients;
+		}
+		
+		/* Prepare leads lookup */
+		$params = array(	
+			'include_lists', $settings['recipients'],
 			'return' => 'ID',
 			'results_per_page' => -1,
 			'orderby' => 'rand',
@@ -43,7 +55,7 @@ class Inbound_Mailer_Scheduling {
 		}
 
 
-		return $batch_array;
+		self::$batches = $batch_array;
 
 	}
 
@@ -53,13 +65,13 @@ class Inbound_Mailer_Scheduling {
 	public static function schedule_email( $email_id ) {
 
 		global $wpdb;
-
+		
 		/* load email settings into static variable */
 		Inbound_Mailer_Scheduling::$settings = Inbound_Email_Meta::get_settings( $email_id );
 
 		/* Prepare lead batches */
-		$lead_batches = Inbound_Mailer_Scheduling::create_batches( $email_id );
-
+		Inbound_Mailer_Scheduling::create_batches( $email_id );
+		
 		/* Set target mysql table name */
 		$table_name = $wpdb->prefix . "inbound_email_queue";
 
@@ -67,7 +79,7 @@ class Inbound_Mailer_Scheduling {
 		$timestamp = Inbound_Mailer_Scheduling::get_timestamp();
 
 		/* prepare multi insert query string - limit to 1000 inserts at a time */
-		foreach ($lead_batches as $vid => $leads ) {
+		foreach (self::$lead_batches as $vid => $leads ) {
 
 			$query_values_array = array();
 			$query_prefix = "INSERT INTO {$table_name} ( `email_id` , `variation_id` , `lead_id` , `type` , `status` , `datetime` )";
@@ -330,8 +342,8 @@ class Inbound_Mailer_Scheduling {
 			array('abbr'=>'LINT', 'name' => __( 'Line Islands Time' , 'inbound-email'	) , 'utc' => 'UTC+14'),
 			array('abbr'=>'TKT', 'name' => __( 'Tokelau Time' , 'inbound-email'	) , 'utc' => 'UTC+14'),
 		);
-
 	}
+	
 
 }
 

@@ -52,11 +52,11 @@ class Inbound_Mail_Daemon {
 	*/
 	public static function load_hooks() {
 
-		/* Adds 'Every Two Minutes' to System Cron */
-		add_filter( 'inbound_heartbeat', array( __CLASS__ , 'process_mail_queue' ) );
+		/* Adds mail processing to Inbound Heartbeat */
+		add_action( 'inbound_heartbeat', array( __CLASS__ , 'process_mail_queue' ) );
 
 		/* For debugging */
-		add_filter( 'init', array( __CLASS__ , 'process_mail_queue' ) , 12 );
+		//add_filter( 'init', array( __CLASS__ , 'process_mail_queue' ) , 12 );
 
 	}
 
@@ -232,22 +232,22 @@ class Inbound_Mail_Daemon {
 	/**
 	*	Sends scheduled batch emails
 	*/
-	public static function send_test_email( $email_address , $email_id , $vid  ) {
+	public static function send_email_by_lead_id( $args  ) {
 		global $wpdb;
 		
-		if ( !$email_id || !$email_address ) {
+		if ( !$args['email_id'] || !$args['lead_id'] ) {
 			return;
 		}
 		
 		/* setup test tags */
 		self::$tags = array();
-		self::$tags[ $email_id ] = array('test');
+		self::$tags[ $args['email_id'] ] = ( isset($args['tags']) ) ?  isset($args['tags']) : 'automated';
 		
 		/* setup email send params */
 		self::$row = new stdClass();
-		self::$row->email_id = $email_id;
-		self::$row->variation_id = $vid;
-		self::$row->lead_id = 'test';
+		self::$row->email_id = $args['email_id'];
+		self::$row->variation_id = $args['vid'];
+		self::$row->lead_id = $args['lead_id'];
 		self::$row->datetime = gmdate( 'Y-m-d h:i:s \G\M\T');
 		
 		/* load extras */
@@ -256,7 +256,49 @@ class Inbound_Mail_Daemon {
 		self::toggle_dom_parser();
 		
 		/* build email */
-		self::$email['send_address'] = $email_address;
+		self::$email['send_address'] = $args['email_address'];
+		self::$email['subject'] = self::get_variation_subject();
+		self::$email['from_name'] = self::$email_settings['from_name'];
+		self::$email['from_email'] = self::$email_settings['from_email'];
+		self::$email['email_title'] = get_the_title( self::$row->email_id );
+		self::$email['reply_email'] = self::$email_settings['reply_email'];
+		self::$email['body'] = self::get_email_body();
+		
+		/* send email */
+		self::send_mandrill_email();
+	
+		/* return response */
+		return self::$response;
+	}
+	
+	/**
+	*	Send email by lead id
+	*/
+	public static function send_test_email( $args  ) {
+		global $wpdb;
+		
+		if ( !$args['email_id'] || !$args['email_address'] ) {
+			return;
+		}
+		
+		/* setup test tags */
+		self::$tags = array();
+		self::$tags[ $args['email_id'] ] = array('test');
+		
+		/* setup email send params */
+		self::$row = new stdClass();
+		self::$row->email_id = $args['email_id'];
+		self::$row->variation_id = $args['vid'];
+		self::$row->lead_id = null;
+		self::$row->datetime = gmdate( 'Y-m-d h:i:s \G\M\T');
+		
+		/* load extras */
+		self::$email_settings = Inbound_Email_Meta::get_settings( self::$row->email_id );
+		self::get_templates();
+		self::toggle_dom_parser();
+		
+		/* build email */
+		self::$email['send_address'] = $args['email_address'];
 		self::$email['subject'] = self::get_variation_subject();
 		self::$email['from_name'] = self::$email_settings['from_name'];
 		self::$email['from_email'] = self::$email_settings['from_email'];

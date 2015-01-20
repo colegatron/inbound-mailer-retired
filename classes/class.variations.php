@@ -108,12 +108,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 			
 
 			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
-			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : null;
-			
-			if (!$variations) {
-				$variations =  array( 0 => array( 'status' => 'active' ) );
-			}
-			
+			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : array( 0 => array( 'status' => 'active' ) );
 			
 			return $variations;
 		}
@@ -139,6 +134,57 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 			return $status;
 		}
 		
+		
+		/**
+		*  Set Variant Marker - When automated emails are sent we still want to rotate variations if they exist. When an email is bein sent to one lead, batching needs a consistant way to rotate variations
+		*  @param INT $inbound_email_id
+		*  @return INT $next_variant_marker
+		*/
+		public static function get_next_variant_marker( $inbound_email_id ) {
+			
+			/* get email settins */
+			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
+			
+			/* get variations */
+			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : array( 0 => array( 'status' => 'active' ) );
+			
+			/* count variatons */
+			$variation_count = count($variations);
+			
+			/* if only one variation return appropraite variant id */
+			if ( $variation_count == 1 ) {
+				return current(array_keys($array));
+			}
+			
+			/* get last known variation marker if it exists else create it with first key in array */
+			$variation_marker = ( isset($settings['variation_marker']) ) ? $settings['variation_marker'] : current(array_keys($array));
+			
+			/* set pointer to variation id in array */
+			while (key($variations) !== $variation_marker) next($variations);
+			
+			/* Get next pointer in line */
+			$variation_marker = next($variations);
+			
+			/* Save new variation marker */
+			Inbound_Mailer_Variations::set_variation_marker( $inbound_email_id , $variation_marker );
+			
+			/* return next pointer in line */
+			return next($variations);
+			
+		}
+		
+		/**
+		*  Updates variation marker (used for single sends)
+		*  @param INT $inbound_email_id
+		*  @param INT $variation_marker
+		*/
+		public static function set_variation_marker( $inbound_email_id , $variation_marker ) {
+			/* get email settins */
+			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
+			$settings['variation_marker'] = $variation_marker;
+			Inbound_Email_Meta::update_settings( $inbound_email_id , $settings );
+		}
+			
 		/**
 		* Returns the permalink of a variation given inbound_email_id and vid
 		*

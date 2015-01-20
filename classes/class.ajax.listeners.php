@@ -127,7 +127,11 @@ class Inbound_Mailer_Ajax_Listeners {
 		$mailer = new Inbound_Mail_Daemon();
 		//error_log( print_r($_REQUEST , true));
 		
-		$mailer->send_test_email( $_REQUEST['email_address'] , $_REQUEST['email_id'] , $_REQUEST['variation_id'] ); 
+		$mailer->send_test_email( array( 
+			'email_address' => $_REQUEST['email_address'] , 
+			'email_id' => $_REQUEST['email_id'] , 
+			'vid' => $_REQUEST['variation_id'] 
+		));
 		
 		header('HTTP/1.1 200 OK');
 		exit;
