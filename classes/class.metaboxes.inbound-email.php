@@ -1963,7 +1963,15 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 				return;
 			}
 
+			/* get current email settings */
+			$email_settings = Inbound_Email_Meta::get_settings( $_POST['post_ID'] );
 
+			/* save template id */
+			$email_settings['variations'][ $_POST[ 'inbvid'] ][ 'selected_template' ] = $_POST['selected_template'];
+			
+			/* Update Settings */
+			Inbound_Email_Meta::update_settings( $_POST['post_ID'] , $email_settings );
+			
 			/* Perform scheduling */
 			Inbound_Mailer_Metaboxes::action_processing();
 		}

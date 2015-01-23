@@ -379,12 +379,12 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
 			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : null;
 			
-			$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'blank-template';
+			$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'simple-responsive';
 			
 			/* If new variation use historic template id */
 			if ( isset($_GET['new-variation'] ) ) {
 				$vid = key($variations);
-				$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'blank-template';	
+				$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'simple-responsive';	
 			}
 				
 			return $template;
