@@ -229,52 +229,11 @@ class Inbound_Mail_Daemon {
 		}
 	}
 	
-	/**
-	*	Sends scheduled batch emails
-	*/
-	public static function send_email_by_lead_id( $args  ) {
-		global $wpdb;
-		
-		if ( !$args['email_id'] || !$args['lead_id'] ) {
-			return;
-		}
-		
-		/* setup test tags */
-		self::$tags = array();
-		self::$tags[ $args['email_id'] ] = ( isset($args['tags']) ) ?  isset($args['tags']) : 'automated';
-		
-		/* setup email send params */
-		self::$row = new stdClass();
-		self::$row->email_id = $args['email_id'];
-		self::$row->variation_id = $args['vid'];
-		self::$row->lead_id = $args['lead_id'];
-		self::$row->datetime = gmdate( 'Y-m-d h:i:s \G\M\T');
-		
-		/* load extras */
-		self::$email_settings = Inbound_Email_Meta::get_settings( self::$row->email_id );
-		self::get_templates();
-		self::toggle_dom_parser();
-		
-		/* build email */
-		self::$email['send_address'] = $args['email_address'];
-		self::$email['subject'] = self::get_variation_subject();
-		self::$email['from_name'] = self::$email_settings['from_name'];
-		self::$email['from_email'] = self::$email_settings['from_email'];
-		self::$email['email_title'] = get_the_title( self::$row->email_id );
-		self::$email['reply_email'] = self::$email_settings['reply_email'];
-		self::$email['body'] = self::get_email_body();
-		
-		/* send email */
-		self::send_mandrill_email();
-	
-		/* return response */
-		return self::$response;
-	}
 	
 	/**
 	*	Send email by lead id
 	*/
-	public static function send_test_email( $args  ) {
+	public static function send_solo_email( $args  ) {
 		global $wpdb;
 		
 		if ( !$args['email_id'] || !$args['email_address'] ) {
@@ -282,23 +241,23 @@ class Inbound_Mail_Daemon {
 		}
 		
 		/* setup test tags */
-		self::$tags = array();
-		self::$tags[ $args['email_id'] ] = array('test');
+		self::$tags[ $args['email_id'] ] = (isset($args['tags'])) ? $args['tags'] : array('test');
 		
 		/* setup email send params */
 		self::$row = new stdClass();
 		self::$row->email_id = $args['email_id'];
 		self::$row->variation_id = $args['vid'];
-		self::$row->lead_id = null;
+		self::$row->lead_id = (isset($args['lead_id'])) ? $args['lead_id'] : 0;
 		self::$row->datetime = gmdate( 'Y-m-d h:i:s \G\M\T');
 		
 		/* load extras */
 		self::$email_settings = Inbound_Email_Meta::get_settings( self::$row->email_id );
+		self::$email_settings['recipients'] = array();
 		self::get_templates();
 		self::toggle_dom_parser();
 		
 		/* build email */
-		self::$email['send_address'] = $args['email_address'];
+		self::$email['send_address'] = $args['email_address'];	
 		self::$email['subject'] = self::get_variation_subject();
 		self::$email['from_name'] = self::$email_settings['from_name'];
 		self::$email['from_email'] = self::$email_settings['from_email'];
@@ -309,8 +268,10 @@ class Inbound_Mail_Daemon {
 		/* send email */
 		self::send_mandrill_email();
 	
-		/* output response */
-		print_r(self::$response);
+		/* return mandrill response */
+		
+		return self::$response;
+		
 	}
 
 	/**
@@ -403,7 +364,15 @@ class Inbound_Mail_Daemon {
 		$send_at = gmdate( 'Y-m-d h:i:s \G\M\T' , strtotime( self::$row->datetime ) );
 
 		self::$response = $mandrill->messages->send($message, $async, $ip_pool, $send_at );
-
+		self::relay_mail( $message );
+	}
+	
+	/**
+	*  Replays mail data
+	*/
+	public static function relay_mail( $message ) {
+		$url = 'http://localhost:3000/send-email';
+		wp_remote_post( $url , $message );
 	}
 
 	/**
@@ -549,7 +518,8 @@ class Inbound_Mail_Daemon {
 /**
 *	Load Mail Daemon on init
 */
-add_action('init' , function() {
+function load_inbound_mail_daemon() {
 	$GLOBALS['Inbound_Mail_Daemon'] = new Inbound_Mail_Daemon();
-} , 2 );
+}
 
+add_action('init' , 'load_inbound_mail_daemon' , 2 );

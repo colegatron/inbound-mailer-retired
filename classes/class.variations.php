@@ -153,7 +153,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 			
 			/* if only one variation return appropraite variant id */
 			if ( $variation_count == 1 ) {
-				return current(array_keys($array));
+				return current(array_keys($variations));
 			}
 			
 			/* get last known variation marker if it exists else create it with first key in array */

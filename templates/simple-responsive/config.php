@@ -51,7 +51,7 @@ register_field_group(array (
 			'instructions' => 'The content of your email should go here. ',
 			'required' => 0,
 			'conditional_logic' => 0,
-			'default_value' => 'Dear [lead-field id="wpleads_first_name" default="Subscriber",
+			'default_value' => 'Dear [lead-field id="wpleads_first_name" default="Subscriber"],
 
 Thank you for taking the time to read this email.
 
