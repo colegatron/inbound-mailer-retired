@@ -57,9 +57,9 @@ if (!class_exists('Inbound_Heartbeat')) {
 		*  	Adds '3min' to cronjob interval options
 		*/
 		public static function add_ping_interval( $schedules ) {
-			$schedules['3min'] = array(
+			$schedules['2min'] = array(
 				'interval' => 60 * 2,
-				'display' => __( 'Every Three Minutes' , 'inbound-email' )
+				'display' => __( 'Every Two Minutes' , 'inbound-email' )
 			);
 			
 			return $schedules;
