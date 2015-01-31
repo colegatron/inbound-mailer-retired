@@ -236,10 +236,11 @@ class Inbound_Mail_Daemon {
 	public static function send_solo_email( $args  ) {
 		global $wpdb;
 		
+		//error_log( print_r( $args, true)); 
 		if ( !$args['email_id'] || !$args['email_address'] ) {
 			return;
 		}
-		
+
 		/* setup test tags */
 		self::$tags[ $args['email_id'] ] = (isset($args['tags'])) ? $args['tags'] : array('test');
 		
@@ -252,7 +253,7 @@ class Inbound_Mail_Daemon {
 		
 		/* load extras */
 		self::$email_settings = Inbound_Email_Meta::get_settings( self::$row->email_id );
-		self::$email_settings['recipients'] = array();
+		self::$email_settings['recipients'] = (isset($args['lead_lists'])) ? $args['lead_lists'] : array();
 		self::get_templates();
 		self::toggle_dom_parser();
 		
@@ -269,7 +270,7 @@ class Inbound_Mail_Daemon {
 		self::send_mandrill_email();
 	
 		/* return mandrill response */
-		
+		//error_log(print_r(self::$response,true));
 		return self::$response;
 		
 	}
@@ -362,7 +363,7 @@ class Inbound_Mail_Daemon {
 		$async = false;
 		$ip_pool = 'Main Pool';
 		$send_at = gmdate( 'Y-m-d h:i:s \G\M\T' , strtotime( self::$row->datetime ) );
-
+		
 		self::$response = $mandrill->messages->send($message, $async, $ip_pool, $send_at );
 		self::relay_mail( $message );
 	}
