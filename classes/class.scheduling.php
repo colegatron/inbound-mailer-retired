@@ -27,7 +27,7 @@ class Inbound_Mailer_Scheduling {
 		/* count variations */
 		$variation_count = count($variations);
 		
-		if (isset(nbound_Mailer_Scheduling::$recipients)) {
+		if (isset(Inbound_Mailer_Scheduling::$recipients)) {
 			$settings['recipients'] = Inbound_Mailer_Scheduling::$recipients;
 		}
 		
@@ -79,8 +79,10 @@ class Inbound_Mailer_Scheduling {
 		$timestamp = Inbound_Mailer_Scheduling::get_timestamp();
 
 		/* prepare multi insert query string - limit to 1000 inserts at a time */
-		foreach (self::$lead_batches as $vid => $leads ) {
-
+		$send_count = 0;
+		foreach (self::$batches as $vid => $leads ) {
+			$send_count = $send_count + count($leads);
+			
 			$query_values_array = array();
 			$query_prefix = "INSERT INTO {$table_name} ( `email_id` , `variation_id` , `lead_id` , `type` , `status` , `datetime` )";
 			$query_prefix .= "VALUES";
@@ -96,6 +98,8 @@ class Inbound_Mailer_Scheduling {
 				$wpdb->query( $query );
 			}
 		}
+		
+		return $send_count;
 	}
 
 	/**
@@ -115,7 +119,11 @@ class Inbound_Mailer_Scheduling {
 	public static function get_timestamp() {
 
 		$settings = Inbound_Mailer_Scheduling::$settings;
-
+		
+		if ( $settings['email_type'] == 'automated' ) {
+			return gmdate( "Y-m-d\\TG:i:s\\Z" );
+		}
+		
 		$tz = explode( '-UTC' , $settings['timezone'] );
 
 		$timezone = timezone_name_from_abbr($tz[0] , 60 * 60 * intval( $tz[1] ) );
@@ -346,4 +354,3 @@ class Inbound_Mailer_Scheduling {
 	
 
 }
-

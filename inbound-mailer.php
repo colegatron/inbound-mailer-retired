@@ -171,6 +171,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 					include_once('classes/class.cron-api.php');
 					include_once('classes/class.sending.php');
 					include_once('classes/class.mandrill.php');
+					include_once('classes/class.scheduling.php');
 
 					BREAK;
 			endswitch;

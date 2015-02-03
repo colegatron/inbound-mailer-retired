@@ -37,7 +37,7 @@ class Inbound_Mail_Daemon {
 		global $wpdb;
 
 		/* Set send limit */
-		self::$send_limit = 200;
+		self::$send_limit = 150;
 
 		/* Set target mysql table name */
 		self::$table_name = $wpdb->prefix . "inbound_email_queue";
@@ -56,7 +56,7 @@ class Inbound_Mail_Daemon {
 		add_action( 'inbound_heartbeat', array( __CLASS__ , 'process_mail_queue' ) );
 
 		/* For debugging */
-		//add_filter( 'init', array( __CLASS__ , 'process_mail_queue' ) , 12 );
+		add_filter( 'init', array( __CLASS__ , 'process_mail_queue' ) , 12 );
 
 	}
 
@@ -91,19 +91,17 @@ class Inbound_Mail_Daemon {
 	}
 
 	/**
-	*  Loads DOMDocument class object
+	*	Loads DOMDocument class object
 	*/
 	public static function toggle_dom_parser() {
 		self::$dom = new DOMDocument;		
 	}
 	
 	/**
-	*  Rebuild links with tracking params
+	*	Rebuild links with tracking params
 	*/
 	public static function rebuild_links( $html ) {
-
-		@self::$dom->loadHTML($html);
-		
+		self::$dom->loadHTML($html);
 		$links = self::$dom->getElementsByTagName('a');
 
 		//Iterate over the extracted links and display their URLs
@@ -131,7 +129,7 @@ class Inbound_Mail_Daemon {
 
 			
 			
-			$html = str_replace( $href  , $new_link , $html );
+			$html = str_replace( $href	, $new_link , $html );
 			
 		}
 		
@@ -145,26 +143,43 @@ class Inbound_Mail_Daemon {
 	public static function send_automated_emails() {
 		global $wpdb;
 
-		$query = "select * from ". self::$table_name ." WHERE `status` != 'processed' && `type` = 'automation' && `datetime` <	'". self::$timestamp ."' ";
-		$results = $wpdb->get_results( $query );
+		$query = "select * from ". self::$table_name ." WHERE `status` != 'processed' && `type` = 'automated' && `datetime` <	'". self::$timestamp ."' && `email_id` = `email_id` order by email_id  ASC LIMIT " .self::$send_limit;
+		self::$results = $wpdb->get_results( $query );
 
-		if (!$results) {
+		if (!self::$results) {
 			return;
 		}
 
+		/* get first row of result set for determining email_id */
+		self::$row = self::$results[0];
+		
+		/* Get email title */
+		self::$email['email_title'] = get_the_title( self::$row->email_id );
+		
+		/* Get email settings if they have not been loaded yet */
+		self::$email_settings = Inbound_Email_Meta::get_settings( self::$row->email_id );
+		
+		/* Build array of html content for variations */
+		self::get_templates();
+		
+		/* Get tags for this email */
+		self::get_tags();
+		
 		/* Make sure we send emails as html */
 		self::toggle_email_type();
-
-		foreach( $results as $row ) {
-
+		
+		/* load dom parser class object */
+		self::toggle_dom_parser();
+		
+		foreach( self::$results as $row ) {
+			
 			self::$row = $row;
-
-			self::$email_settings = Inbound_Email_Meta::get_settings( $row->email_id );
 
 			self::get_email();
 
-			self::$response = self::send_mandrill_email( 'mandrill' );
+			self::$response = self::send_mandrill_email( );
 
+			self::delete_from_queue();
 		}
 	}
 
@@ -209,7 +224,7 @@ class Inbound_Mail_Daemon {
 			self::$row = $row;
 
 			/* make sure not to try and send more than wp can handle */
-			if (  $send_count > self::$send_limit ){
+			if (	$send_count > self::$send_limit ){
 				return;
 			}
 
@@ -217,7 +232,7 @@ class Inbound_Mail_Daemon {
 
 			self::send_mandrill_email();
 			
-			self::update_email_status();
+			self::delete_from_queue();
 			
 			$send_count++;
 		}
@@ -233,10 +248,9 @@ class Inbound_Mail_Daemon {
 	/**
 	*	Send email by lead id
 	*/
-	public static function send_solo_email( $args  ) {
+	public static function send_solo_email( $args	) {
 		global $wpdb;
 		
-		//error_log( print_r( $args, true)); 
 		if ( !$args['email_id'] || !$args['email_address'] ) {
 			return;
 		}
@@ -369,7 +383,7 @@ class Inbound_Mail_Daemon {
 	}
 	
 	/**
-	*  Replays mail data
+	*	Replays mail data
 	*/
 	public static function relay_mail( $message ) {
 		$url = 'http://localhost:3000/send-email';
@@ -377,18 +391,18 @@ class Inbound_Mail_Daemon {
 	}
 
 	/**
-	*  Updates the status of the email in the queue
+	*	Updates the status of the email in the queue
 	*/
-	public static function update_email_status() {
+	public static function delete_from_queue() {
 		global $wpdb;
 		
-		$query = "update ". self::$table_name ." set `status` = 'processed' , token = '". self::$response[0]['_id'] ."' where `id` = '".self::$row->id."'";
+		$query = "delete from ". self::$table_name ." where `id` = '".self::$row->id."'";
 		$wpdb->query( $query );
 		
 	}
 
 	/**
-	*  Updates the post status of an email to sent
+	*	Updates the post status of an email to sent
 	*/
 	public static function mark_email_sent( ) {
 		global $wpdb;
@@ -403,7 +417,7 @@ class Inbound_Mail_Daemon {
 	
 	
 	/**
-	*  Gets array of raw html for each variation
+	*	Gets array of raw html for each variation
 	*/
 	public static function get_templates() {
 		
@@ -419,14 +433,14 @@ class Inbound_Mail_Daemon {
 			$permalink = add_query_arg( array( 'inbvid' => $vid , 'disable_shortcodes' => true ), $permalink );;
 			
 			/* Stash variation template in static array */
-			self::$templates[ self::$row->email_id ][ $vid ] =  self::get_variation_html( $permalink );
+			self::$templates[ self::$row->email_id ][ $vid ] =	self::get_variation_html( $permalink );
 			
 		}
 
 	}
 	
 	/**
-	*  Gets tags & sets them into static array
+	*	Gets tags & sets them into static array
 	*/
 	public static function get_tags() {
 		
@@ -450,23 +464,25 @@ class Inbound_Mail_Daemon {
 	*	@return ARRAY $email
 	*/
 	public static function get_email() {
-
+	
 		self::$email['send_address'] = Leads_Field_Map::get_field( self::$row->lead_id ,	'wpleads_email_address' );
 		self::$email['subject'] = self::get_variation_subject();
 		self::$email['from_name'] = self::$email_settings['from_name'];
 		self::$email['from_email'] = self::$email_settings['from_email'];
 		self::$email['reply_email'] = self::$email_settings['reply_email'];
 		self::$email['body'] = self::get_email_body();
-		
 	}
 
 	/**
-	*  Generates targeted email body html
+	*	Generates targeted email body html
 	*/
 	public static function get_email_body() {
+		
+		/* set required variables if empty */
+		self::$email_settings['recipients'] = (isset(self::$email_settings['recipients'])) ? self::$email_settings['recipients'] : array();
 
 		$html = self::$templates[ self::$row->email_id ][ self::$row->variation_id ];
-
+	
 		/* add lead id to all shortcodes before processing */
 		$html = str_replace('[lead-field ' , '[lead-field lead_id="'. self::$row->lead_id .'" ' , $html );
 		
@@ -499,7 +515,7 @@ class Inbound_Mail_Daemon {
 	}
 	
 	/**
-	*  Gets the subject line from variation settings
+	*	Gets the subject line from variation settings
 	*/
 	public static function get_variation_subject() {
 		return self::$email_settings[ 'variations' ] [ self::$row->variation_id ] [ 'subject' ];
@@ -507,7 +523,7 @@ class Inbound_Mail_Daemon {
 	
 	
 	/**
-	*  Generate text version of html email automatically
+	*	Generate text version of html email automatically
 	*/
 	public static function get_text_version() {
 	
