@@ -530,7 +530,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 		public static function add_statistics() {
 			global $Inbound_Mailer_Variations, $post;
 
-			$pass = array( 'scheduled' , 'sent' , 'sending' , 'automation' );
+			$pass = array( 'scheduled' , 'sent' , 'sending' , 'automated' );
 
 			if ( !in_array( $post->post_status , $pass ) ) {
 				return;
@@ -743,7 +743,12 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 						</td>
 						<td class='email-details-td-info'>
 							<?php
-
+							
+							if ( $settings['email_type'] == 'automated' ) {
+								_e( 'Automated sends' , 'inbound-pro' );
+								$settings['recipients'] = array();
+							}
+							
 							foreach ($settings['recipients'] as $list_id ) {
 								$list = Inbound_Leads::get_lead_list_by( 'id' , $list_id );
 

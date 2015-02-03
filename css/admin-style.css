@@ -10,8 +10,8 @@
 
 #adminmenu .menu-icon-inbound-email div.wp-menu-image:before {
 	font-family: "FontAwesome" !important;
-	content: "\f05b";
-	font: 400 24px/1 "FontAwesome" !important;
+	content: "\f003";
+	font: 400 18px/1 "FontAwesome" !important;
 	padding-top: 6px;
 
 }

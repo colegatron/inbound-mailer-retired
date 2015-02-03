@@ -201,5 +201,10 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 		Inbound_Mailer_Plugin::fail_php_version();
 	}
 
-
+	/**
+	*  Checks if inbound-mailer plugin is active 
+	*/
+	function mailer_check_active() {
+		return 1;
+	}
 }
