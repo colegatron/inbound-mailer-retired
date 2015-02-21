@@ -16,7 +16,7 @@ class Inbound_Email_Preview {
 	*	Loads hooks and filters
 	*/
 	public function load_hooks() {
-		add_filter( 'single_template' , array( __CLASS__ , 'load_email' ) );
+		add_filter( 'single_template' , array( __CLASS__ , 'load_email' ) , 11 );
 	}
 
 	/**
@@ -26,7 +26,7 @@ class Inbound_Email_Preview {
 
 		global $wp_query, $post, $query_string, $Inbound_Mailer_Variations;
 
-		if ( $post->post_type!= "inbound-email" ) {
+		if ( $post->post_type != "inbound-email" ) {
 			return;
 		}
 		
