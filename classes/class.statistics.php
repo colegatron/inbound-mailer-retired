@@ -43,6 +43,10 @@ class Inbound_Email_Stats {
 			self::$email_id = $post->ID;
 
 			$query = 'u_email_id:' .	$post->ID	. ' u_variation_id:'. self::$vid .' ( tags:batch OR tags:automated)';
+			if (isset($_GET['debug'])) {
+			    echo $query . '<br>';
+			    exit;
+            }
 			self::query_mandrill( $query );
 
 			/* sort data into local stats object by hour */
@@ -87,16 +91,16 @@ class Inbound_Email_Stats {
 	*	@param DATETIME $timestamp timestamp in gmt before calculating timezone
 	*/
 	public static function get_mandrill_timestamp( $timestamp ) {
-	
+
 		/* get timezone */
 		$tz = explode( '-UTC' , self::$settings['timezone'] );
-		
+
 		$timezone = timezone_name_from_abbr($tz[0] , 60 * 60 * intval( $tz[1] ) );
 		$timezone = self::timezone_check( $timezone );
 		if ($timezone) {
 			date_default_timezone_set( $timezone );
 		}
-		
+
 		$mandrill_timestamp = gmdate( "Y-m-d\\TG:i:s\\Z" ,	strtotime($timestamp) );
 
 		return $mandrill_timestamp;
@@ -109,7 +113,7 @@ class Inbound_Email_Stats {
 		if ($timezone) {
 			return $timezone;
 		}
-		
+
 		switch( self::$settings['timezone'] ) {
 			case 'BIT-UTC-12' :
 				return '';
@@ -133,14 +137,14 @@ class Inbound_Email_Stats {
 		global $post;
 
 		/* load mandrill time	*/
-		$settings = Inbound_Mailer_Settings::get_settings();		
+		$settings = Inbound_Mailer_Settings::get_settings();
 		$mandrill = new Mandrill(  $settings['api_key'] );
 
 		$tags = array();
 		$senders = array();
 
 		self::$results = $mandrill->messages->searchTimeSeries($query, self::$stats['date_from'] , self::$stats['date_to'] , $tags, $senders);
-		
+
 	}
 
 	/**
@@ -152,7 +156,7 @@ class Inbound_Email_Stats {
 		if ( isset(self::$results['status']) && self::$results['status'] == 'error' ) {
 			self::$stats[ 'mandrill' ] = array();
 			return;
-		}		
+		}
 		/* stores data by hour */
 		foreach ( self::$results as $key => $totals ) {
 
@@ -174,10 +178,10 @@ class Inbound_Email_Stats {
 			self::$stats[ 'variations' ] = array();
 			return;
 		}
-		
+
 		/* loop through mandrill object & compile hour totals to build variation totals */
 		foreach ( self::$stats['mandrill'] as $vid => $hours ) {
-			
+
 			/* set to zero */
 			self::$stats[ 'variations' ][ $vid ] = array(
 				'sent' => 0,
@@ -192,24 +196,24 @@ class Inbound_Email_Stats {
 				'unique_clicks' => 0,
 				'unopened' => 0
 			);
-			
+
 			/* loop through each hour's totals for variation */
 			foreach ( $hours as $hour => $totals ) {
 				unset($totals['time']);
-				
+
 				/* update processed totals */
 				foreach ($totals as $key => $value ) {
 					self::$stats[ 'variations' ][ $vid ][ $key ] = self::$stats[ 'variations' ][ $vid ][ $key ] + $value;
 				}
-				
+
 			}
-			
+
 			/* process unopened */
 			self::$stats[ 'variations' ][ $vid ][ 'unopened' ] = self::$stats[ 'variations' ][ $vid ][ 'sent'] - self::$stats[ 'variations' ][ $vid ][ 'opens'];
 
 			/* add label */
 			self::$stats[ 'variations' ][ $vid ][ 'label' ] =	Inbound_Mailer_Variations::vid_to_letter( self::$email_id , $vid );
-			
+
 			/* add subject line */
 			self::$stats[ 'variations' ][ $vid ][ 'subject' ] = self::$settings['variations'][ $vid ][ 'subject' ];
 
@@ -223,7 +227,7 @@ class Inbound_Email_Stats {
 	*/
 	public static function prepare_date_ranges() {
 
-		
+
 		/* If we've already processed time & stats already exits then start from last processing point */
 		if ( isset(self::$stats['date_to'] ) && self::$stats['totals'] ) {
 
@@ -263,8 +267,8 @@ class Inbound_Email_Stats {
 			self::$stats[ 'totals' ] = array();
 			return;
 		}
-		
-		
+
+
 		self::$stats[ 'totals' ] = array(
 			'sent' => 0,
 				'opens' => 0,
