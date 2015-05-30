@@ -253,7 +253,7 @@ float: right;
 }
 
 /* Split Testing Splash */
-.inbound_email_tooltip, .inbound_email_tooltip_templates {background: url('/wp-content/plugins/cta/css/images/question-light.png');
+.inbound_email_tooltip, .inbound_email_tooltip_templates {background: url('/wp-content/plugins/cta/assets/css/images/question-light.png');
 width: 15px;
 height: 15px;
 display: inline-block;

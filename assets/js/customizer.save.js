@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
-	
-	
+
+
 	var window_width = jQuery(window).width();
 	var parent_window = parent.document.width;
 	iframe_size = parent_window * 0.334;
@@ -374,10 +374,10 @@ jQuery(document).ready(function($) {
 			jQuery(parent_el).find(".new-save-inbound-mailer-frontend").remove();
 			var ajax_save_button = jQuery('<span class="button-primary new-save-inbound-mailer-frontend" id="' + media_name + '" style="position: absolute; top: 0px; right: 34px;">Update</span>');
 			setTimeout(function() {
-				jQuery("#TB_iframeContent").contents().find('head').append('<link rel="stylesheet" href="/wp-content/plugins/inbound-emails/css/customizer.media-uploader.css" type="text/css" />');
+				jQuery("#TB_iframeContent").contents().find('head').append('<link rel="stylesheet" href="/wp-content/plugins/inbound-emails/assets/css/customizer.media-uploader.css" type="text/css" />');
 			}, 500);
 			setTimeout(function() {
-				jQuery("#TB_iframeContent").contents().find('head').append('<link rel="stylesheet" href="/wp-content/plugins/inbound-emails/css/customizer.media-uploader.css" type="text/css" />');
+				jQuery("#TB_iframeContent").contents().find('head').append('<link rel="stylesheet" href="/wp-content/plugins/inbound-emails/assets/css/customizer.media-uploader.css" type="text/css" />');
 			}, 2000);
 
 		//console.log(parent_el);
