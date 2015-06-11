@@ -56,7 +56,7 @@ class Inbound_Mailer_Unsubscribe {
 				if ($list_id == '-1' || !$list_id ) {
 					continue;
 				}
-				
+
 				$html .= "<span class='unsubscribe-span'><label class='lead-list-label'><input type='checkbox' name='list_id[]' value='".$list_id."' class='lead-list-class'> " . $lead_lists[ $list_id ] . '</label></span>';
 
 			}
