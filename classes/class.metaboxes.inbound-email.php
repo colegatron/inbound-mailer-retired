@@ -48,6 +48,9 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
             /* changes the post status 'published' to 'unsent' */
             add_filter('wp_insert_post_data', array(__CLASS__, 'check_post_stats'));
 
+            /* generate serialized settings for this email (used for creating example email) */
+            add_action( 'admin_notices' , array( __CLASS__ , 'generate_json' ) );
+
         }
 
         /**
@@ -153,7 +156,8 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 }
                             ];
 
-
+                            console.log('here');
+                            console.log(this.stats.variations);
                             for (id in this.stats.variations) {
                                 chart[0]['values'].push({
                                     "label": this.stats.variations[id].label,
@@ -2180,11 +2184,23 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
             return $data;
         }
 
+        /**
+         * Print serialized email settings
+         */
+        public static function generate_json() {
+
+            global $post;
+
+            if ( !isset($_GET['inbound_generate_serialed_email_settings'] ) ) {
+                return;
+            }
+
+
+            $settings = get_post_meta( $post->ID , 'inbound_settings' ,true );
+            echo json_encode($settings);exit;
+        }
     }
 
     $GLOBALS['Inbound_Mailer_Metaboxes'] = new Inbound_Mailer_Metaboxes;
 }
 
-//delete_post_meta( 97079 , 'inbound_settings' );
-//$settings = get_post_meta( 97079 , 'inbound_settings' ,true );
-//print_r($settings);exit;
