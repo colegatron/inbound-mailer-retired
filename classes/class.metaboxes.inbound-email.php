@@ -2191,12 +2191,13 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
             global $post;
 
-            if ( !isset($_GET['inbound_generate_serialed_email_settings'] ) ) {
+            if ( !isset($_GET['inbound_generate_email_json'] ) ) {
                 return;
             }
 
 
             $settings = get_post_meta( $post->ID , 'inbound_settings' ,true );
+            $settings['is_sample_email'] = true;
             echo json_encode($settings);exit;
         }
     }
