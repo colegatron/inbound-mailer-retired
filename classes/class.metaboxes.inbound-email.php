@@ -1435,6 +1435,9 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
             <script>
                 jQuery(document).ready(function () {
 
+                    /* disable post save navigation confrimation listener */
+                    jQuery(window).unbind('beforeunload');
+
                     /* Initialize CPT UI default changes */
                     Settings.init();
 
@@ -1493,6 +1496,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
                     /* Fire: Load post status toggles */
                     Settings.toggle_post_status('<?php echo $post->post_status; ?>');
+
 
                 });
             </script>
@@ -1865,7 +1869,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 inputField: {
                                     placeholder: '<?php _e( 'Enter target e-mail address.' , 'inbound-email' ); ?>',
                                     padding: '20px',
-                                    width: '271px',
                                     width: '271px'
                                 }
                             }, function (email_address) {
