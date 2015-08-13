@@ -26,7 +26,7 @@ if( function_exists('register_field_group') ):
 
 register_field_group(array (
 	'key' => 'group_55cc433477c28',
-	'title' => 'Sidebar Email Template',
+	'title' => 'Sidebar',
 	'fields' => array (
 		array (
 			'key' => 'field_55cc44eecaab2',
@@ -61,7 +61,22 @@ register_field_group(array (
 			'return_format' => 'url',
 			'preview_size' => 'thumbnail',
 			'library' => 'all',
-			'default_value' => INBOUND_EMAIL_URLPATH.'templates/'.$key.'/images/logo-wide-3.png',
+		),
+		array (
+			'key' => 'field_55cc4c906a6a7',
+			'label' => 'Header Background color',
+			'name' => 'header_bg_color',
+			'prefix' => '',
+			'type' => 'color_picker',
+			'instructions' => 'Choose the background color of your header',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
 		),
 		array (
 			'key' => 'field_55cc4334a8d5b',
@@ -193,6 +208,22 @@ register_field_group(array (
 				'id' => '',
 			),
 			'placement' => 'top',
+		),
+		array (
+			'key' => 'field_55cc4d3c97933',
+			'label' => 'Footer Background Color',
+			'name' => 'footer_bg_color',
+			'prefix' => '',
+			'type' => 'color_picker',
+			'instructions' => 'Choose the background color of your footer',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
 		),
 		array (
 			'key' => 'field_55cc4334aa4cc',
@@ -367,6 +398,22 @@ register_field_group(array (
 				'id' => '',
 			),
 			'message' => 'In the following section you will add your sidebar content. You can add a header and up to 9 sections. The header and each section can also optionally be a link that sends to a URL of your interest. If you want less than 9 sections simply leave the exceeeding sections empty',
+		),
+		array (
+			'key' => 'field_55cc4cf88ee15',
+			'label' => 'Sidebar Background Color',
+			'name' => 'sidebar_bg_color',
+			'prefix' => '',
+			'type' => 'color_picker',
+			'instructions' => 'Choose the background color of your sidebar',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
 		),
 		array (
 			'key' => 'field_55cc4334ac7f4',
