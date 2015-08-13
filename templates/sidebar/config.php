@@ -196,8 +196,8 @@ register_field_group(array (
 		),
 		array (
 			'key' => 'field_55cc455ccaab4',
-			'label' => 'Footer',
-			'name' => 'footer',
+			'label' => 'Social Box',
+			'name' => 'social',
 			'prefix' => '',
 			'type' => 'tab',
 			'instructions' => '',
@@ -212,11 +212,11 @@ register_field_group(array (
 		),
 		array (
 			'key' => 'field_55cc4334ab084',
-			'label' => 'Footer Background Color',
+			'label' => 'Social Box Background Color',
 			'name' => 'footer_bg_color',
 			'prefix' => '',
 			'type' => 'color_picker',
-			'instructions' => 'Choose the background color of the footer box',
+			'instructions' => 'Choose the background color of the social box',
 			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array (
