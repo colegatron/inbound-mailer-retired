@@ -92,7 +92,8 @@ register_field_group(array (
 				'class' => '',
 				'id' => '',
 			),
-			'default_value' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+			'default_value' => 'Dear [lead-field id="wpleads_first_name" default="Subscriber"],
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et. Lorem ipsum dolor sit amet.</p>',
 			'tabs' => 'all',
 			'toolbar' => 'full',
@@ -210,12 +211,12 @@ register_field_group(array (
 			'placement' => 'top',
 		),
 		array (
-			'key' => 'field_55cc4d3c97933',
+			'key' => 'field_55cc4334ab084',
 			'label' => 'Footer Background Color',
 			'name' => 'footer_bg_color',
 			'prefix' => '',
 			'type' => 'color_picker',
-			'instructions' => 'Choose the background color of your footer',
+			'instructions' => 'Choose the background color of the footer box',
 			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array (
@@ -275,22 +276,6 @@ register_field_group(array (
 			),
 			'default_value' => '',
 			'placeholder' => 'Add the complete URL',
-		),
-		array (
-			'key' => 'field_55cc4334ab084',
-			'label' => 'Footer Background Color',
-			'name' => 'footer_background_color',
-			'prefix' => '',
-			'type' => 'color_picker',
-			'instructions' => 'Choose the background color of the footer box',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
 		),
 		array (
 			'key' => 'field_55cc4334ab46c',
