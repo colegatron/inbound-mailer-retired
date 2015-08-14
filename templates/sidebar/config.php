@@ -29,9 +29,9 @@ register_field_group(array (
 	'title' => 'Sidebar',
 	'fields' => array (
 		array (
-			'key' => 'field_55cc44eecaab2',
-			'label' => 'Main Content',
-			'name' => 'main_content',
+			'key' => 'field_55cd81a2fc784',
+			'label' => 'Header',
+			'name' => 'header',
 			'prefix' => '',
 			'type' => 'tab',
 			'instructions' => '',
@@ -77,6 +77,22 @@ register_field_group(array (
 				'id' => '',
 			),
 			'default_value' => '',
+		),
+		array (
+			'key' => 'field_55cc44eecaab2',
+			'label' => 'Email Body',
+			'name' => 'main_content',
+			'prefix' => '',
+			'type' => 'tab',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'placement' => 'top',
 		),
 		array (
 			'key' => 'field_55cc4334a8d5b',
