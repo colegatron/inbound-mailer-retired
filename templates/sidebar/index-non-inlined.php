@@ -309,7 +309,7 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 
 </head>
  
-<body bgcolor="#FFFFFF" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+<body bgcolor="#FFFFFF">
 
 <!-- HEADER -->
 <table class="head-wrap" bgcolor="<?php  echo $header_bg_color; ?>">
@@ -372,7 +372,7 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 							<li>
 								<a href="<?php echo $sidebar_header_url; ?>">
 									<h5><?php echo $sidebar_header; ?></h5>
-									<p><?php echo $sidebar_subheader; ?></p>
+									<?php echo $sidebar_subheader; ?>
 								</a>
 							</li>
 							<?php if ($sidebar_text_1) { ?>
