@@ -1,5 +1,15 @@
 jQuery(document).ready(function($) {
 
+	/* make sure screen options is not hiding anything */
+	jQuery('.hide-if-js').removeClass('hide-if-js');
+
+	/* on save rebuild preview link in case slug was update */
+	var current_slug = jQuery('#post_name').val();
+
+	jQuery('#email-actions-continued').on('click', '.action-save' ,  function() {
+		alert('here');
+
+	});
 
 	/* Check to See if cookies are on */
 	var cookies = (typeof (jQuery.cookie) != "undefined" ? true : false); // Check for JQuery Cookie
@@ -29,7 +39,7 @@ jQuery(document).ready(function($) {
 		var which_editor = 'editor';
 		cookie_notice();
 	}
-	
+
 	if(which_editor === null){
 		setTimeout(function() {
 		//jQuery("#content-tmce").click();
@@ -37,7 +47,7 @@ jQuery(document).ready(function($) {
 		}, 1000);
 
 	}
-		
+
 	if(which_editor === 'editor'){
 		setTimeout(function() {
 		//jQuery("#content-tmce").click();
@@ -153,9 +163,9 @@ jQuery(document).ready(function($) {
 
 						jQuery('#inbound_email_template_select_meta_box .input').remove();
 						jQuery('#inbound_email_template_select_meta_box .inside').remove();
-						
+
 						jQuery('#inbound_email_template_select_meta_box h3').remove();
-						
+
 						var html = '<div class="inside">'
 								+ '<input id="inbound_email_select_template" type="hidden" value="'+template+'" name="inbound-mailer-selected-template'+variation_tag+'">'
 								+ '<input type="hidden" value="'+inbound_email_post_edit_ui.wp_call_to_action_template_nonce+'" name="inbound_email_wp-inbound_email_custom_fields_nonce">'
@@ -164,10 +174,10 @@ jQuery(document).ready(function($) {
 								+ '<small>'+ template +' Options:</small>'
 								+	'</span>'
 								+	'</h3>'
-								
+
 								+ response
 								+ '</div>';
-								
+
 						jQuery('#inbound_email_template_select_meta_box').append(html);
 
 					},
@@ -271,7 +281,7 @@ jQuery(document).ready(function($) {
 
 
 
-	
+
 
 	/* Move Slug Box
 	var slugs = jQuery("#edit-slug-box");

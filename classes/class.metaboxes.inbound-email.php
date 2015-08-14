@@ -1527,6 +1527,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                 var Settings = (function () {
 
                     var ladda_button;
+                    var current_slug;
 
                     var Init = {
                         /**
@@ -1550,6 +1551,9 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
                             /* Removes Permalink edit option */
                             //jQuery('#edit-slug-box').hide();
+
+                            /* store current slug */
+                            Settings.current_slug = jQuery('#post_name').val();
 
                             /* Initiate tooltips */
                             jQuery('.btn-group a').tooltip();
@@ -2078,6 +2082,16 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     Settings.ladda_button.toggle();
                                 }
                             });
+
+                            /* update post_name */
+                            var current_url = jQuery('#action-preview').attr('href');
+                            var new_slug = jQuery('#post_name').val();
+
+                            if ( new_slug != Settings.current_slug ) {
+                                alert(current_url.replace( current_slug , new_slug));
+                                jQuery('#action-preview').attr('href' , current_url.replace( Settings.current_slug , new_slug ) );
+                                Settings.current_slug = new_slug;
+                            }
                         },
                         /**
                          *  Generate object of data from form inputs
@@ -2119,7 +2133,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
          *
          */
         public static function action_save_data($inbound_email_id) {
-            global $post;
+
             unset($_POST['post_content']);
 
             if (wp_is_post_revision($inbound_email_id)) {
@@ -2142,6 +2156,15 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
             /* Update Settings */
             Inbound_Email_Meta::update_settings($_POST['post_ID'], $email_settings);
+
+            /* updte slug */
+            remove_action('save_post', array(__CLASS__, 'action_save_data'));
+            wp_update_post(
+                array (
+                    'ID'        => $inbound_email_id,
+                    'post_name' => $_POST['post_name']
+                )
+            );
 
             /* Perform scheduling */
             Inbound_Mailer_Metaboxes::action_processing();
