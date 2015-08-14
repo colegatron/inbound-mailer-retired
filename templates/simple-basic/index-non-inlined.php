@@ -2,12 +2,12 @@
 /**
  * This is the original template. It has been left here so that it can be modified in the future.
  * The html of this file must be passed through an inliner in order to work correctly.
- * Having the css with the html in the same file is not enough because there are email clients that strip the css code out.
+ * Having the css with the html in the same file is not enough because there are email clients that strip the css code.
  * The html of this template has been passed through http://templates.mailchimp.com/resources/inline-css/
  * After the html is passed through the inliner it's necessary to check and fix the php inside the html because the inliner turns '<' and '>' characters in their html entities
  * The result is the index.php file that produces the actual email code.
  * 
- * Template Name: Sidebar
+ * Template Name: Hero
  * @package  Inbound Email
  * @author   Inbound Now
 */
@@ -21,66 +21,43 @@ do_action('inbound_mail_header');
 /* Load post */
 if (have_posts()) : while (have_posts()) : the_post();
 
-/* Main content */
+/* Header */
 $post_id = get_the_ID();
 $logo_url = get_field('logo_url', $post_id);
 $header_bg_color_array = get_field('header_bg_color', $post_id);
 $header_bg_color = $header_bg_color_array[1];
-$callout_text = get_field('callout_text', $post_id);
-$callout_background_color_array = get_field('callout_background_color', $post_id);
-$callout_background_color = $callout_background_color_array[1];
-$main_email_content = get_field('main_email_content', $post_id);
-$content_after_callout = get_field('content_after_callout', $post_id);
-$button_link = get_field('button_link', $post_id);
-$button_text = get_field('button_text', $post_id);
 
-/* Footer */
-$footer_bg_color_array = get_field('footer_bg_color', $post_id);
-$footer_bg_color = $footer_bg_color_array[1];
+/* Email Body */
+$main_email_content = get_field('main_email_content', $post_id);
+$callout = get_field('callout', $post_id);
+$callout_bg_color_array = get_field('callout_bg_color', $post_id);
+$callout_bg_color = $callout_bg_color_array[1];
+
+/* Social Box */
+$social_bg_color_array = get_field('social_bg_color', $post_id);
+$social_bg_color = $social_bg_color_array[1];
 $facebook_page_url = get_field('facebook_page', $post_id);
 $twitter_handle = get_field('twitter_handle', $post_id);
 $google_plus_url = get_field('google_plus', $post_id);
 $phone_number = get_field('phone_number', $post_id);
 $email = get_field('email', $post_id);
+
+/* Footer */
 $terms_page_url = get_field('terms_page_url', $post_id);
 $privacy_page_url = get_field('privacy_page_url', $post_id);
 
-/* Sidebar */
-$sidebar_bg_color_array = get_field('sidebar_bg_color', $post_id);
-$sidebar_bg_color = $sidebar_bg_color_array[1];
-$sidebar_header = get_field('sidebar_header', $post_id);
-$sidebar_subheader = get_field('sidebar_subheader', $post_id);
-$sidebar_header_url = get_field('sidebar_header_link', $post_id);
-$sidebar_text_1 = get_field('sidebar_text_link_1', $post_id);
-$sidebar_url_1 = get_field('sidebar_url_link_1', $post_id);
-$sidebar_text_2 = get_field('sidebar_text_link_2', $post_id);
-$sidebar_url_2 = get_field('sidebar_url_link_2', $post_id);
-$sidebar_text_3 = get_field('sidebar_text_link_3', $post_id);
-$sidebar_url_3 = get_field('sidebar_url_link_3', $post_id);
-$sidebar_text_4 = get_field('sidebar_text_link_4', $post_id);
-$sidebar_url_4 = get_field('sidebar_url_link_4', $post_id);
-$sidebar_text_5 = get_field('sidebar_text_link_5', $post_id);
-$sidebar_url_5 = get_field('sidebar_url_link_5', $post_id);
-$sidebar_text_6 = get_field('sidebar_text_link_6', $post_id);
-$sidebar_url_6 = get_field('sidebar_url_link_6', $post_id);
-$sidebar_text_7 = get_field('sidebar_text_link_7', $post_id);
-$sidebar_url_7 = get_field('sidebar_url_link_7', $post_id);
-$sidebar_text_8 = get_field('sidebar_text_link_8', $post_id);
-$sidebar_url_8 = get_field('sidebar_url_link_1', $post_id);
-$sidebar_text_9 = get_field('sidebar_text_link_9', $post_id);
-$sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
-
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- If you delete this meta tag, Earth will fall into the sun. -->
+<!-- If you delete this meta tag, Half Life 3 will never be released. -->
 <meta name="viewport" content="width=device-width" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Sidebar Template</title>
+<title>Simple Basic</title>
 	
-<style type='css/text'>
+<style type="text/css">
 	/* ------------------------------------- 
 			GLOBAL 
 	------------------------------------- */
@@ -124,7 +101,7 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 
 	div.callout {
 		padding:15px;
-		background-color:<?php echo (!empty($callout_background_color) ? $callout_background_color : '#ffffff');  ?>;
+		background-color:<?php echo (!empty($callout_bg_color) ? $callout_bg_color : '#ffffff');  ?>;
 		margin-bottom: 15px;
 	}
 	.callout a {
@@ -134,7 +111,7 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 
 	table.social {
 	/* 	padding:15px; */
-		background-color: <?php echo $footer_bg_color; ?>;
+		background-color: <?php echo $social_bg_color; ?>;
 
 	}
 	.social .soc-btn {
@@ -219,7 +196,7 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 			SIDEBAR 
 	------------------------------------- */
 	ul.sidebar {
-		background:<?php echo $sidebar_bg_color; ?>;
+		background:#ebebeb;
 		display:block;
 		list-style-type: none;
 	}
@@ -317,150 +294,111 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 		<td></td>
 		<td class="header container" >
 				
-			<div class="content">
-				<table bgcolor="<?php  echo $header_bg_color; ?>">
-					<tr>
-						<td><?php if ($logo_url) { ?>
-						<img src="<?php  echo $logo_url; ?>" width='188'/>
-						<?php } ?></td>
-						<td align="right" height="70" class="viewWebsite">
-						<p style="font-family: Arial, Helvetica, sans-serif; color: #555555; font-size: 10px; padding: 0; margin: 0;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;" class='do-not-tracks'><?php _e('online' , 'inbound-email' ); ?></a>.</p>
-					</td>
-					</tr>
-				</table>
-			</div>
+				<div class="content">
+					<table bgcolor="<?php  echo $header_bg_color; ?>">
+						<tr>
+							<td><?php if ($logo_url) { ?>
+							<img src="<?php  echo $logo_url; ?>" width='188'/>
+							<?php } ?></td>
+							<td align="right" height="70" class="viewWebsite">
+							<p style="font-family: Arial, Helvetica, sans-serif; color: #555555; font-size: 10px; padding: 0; margin: 0;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;" class='do-not-tracks'><?php _e('online' , 'inbound-email' ); ?></a>.</p>
+							</td>
+						</tr>
+					</table>
+				</div>
 				
 		</td>
 		<td></td>
 	</tr>
 </table><!-- /HEADER -->
 
+
 <!-- BODY -->
 <table class="body-wrap">
 	<tr>
 		<td></td>
 		<td class="container" bgcolor="#FFFFFF">
-			
-			<div class="column-wrap">
-				
-				<div class="column">
-				<table>
+
+			<div class="content">
+			<table>
 				<tr>
-					<td>				
-						
+					<td>
 						<?php echo $main_email_content; ?>
+						
 						<!-- Callout Panel -->
-						
+						<?php
+						if ( $callout ) {
+							?>
 							<div class="callout">
-								<?php echo $callout_text; ?>
+								<?php echo $callout; ?>
 							</div><!-- /Callout Panel -->
+							<?php
+						}
+						?>			
 						
-						<?php echo $content_after_callout; ?>
-						<a href="<?php echo $button_link; ?>" class="btn"><?php echo $button_text; ?></a>
+						<?php 
+						if ( !empty($facebook_page_url) || !empty($twitter_handle) || !empty($google_plus_url) || !empty($phone_number) || !empty($email)) {
+						?>
+							<!-- social & contact -->
+							<table class="social" width="100%">
+								<tr>
+									<td>
+
+										<!--- column 1 -->
+										<table align="left" class="column">
+											<tr>
+												<td>				
+
+													<h5 class="">Connect with Us:</h5>
+													<p class="">
+														<?php if ($facebook_page_url) { ?>
+															<a href="<?php echo $facebook_page_url; ?>" class="soc-btn fb">Facebook</a>
+														<?php } ?>
+														<?php if ($twitter_handle) { ?>
+															<a href="<?php echo $twitter_handle; ?>" class="soc-btn tw">Twitter</a> 
+														<?php } ?>
+														<?php if ($google_plus_url) { ?>
+															<a href="<?php echo $google_plus_url; ?>" class="soc-btn gp">Google+</a>
+														<?php } ?>
+													</p>
+
+
+												</td>
+											</tr>
+										</table><!-- /column 1 -->	
+
+										<!--- column 2 -->
+										<table align="left" class="column">
+											<tr>
+												<td>				
+													<?php if ( $phone_number || $email ) { ?>							
+														<h5 class="">Contact Info:</h5>	
+														<?php if ( $phone_number ) { ?>
+															<p>Phone: <strong><?php echo $phone_number; ?></strong><br/>
+														<?php } ?>
+														<?php if ( $email ) { ?>
+															Email: <strong><a href="emailto:<?php echo $email; ?>"><?php echo $email; ?></a></strong></p>
+														<?php } ?>
+													<?php } ?>
+
+												</td>
+											</tr>
+										</table><!-- /column 2 -->
+
+										<span class="clear"></span>	
+
+									</td>
+								</tr>
+							</table><!-- /social & contact -->
+						<?php
+						}
+						?>
 						
 					</td>
 				</tr>
 			</table>
-			</div>
-			
-				<div class="column">
-				<table>
-				<tr>
-					<td>				
-													
-						<ul class="sidebar">
-							<li>
-								<a href="<?php echo $sidebar_header_url; ?>">
-									<h5><?php echo $sidebar_header; ?></h5>
-									<?php echo $sidebar_subheader; ?>
-								</a>
-							</li>
-							<?php if ($sidebar_text_1) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_1; ?>" class=""><?php echo $sidebar_text_1; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_2) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_2; ?>" class=""><?php echo $sidebar_text_2; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_3) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_3; ?>" class=""><?php echo $sidebar_text_3; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_4) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_4; ?>" class=""><?php echo $sidebar_text_4; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_5) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_5; ?>" class=""><?php echo $sidebar_text_5; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_6) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_6; ?>" class=""><?php echo $sidebar_text_6; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_7) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_7; ?>" class=""><?php echo $sidebar_text_7; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_8) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_8; ?>" class=""><?php echo $sidebar_text_8; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_9) { ?>
-								<li>
-									<a class="last" href="<?php echo $sidebar_url_9; ?>" class=""><?php echo $sidebar_text_9; ?></a>
-								</li>
-							<?php } ?>
-						</ul>
-						
-						<!-- social & contact -->
-						<table class="social" width="100%">
-							<tr>
-								<td>
-									<h6 class="">Connect with Us:</h6>
-									<p class="">
-										<?php if ($facebook_page_url) { ?>
-											<a href="<?php echo $facebook_page_url; ?>" class="soc-btn fb">Facebook</a>
-										<?php } ?>
-										<?php if ($twitter_handle) { ?>
-											<a href="<?php echo $twitter_handle; ?>" class="soc-btn tw">Twitter</a> 
-										<?php } ?>
-										<?php if ($google_plus_url) { ?>
-											<a href="<?php echo $google_plus_url; ?>" class="soc-btn gp">Google+</a>
-										<?php } ?>
-									</p>
-
-									<?php if ( $phone_number || $email ) { ?>							
-										<h6 class="">Contact Info:</h6>	
-										<?php if ( $phone_number ) { ?>
-											<p>Phone: <strong><?php echo $phone_number; ?></strong><br/>
-										<?php } ?>
-										<?php if ( $email ) { ?>
-											Email: <strong><a href="emailto:<?php echo $email; ?>"><?php echo $email; ?></a></strong></p>
-										<?php } ?>
-									<?php } ?>
-								</td>
-							</tr>
-						</table><!-- /social & contact -->
-
-					</td>
-				</tr>
-			</table>				
-			</div>
-				
-				<div class="clear"></div>			
-			
-			</div>
-
+			</div><!-- /content -->
+									
 		</td>
 		<td></td>
 	</tr>
@@ -472,24 +410,20 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 		<td></td>
 		<td class="container">
 			
-			<!-- content -->
-			<div class="content">
+				<!-- content -->
+				<div class="content">
 				<table>
 				<tr>
 					<td align="center">
 						<p>
-							<?php if ( $terms_page_url ) { ?>
-								<a href="<?php echo $terms_page_url; ?>">Terms</a> |
-							<?php } ?>
-							<?php if ( $privacy_page_url ) { ?>
-								<a href="<?php echo $privacy_page_url; ?>">Privacy</a> |
-							<?php } ?>
-							<a href="<?php echo do_shortcode('[unsubscribe-link]'); ?>"><?php _e('Unsubscribe from this list' , 'inbound-mailer' ); ?></a>
+							<a href="#">Terms</a> |
+							<a href="#">Privacy</a> |
+							<a href="#"><unsubscribe>Unsubscribe</unsubscribe></a>
 						</p>
 					</td>
 				</tr>
-				</table>
-			</div><!-- /content -->
+			</table>
+				</div><!-- /content -->
 				
 		</td>
 		<td></td>

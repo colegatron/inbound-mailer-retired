@@ -1,8 +1,8 @@
 <?php
 /**
-* Template Name: Hero
-* @package  Inbound Email
-* @author   Inbound Now
+ * Template Name: Simple Basic
+ * @package  Inbound Email
+ * @author   Inbound Now
 */
 
 /* Declare Template Key */
@@ -21,21 +21,17 @@ $header_bg_color_array = get_field('header_bg_color', $post_id);
 $header_bg_color = $header_bg_color_array[1];
 
 /* Email Body */
-$text_above_hero_image = get_field('text_above_hero_image', $post_id);
-$hero_image_url = get_field('hero_image', $post_id);
-$hero_image_callout = get_field('hero_image_callout', $post_id);
-$hero_callout_background_color_array = get_field('hero_callout_background_color', $post_id);
-$hero_callout_background_color = $hero_callout_background_color_array[1];
 $main_email_content = get_field('main_email_content', $post_id);
-$button_link = get_field('button_link', $post_id);
-$button_text = get_field('button_text', $post_id);
+$callout = get_field('callout', $post_id);
+$callout_bg_color_array = get_field('callout_bg_color', $post_id);
+$callout_bg_color = $callout_bg_color_array[1];
 
 /* Social Box */
+$social_bg_color_array = get_field('social_bg_color', $post_id);
+$social_bg_color = $social_bg_color_array[1];
 $facebook_page_url = get_field('facebook_page', $post_id);
 $twitter_handle = get_field('twitter_handle', $post_id);
 $google_plus_url = get_field('google_plus', $post_id);
-$footer_background_color_array = get_field('footer_background_color', $post_id);
-$footer_background_color = $footer_background_color_array[1];
 $phone_number = get_field('phone_number', $post_id);
 $email = get_field('email', $post_id);
 
@@ -44,17 +40,17 @@ $terms_page_url = get_field('terms_page_url', $post_id);
 $privacy_page_url = get_field('privacy_page_url', $post_id);
 
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- If you delete this tag, the sky will fall on your head -->
+<!-- If you delete this meta tag, Half Life 3 will never be released. -->
 <meta name="viewport" content="width=device-width" />
 
-<title></title>
-
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<style type="css/text">
+<title>Simple Basic</title>
+	
+<style type="text/css">
 	/* ------------------------------------- 
 			GLOBAL 
 	------------------------------------- */
@@ -96,9 +92,9 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 		display: inline-block;
 	}
 
-	p.callout {
+	div.callout {
 		padding:15px;
-		background-color:<?php echo (!empty($hero_callout_background_color) ? $hero_callout_background_color : '#ffffff');  ?>;
+		background-color:<?php echo (!empty($callout_bg_color) ? $callout_bg_color : '#ffffff');  ?>;
 		margin-bottom: 15px;
 	}
 	.callout a {
@@ -108,7 +104,7 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 
 	table.social {
 	/* 	padding:15px; */
-		background-color: #ebebeb;
+		background-color: <?php echo $social_bg_color; ?>;
 
 	}
 	.social .soc-btn {
@@ -282,27 +278,26 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 </style>
 
 </head>
-
-	
-<body bgcolor="#FFFFFF" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;-webkit-font-smoothing: antialiased;-webkit-text-size-adjust: none;height: 100%;width: 100%!important;">
+ 
+<body bgcolor="#FFFFFF">
 
 <!-- HEADER -->
 <table class="head-wrap" bgcolor="<?php  echo $header_bg_color; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 100%;">
 	<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
 		<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"></td>
 		<td class="header container" style="margin: 0 auto!important;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;display: block!important;max-width: 600px!important;clear: both!important;">
-			
+				
 				<div class="content" style="margin: 0 auto;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 600px;display: block;">
 					<table bgcolor="<?php  echo $header_bg_color; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 100%;">
-					<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-						<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><?php if ($logo_url) { ?>
-						<img src="<?php  echo $logo_url; ?>" width="188" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 100%;"/>
-						<?php } ?></td>
-						<td align="right" height="70" class="viewWebsite" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-						<p style="font-family: Arial, Helvetica, sans-serif;color: #555555;font-size: 10px;padding: 0;margin: 0;margin-bottom: 10px;font-weight: normal;line-height: 1.6;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;" class="do-not-tracks"><?php _e('online' , 'inbound-email' ); ?></a>.</p>
-						</td>
-					</tr>
-				</table>
+						<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
+							<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><?php if ($logo_url) { ?>
+							<img src="<?php  echo $logo_url; ?>" width="188" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 100%;"/>
+							<?php } ?></td>
+							<td align="right" height="70" class="viewWebsite" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
+							<p style="font-family: Arial, Helvetica, sans-serif;color: #555555;font-size: 10px;padding: 0;margin: 0;margin-bottom: 10px;font-weight: normal;line-height: 1.6;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;" class="do-not-tracks"><?php _e('online' , 'inbound-email' ); ?></a>.</p>
+							</td>
+						</tr>
+					</table>
 				</div>
 				
 		</td>
@@ -321,92 +316,81 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 			<table style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 100%;">
 				<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
 					<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-						
-						<?php 
-							if ( $text_above_hero_image ) {
-								echo $text_above_hero_image;
-							}
-						?>
-						
-						<!-- A Real Hero (and a real human being) -->
-						<p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;"><?php if ($hero_image_url) { ?>
-						<img src="<?php  echo $hero_image_url; ?>" width="600" height="300" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 100%;"/>
-						<?php } ?></p><!-- /hero -->
+						<?php echo $main_email_content; ?>
 						
 						<!-- Callout Panel -->
 						<?php
-						if ( $hero_image_callout ) {
+						if ( $callout ) {
 							?>
-							<div class="callout" style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 15px;font-weight: normal;font-size: 14px;line-height: 1.6;background-color: <?php echo (!empty($hero_callout_background_color) ? $hero_callout_background_color : '#ffffff');?>;">
-								<?php echo $hero_image_callout; ?>
+							<div class="callout" style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;background-color: <?php echo (!empty($callout_bg_color) ? $callout_bg_color : '#ffffff');?> ;margin-bottom: 15px;">
+								<?php echo $callout; ?>
 							</div><!-- /Callout Panel -->
 							<?php
 						}
+						?>			
+						
+						<?php 
+						if ( !empty($facebook_page_url) || !empty($twitter_handle) || !empty($google_plus_url) || !empty($phone_number) || !empty($email)) {
+						?>
+							<!-- social & contact -->
+							<table class="social" width="100%" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;background-color: <?php echo $social_bg_color;?> ;width: 100%;">
+								<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
+									<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
+
+										<!--- column 1 -->
+										<table align="left" class="column" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 280px;float: left;min-width: 279px;">
+											<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
+												<td style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">				
+
+													<h5 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #000;font-weight: 900;font-size: 17px;">Connect with Us:</h5>
+													<p class="" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">
+														<?php if ($facebook_page_url) { ?>
+															<a href="<?php echo $facebook_page_url; ?>" class="soc-btn fb" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #3B5998!important;">Facebook</a>
+														<?php } ?>
+														<?php if ($twitter_handle) { ?>
+															<a href="<?php echo $twitter_handle; ?>" class="soc-btn tw" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #1daced!important;">Twitter</a> 
+														<?php } ?>
+														<?php if ($google_plus_url) { ?>
+															<a href="<?php echo $google_plus_url; ?>" class="soc-btn gp" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #DB4A39!important;">Google+</a>
+														<?php } ?>
+													</p>
+
+
+												</td>
+											</tr>
+										</table><!-- /column 1 -->	
+
+										<!--- column 2 -->
+										<table align="left" class="column" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 280px;float: left;min-width: 279px;">
+											<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
+												<td style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">				
+													<?php if ( $phone_number || $email ) { ?>							
+														<h5 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #000;font-weight: 900;font-size: 17px;">Contact Info:</h5>	
+														<?php if ( $phone_number ) { ?>
+															<p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">Phone: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><?php echo $phone_number; ?></strong><br/>
+														<?php } ?>
+														<?php if ( $email ) { ?>
+															Email: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><a href="emailto:<?php echo $email; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;"><?php echo $email; ?></a></strong></p>
+														<?php } ?>
+													<?php } ?>
+
+												</td>
+											</tr>
+										</table><!-- /column 2 -->
+
+										<span class="clear" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;display: block;clear: both;"></span>	
+
+									</td>
+								</tr>
+							</table><!-- /social & contact -->
+						<?php
+						}
 						?>
 						
-						<?php echo $main_email_content; ?>
-						<a href="<?php echo $button_link; ?>" class="btn" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;text-decoration: none;background-color: #666;font-weight: bold;margin-right: 10px;text-align: center;cursor: pointer;display: inline-block;"><?php echo $button_text; ?></a>
-												
-						<br>
-						<br>					
-												
-						<!-- social & contact -->
-						<table class="social" width="100%" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;background-color: #ebebeb;width: 100%;">
-							<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-								<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-									
-									<!--- column 1 -->
-									<table align="left" class="column" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 280px;float: left;min-width: 279px;">
-										<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-											<td style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">				
-												
-												<h5 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #000;font-weight: 900;font-size: 17px;">Connect with Us:</h5>
-												<p class="" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">
-													<?php if ($facebook_page_url) { ?>
-														<a href="<?php echo $facebook_page_url; ?>" class="soc-btn fb" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #3B5998!important;">Facebook</a>
-													<?php } ?>
-													<?php if ($twitter_handle) { ?>
-														<a href="<?php echo $twitter_handle; ?>" class="soc-btn tw" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #1daced!important;">Twitter</a> 
-													<?php } ?>
-													<?php if ($google_plus_url) { ?>
-														<a href="<?php echo $google_plus_url; ?>" class="soc-btn gp" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #DB4A39!important;">Google+</a>
-													<?php } ?>
-												</p>
-						
-												
-											</td>
-										</tr>
-									</table><!-- /column 1 -->	
-									
-									<!--- column 2 -->
-									<table align="left" class="column" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;width: 280px;float: left;min-width: 279px;">
-										<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-											<td style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">				
-												<?php if ( $phone_number || $email ) { ?>							
-													<h5 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #000;font-weight: 900;font-size: 17px;">Contact Info:</h5>	
-													<?php if ( $phone_number ) { ?>
-														<p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">Phone: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><?php echo $phone_number; ?></strong><br style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-													<?php } ?>
-													<?php if ( $email ) { ?>
-														Email: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><a href="emailto:<?php echo $email; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;"><?php echo $email; ?></a></strong></p>
-													<?php } ?>
-												<?php } ?>
-                
-											</td>
-										</tr>
-									</table><!-- /column 2 -->
-									
-									<span class="clear" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;display: block;clear: both;"></span>	
-									
-								</td>
-							</tr>
-						</table><!-- /social & contact -->
-					
-					
 					</td>
 				</tr>
 			</table>
-			</div>
+			</div><!-- /content -->
 									
 		</td>
 		<td style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"></td>
@@ -425,13 +409,9 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 				<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
 					<td align="center" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
 						<p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">
-							<?php if ( $terms_page_url ) { ?>
-								<a href="<?php echo $terms_page_url; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;">Terms</a> |
-							<?php } ?>
-							<?php if ( $privacy_page_url ) { ?>
-								<a href="<?php echo $privacy_page_url; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;">Privacy</a> |
-							<?php } ?>
-							<a href="<?php echo do_shortcode('[unsubscribe-link]'); ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;"><?php _e('Unsubscribe from this list' , 'inbound-mailer' ); ?></a>
+							<a href="#" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;">Terms</a> |
+							<a href="#" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;">Privacy</a> |
+							<a href="#" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;"><unsubscribe style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">Unsubscribe</unsubscribe></a>
 						</p>
 					</td>
 				</tr>
@@ -443,7 +423,8 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 	</tr>
 </table><!-- /FOOTER -->
 
-</body></html>
+</body>
+</html>
 
 <?php
 

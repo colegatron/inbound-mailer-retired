@@ -1,6 +1,6 @@
 <?php
 /**
-* Template Name: Hero
+* Template Name: Simple Responsive
 * @package	Inbound Email
 * 
 */
@@ -11,10 +11,10 @@ $key = basename(dirname(__FILE__));
 /* Configures Template Information */
 $inbound_email_data[$key]['info'] = array(
 	'data_type' =>'email-template',
-	'label' => __( 'Hero' , 'inbound-mailer') ,
+	'label' => __( 'Simple Basic' , 'inbound-mailer') ,
 	'category' => 'responsive',
 	'demo' => '',
-	'description' => __( 'Hero email template.' , 'inbound-mailer' ),
+	'description' => __( 'Simple basic email template.' , 'inbound-mailer' ),
 	'acf' => true
 );
 
@@ -26,11 +26,11 @@ $inbound_email_data[$key]['info'] = array(
 if( function_exists('register_field_group') ):
 
 register_field_group(array (
-	'key' => 'group_55c8aac0de44a',
-	'title' => 'Hero Email',
+	'key' => 'group_55cd9b08e171d',
+	'title' => 'Simple Basic',
 	'fields' => array (
 		array (
-			'key' => 'field_55cd713ab1185',
+			'key' => 'field_55cd9b09ede91',
 			'label' => 'Header',
 			'name' => 'header',
 			'prefix' => '',
@@ -46,7 +46,7 @@ register_field_group(array (
 			'placement' => 'top',
 		),
 		array (
-			'key' => 'field_55c8ab6597609',
+			'key' => 'field_55cd9b09ee279',
 			'label' => 'Logo URL',
 			'name' => 'logo_url',
 			'prefix' => '',
@@ -64,7 +64,7 @@ register_field_group(array (
 			'library' => 'all',
 		),
 		array (
-			'key' => 'field_55cd717fbdddb',
+			'key' => 'field_55cd9b09ee661',
 			'label' => 'Header Background Color',
 			'name' => 'header_bg_color',
 			'prefix' => '',
@@ -80,7 +80,7 @@ register_field_group(array (
 			'default_value' => '',
 		),
 		array (
-			'key' => 'field_55cd71c18c148',
+			'key' => 'field_55cd9b09eea49',
 			'label' => 'Email Body',
 			'name' => 'email_body',
 			'prefix' => '',
@@ -96,12 +96,12 @@ register_field_group(array (
 			'placement' => 'top',
 		),
 		array (
-			'key' => 'field_55c960a2c8d82',
-			'label' => 'Text Above Hero Image',
-			'name' => 'text_above_hero_image',
+			'key' => 'field_55cd9b09efdd1',
+			'label' => 'Main Email Content',
+			'name' => 'main_email_content',
 			'prefix' => '',
 			'type' => 'wysiwyg',
-			'instructions' => 'Add here the text that will appear above the hero image',
+			'instructions' => 'The content of your email should go here.',
 			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array (
@@ -117,12 +117,12 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'media_upload' => 1,
 		),
 		array (
-			'key' => 'field_55c9648893443',
-			'label' => 'Hero Image',
-			'name' => 'hero_image',
+			'key' => 'field_55cd9b09ef9e9',
+			'label' => 'Callout Background Color',
+			'name' => 'callout_bg_color',
 			'prefix' => '',
-			'type' => 'image',
-			'instructions' => 'Enter or upload your hero image here',
+			'type' => 'color_picker',
+			'instructions' => 'Choose the callout background color',
 			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array (
@@ -130,17 +130,15 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 				'class' => '',
 				'id' => '',
 			),
-			'return_format' => 'url',
-			'preview_size' => 'thumbnail',
-			'library' => 'all',
+			'default_value' => '',
 		),
 		array (
-			'key' => 'field_55c96250484bd',
-			'label' => 'Hero Image Callout',
-			'name' => 'hero_image_callout',
+			'key' => 'field_55cd9b09ef601',
+			'label' => 'Callout',
+			'name' => 'callout',
 			'prefix' => '',
 			'type' => 'wysiwyg',
-			'instructions' => 'Add here the callout that will appear under the hero image',
+			'instructions' => 'Add here the callout content',
 			'required' => 0,
 			'conditional_logic' => 0,
 			'wrapper' => array (
@@ -154,82 +152,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'media_upload' => 0,
 		),
 		array (
-			'key' => 'field_55c96785ab1cd',
-			'label' => 'Callout Background Color',
-			'name' => 'hero_callout_background_color',
-			'prefix' => '',
-			'type' => 'color_picker',
-			'instructions' => 'Choose the background color of the callout under the hero image',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-		),
-		array (
-			'key' => 'field_55c96304c99e1',
-			'label' => 'Main Email Content',
-			'name' => 'main_email_content',
-			'prefix' => '',
-			'type' => 'wysiwyg',
-			'instructions' => 'The content of your email should go here.',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '<h3>Title Ipsum <small>This is a note.</small></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\',',
-			'tabs' => 'all',
-			'toolbar' => 'full',
-			'media_upload' => 1,
-		),
-		array (
-			'key' => 'field_55c970ecf9d6d',
-			'label' => 'Button Link',
-			'name' => 'button_link',
-			'prefix' => '',
-			'type' => 'url',
-			'instructions' => 'Add the link to a landing page',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-		),
-		array (
-			'key' => 'field_55c9711df9d6e',
-			'label' => 'Button Text',
-			'name' => 'button_text',
-			'prefix' => '',
-			'type' => 'text',
-			'instructions' => 'Add the text that will appear inside the button',
-			'required' => 0,
-			'conditional_logic' => 0,
-			'wrapper' => array (
-				'width' => '',
-				'class' => '',
-				'id' => '',
-			),
-			'default_value' => '',
-			'placeholder' => '',
-			'prepend' => '',
-			'append' => '',
-			'maxlength' => '',
-			'readonly' => 0,
-			'disabled' => 0,
-		),
-		array (
-			'key' => 'field_55cd71f7064e2',
+			'key' => 'field_55cd9b09f098a',
 			'label' => 'Social Box',
 			'name' => 'social_box',
 			'prefix' => '',
@@ -245,9 +168,9 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'placement' => 'top',
 		),
 		array (
-			'key' => 'field_55c967dd86334',
+			'key' => 'field_55cd9b09f0d72',
 			'label' => 'Social Box Background Color',
-			'name' => 'footer_background_color',
+			'name' => 'social_bg_color',
 			'prefix' => '',
 			'type' => 'color_picker',
 			'instructions' => 'Choose the background color of the social box',
@@ -261,7 +184,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'default_value' => '',
 		),
 		array (
-			'key' => 'field_55c966404c413',
+			'key' => 'field_55cd9b09f115a',
 			'label' => 'Facebook Page',
 			'name' => 'facebook_page',
 			'prefix' => '',
@@ -278,7 +201,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'placeholder' => 'Enter the complete URL',
 		),
 		array (
-			'key' => 'field_55c9669937393',
+			'key' => 'field_55cd9b09f1542',
 			'label' => 'Twitter Handle',
 			'name' => 'twitter_handle',
 			'prefix' => '',
@@ -295,7 +218,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'placeholder' => 'Add the complete URL here',
 		),
 		array (
-			'key' => 'field_55c966e0bc8df',
+			'key' => 'field_55cd9b09f192a',
 			'label' => 'Google Plus',
 			'name' => 'google_plus',
 			'prefix' => '',
@@ -312,7 +235,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'placeholder' => 'Add the complete URL',
 		),
 		array (
-			'key' => 'field_55c9694435133',
+			'key' => 'field_55cd9b09f1d12',
 			'label' => 'Phone Number',
 			'name' => 'phone_number',
 			'prefix' => '',
@@ -334,7 +257,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'disabled' => 0,
 		),
 		array (
-			'key' => 'field_55c9698a35134',
+			'key' => 'field_55cd9b09f20fa',
 			'label' => 'Email',
 			'name' => 'email',
 			'prefix' => '',
@@ -353,7 +276,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'append' => '',
 		),
 		array (
-			'key' => 'field_55cd721a4b56c',
+			'key' => 'field_55cd9b09f24e2',
 			'label' => 'Footer',
 			'name' => 'footer',
 			'prefix' => '',
@@ -369,7 +292,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'placement' => 'top',
 		),
 		array (
-			'key' => 'field_55c969c5499dc',
+			'key' => 'field_55cd9b09f28ca',
 			'label' => 'Terms Page URL',
 			'name' => 'terms_page_url',
 			'prefix' => '',
@@ -386,7 +309,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 			'placeholder' => '',
 		),
 		array (
-			'key' => 'field_55c969ff499dd',
+			'key' => 'field_55cd9b09f2cb2',
 			'label' => 'Privacy Page URL',
 			'name' => 'privacy_page_url',
 			'prefix' => '',
@@ -404,18 +327,18 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 		),
 	),
 	'location' => array (
+		array (
 			array (
-				array (
-					'param' => 'post_type',
-					'operator' => '==',
-					'value' => 'inbound-email',
-				),
-				array (
+				'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'inbound-email',
+			),
+			array (
 					'param' => 'template_id',
 					'operator' => '==',
 					'value' => $key,
 				)
-			),
+		),
 	),
 	'menu_order' => 0,
 	'position' => 'normal',
