@@ -1859,7 +1859,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                         send_test_email: function () {
 
                             /* make sure fields are filled out */
-                            if (!Settings.validate_fields()) {
+                            if (!Settings.validate_headers()) {
                                 return false;
                             }
 

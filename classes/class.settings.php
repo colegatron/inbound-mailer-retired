@@ -108,6 +108,7 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 						'id'  => 'mandrill-key',
 						'label'  => __('Mandrill API Key', 'inbound-email' ),
 						'description'  => __( 'Enter in your maindrill API Key here.' , 'inbound-email' ),
+						'option_name'  => 'mandrill-key',
 						'type'  => 'text',
 						'default'  => '',
 						'options' => null
@@ -348,8 +349,9 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 
 				$field['id'] = $key."-".$field['id'];
 
-				if (array_key_exists('option_name',$field) && $field['option_name'] )
+				if (array_key_exists('option_name',$field) && $field['option_name'] ) {
 					$field['id'] = $field['option_name'];
+				}
 
 				$field['value'] = Inbound_Options_API::get_option( 'inbound-email' , $field['id'] , $field['default'] );
 
@@ -559,7 +561,6 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 				return;
 			}
 
-
 			/* Loop through post vars and save as global setting */
 			foreach ($_POST as $key => $value ) {
 				Inbound_Options_API::update_option( 'inbound-email' , $key , $value );
@@ -570,6 +571,7 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 		*  Gets settings value depending on if Inbound Pro or single installation.
 		*/
 		public static function get_settings() {
+
 			if (!defined('INBOUND_PRO_CURRENT_VERSION')) {
 				$keys['unsubscribe_page'] = Inbound_Options_API::get_option( 'inbound-email' , 'unsubscribe-page' , null);
 				$keys['api_key'] = Inbound_Options_API::get_option( 'inbound-email' , 'mandrill-key' , null);
