@@ -324,3 +324,7 @@ ul#template-filter li {
 .mail-headers-container {
     display:none !important;
 }
+
+#slugdiv {
+    display:none;
+}

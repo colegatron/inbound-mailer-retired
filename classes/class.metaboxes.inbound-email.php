@@ -2084,12 +2084,12 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                             });
 
                             /* update post_name */
-                            var current_url = jQuery('#action-preview').attr('href');
                             var new_slug = jQuery('#post_name').val();
-
                             if ( new_slug != Settings.current_slug ) {
-                                alert(current_url.replace( current_slug , new_slug));
-                                jQuery('#action-preview').attr('href' , current_url.replace( Settings.current_slug , new_slug ) );
+                                var preview_url = jQuery('#action-preview').attr('href');
+                                jQuery('#action-preview').attr('href' , preview_url.replace( Settings.current_slug , new_slug ) );
+                                var visual_editor_url = jQuery('#cta-launch-front').attr('href');
+                                jQuery('#cta-launch-front').attr('href' , visual_editor_url.replace( Settings.current_slug , new_slug ) );
                                 Settings.current_slug = new_slug;
                             }
                         },

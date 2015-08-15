@@ -124,7 +124,9 @@ class Inbound_Mailer_Customizer {
 
 			jQuery('#inbound_email_customizer_options').load(function(){
 				jQuery('#inbound_email_customizer_options').contents().find(".action-save").on('click', function(event) {
-					document.getElementById('inbound-mailer-live-preview').src = document.getElementById('inbound-mailer-live-preview').src;
+					setTimeout( function() {
+						document.getElementById('inbound-mailer-live-preview').src = document.getElementById('inbound-mailer-live-preview').src;
+					} , 1500 );
 				});
 			});
 		 });
