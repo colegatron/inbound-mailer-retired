@@ -51,24 +51,6 @@ $sidebar_bg_color = $sidebar_bg_color_array[1];
 $sidebar_header = get_field('sidebar_header', $post_id);
 $sidebar_subheader = get_field('sidebar_subheader', $post_id);
 $sidebar_header_url = get_field('sidebar_header_link', $post_id);
-$sidebar_text_1 = get_field('sidebar_text_link_1', $post_id);
-$sidebar_url_1 = get_field('sidebar_url_link_1', $post_id);
-$sidebar_text_2 = get_field('sidebar_text_link_2', $post_id);
-$sidebar_url_2 = get_field('sidebar_url_link_2', $post_id);
-$sidebar_text_3 = get_field('sidebar_text_link_3', $post_id);
-$sidebar_url_3 = get_field('sidebar_url_link_3', $post_id);
-$sidebar_text_4 = get_field('sidebar_text_link_4', $post_id);
-$sidebar_url_4 = get_field('sidebar_url_link_4', $post_id);
-$sidebar_text_5 = get_field('sidebar_text_link_5', $post_id);
-$sidebar_url_5 = get_field('sidebar_url_link_5', $post_id);
-$sidebar_text_6 = get_field('sidebar_text_link_6', $post_id);
-$sidebar_url_6 = get_field('sidebar_url_link_6', $post_id);
-$sidebar_text_7 = get_field('sidebar_text_link_7', $post_id);
-$sidebar_url_7 = get_field('sidebar_url_link_7', $post_id);
-$sidebar_text_8 = get_field('sidebar_text_link_8', $post_id);
-$sidebar_url_8 = get_field('sidebar_url_link_1', $post_id);
-$sidebar_text_9 = get_field('sidebar_text_link_9', $post_id);
-$sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -325,7 +307,7 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 						<?php } ?></td>
 						<td align="right" height="70" class="viewWebsite">
 						<p style="font-family: Arial, Helvetica, sans-serif; color: #555555; font-size: 10px; padding: 0; margin: 0;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;" class='do-not-tracks'><?php _e('online' , 'inbound-email' ); ?></a>.</p>
-					</td>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -375,51 +357,24 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 									<?php echo $sidebar_subheader; ?>
 								</a>
 							</li>
-							<?php if ($sidebar_text_1) { ?>
+							<?php 
+							
+							if ( have_rows('sidebar_sections') ) { 
+								
+								while( have_rows('sidebar_sections') ){
+									the_row();
+									
+									$section_link_text = get_sub_field('section_link_text');
+									$section_link_url = get_sub_field('section_link_url');
+							?>
 								<li>
-									<a href="<?php echo $sidebar_url_1; ?>" class=""><?php echo $sidebar_text_1; ?></a>
+									<a href="<?php echo $section_link_url; ?>" class=""><?php echo $section_link_text; ?></a>
 								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_2) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_2; ?>" class=""><?php echo $sidebar_text_2; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_3) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_3; ?>" class=""><?php echo $sidebar_text_3; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_4) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_4; ?>" class=""><?php echo $sidebar_text_4; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_5) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_5; ?>" class=""><?php echo $sidebar_text_5; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_6) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_6; ?>" class=""><?php echo $sidebar_text_6; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_7) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_7; ?>" class=""><?php echo $sidebar_text_7; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_8) { ?>
-								<li>
-									<a href="<?php echo $sidebar_url_8; ?>" class=""><?php echo $sidebar_text_8; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_9) { ?>
-								<li>
-									<a class="last" href="<?php echo $sidebar_url_9; ?>" class=""><?php echo $sidebar_text_9; ?></a>
-								</li>
-							<?php } ?>
+							<?php 
+								}	
+							}
+							?>
+							
 						</ul>
 						
 						<!-- social & contact -->
