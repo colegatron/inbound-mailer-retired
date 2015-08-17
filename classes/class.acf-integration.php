@@ -108,6 +108,17 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 							return $repeater_array;
 
 						} else	{
+							/* color pickers seem to be special */
+							if ($field['type'] == 'color_picker' ) {
+								$color = json_decode($value[1] , true);
+								if (is_array($color)) {
+									$value = json_decode($color[1] , true);
+									$value = $value[1];
+								} else {
+									$value = $value[1];
+								}
+							}
+
 							return $value;
 						}
 
