@@ -389,15 +389,6 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 					}
 				echo '</th><td>';
 						switch($field['type']) {
-							// text
-							case 'colorpicker':
-								if (!$field['value'])
-								{
-									$field['value'] = $field['default'];
-								}
-								echo '<input type="text" class="jpicker" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$field['value'].'" size="5" />
-										<div class="inbound_email_tooltip tool_color" title="'.$field['description'].'"></div>';
-								break;
 							case 'header':
 								$extra = (isset($field['description'])) ? $field['description'] : '';
 								echo $extra;

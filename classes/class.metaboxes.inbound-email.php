@@ -1235,14 +1235,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                         echo '<div id="' . $field_id . '" class="description-block">' . $field['description'] . '</div>';
                         break;
                     // text
-                    case 'colorpicker':
-                        if (!$meta) {
-                            $meta = $field['default'];
-                        }
-                        $var_id = (isset($_GET['new_meta_key'])) ? "-" . $_GET['new_meta_key'] : '';
-                        echo '<input type="text" class="jpicker" style="background-color:#' . $meta . '" name="' . $field_id . '" id="' . $field_id . '" value="' . $meta . '" size="5" /><span class="button-primary new-save-wp-cta" data-field-type="text" id="' . $field_id . $var_id . '" style="margin-left:10px; display:none;">Update</span>
-										<i class="fa fa-question-circle inbound-tooltip"title="' . $field['description'] . '"></i>';
-                        break;
                     case 'datepicker':
                         $timezones = Inbound_Mailer_Scheduling::get_timezones();
 
