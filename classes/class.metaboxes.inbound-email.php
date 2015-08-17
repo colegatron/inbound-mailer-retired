@@ -1495,6 +1495,16 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                         Settings.select_template(jQuery(this));
                     });
 
+                    /* Add listener for canceling template selection */
+                    jQuery('#inbound-mailer-cancel-selection').click(function () {
+                        Settings.cancel_template_selection();
+                    });
+
+                    /* Add listener for filtering available templates */
+                    jQuery('#template-filter a').click(function () {
+                        Settings.filter_templates( jQuery(this) );
+                    });
+
                     /* Add listener for saving email */
                     jQuery('.action-save').click(function () {
                         Settings.save_email();
@@ -2056,6 +2066,27 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 jQuery('#post').submit();
 
                             });
+                        },
+                        /**
+                         * Cancel template selection
+                         */
+                        cancel_template_selection: function () {
+                            jQuery(".inbound-mailer-template-selector-container").fadeOut(500, function () {
+                                jQuery(".wrap").fadeIn(500, function () {
+                                });
+                            });
+                        },
+                        /**
+                         * Filter templates by category in template select mode
+                         */
+                        filter_templates: function ( element ) {
+                            var selector = element.attr('data-filter');
+                            jQuery(".template-item-boxes").fadeOut(500);
+                            setTimeout(function () {
+                                jQuery(selector).fadeIn(500);
+                            }, 500);
+                            return false;
+
                         },
                         /**
                          *    Loads template selection box

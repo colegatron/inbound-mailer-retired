@@ -163,18 +163,7 @@
 	width: 60%;
 }
 
-#page-cat-tag, .calc.button-secondary {
-	display: none !important;
-}
 
-.calc.button-secondary {
-	display: inline-block;
-	width: 141px;
-	text-align: center;
-	margin-top: -1px;
-	margin-bottom: 0px;
-	margin-left: 8px;
-}
 
 tr.description th.description-label {
 	display: none;
@@ -266,9 +255,6 @@ padding-top: 6px !important; }
 	float:right;
 	margin-right:19px;
 }
-.calc.button-primary {
-	display: none;}
-
 
 .bs-callout {
     padding: 20px;
