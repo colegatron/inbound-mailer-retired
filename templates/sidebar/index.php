@@ -44,24 +44,6 @@ $sidebar_bg_color = $sidebar_bg_color_array[1];
 $sidebar_header = get_field('sidebar_header', $post_id);
 $sidebar_subheader = get_field('sidebar_subheader', $post_id);
 $sidebar_header_url = get_field('sidebar_header_link', $post_id);
-$sidebar_text_1 = get_field('sidebar_text_link_1', $post_id);
-$sidebar_url_1 = get_field('sidebar_url_link_1', $post_id);
-$sidebar_text_2 = get_field('sidebar_text_link_2', $post_id);
-$sidebar_url_2 = get_field('sidebar_url_link_2', $post_id);
-$sidebar_text_3 = get_field('sidebar_text_link_3', $post_id);
-$sidebar_url_3 = get_field('sidebar_url_link_3', $post_id);
-$sidebar_text_4 = get_field('sidebar_text_link_4', $post_id);
-$sidebar_url_4 = get_field('sidebar_url_link_4', $post_id);
-$sidebar_text_5 = get_field('sidebar_text_link_5', $post_id);
-$sidebar_url_5 = get_field('sidebar_url_link_5', $post_id);
-$sidebar_text_6 = get_field('sidebar_text_link_6', $post_id);
-$sidebar_url_6 = get_field('sidebar_url_link_6', $post_id);
-$sidebar_text_7 = get_field('sidebar_text_link_7', $post_id);
-$sidebar_url_7 = get_field('sidebar_url_link_7', $post_id);
-$sidebar_text_8 = get_field('sidebar_text_link_8', $post_id);
-$sidebar_url_8 = get_field('sidebar_url_link_1', $post_id);
-$sidebar_text_9 = get_field('sidebar_text_link_9', $post_id);
-$sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -301,7 +283,6 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 </style>
 
 </head>
-
  
 <body bgcolor="#FFFFFF">
 
@@ -367,93 +348,54 @@ $sidebar_url_9 = get_field('sidebar_url_link_9', $post_id);
 								<a href="<?php echo $sidebar_header_url; ?>" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;">
 									<h5 style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 0!important;color: #000;font-weight: 900;font-size: 17px;"><?php echo $sidebar_header; ?></h5>
 									<?php echo $sidebar_subheader; ?>
-									</a>
-								
+								</a>
 							</li>
-							<?php if ($sidebar_text_1) { ?>
+							<?php 
+							
+							if ( have_rows('sidebar_sections') ) { 
+								
+								while( have_rows('sidebar_sections') ){
+									the_row();
+									
+									$section_link_text = get_sub_field('section_link_text');
+									$section_link_url = get_sub_field('section_link_url');
+							?>
 								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_1; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_1; ?></a>
+									<a href="<?php echo $section_link_url; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $section_link_text; ?></a>
 								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_2) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_2; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_2; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_3) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_3; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_3; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_4) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_4; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_4; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_5) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_5; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_5; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_6) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_6; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_6; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_7) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_7; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_7; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_8) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a href="<?php echo $sidebar_url_8; ?>" class="" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_8; ?></a>
-								</li>
-							<?php } ?>
-							<?php if ($sidebar_text_9) { ?>
-								<li style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-left: 5px;list-style-position: inside;display: block;">
-									<a class="" href="<?php echo $sidebar_url_9; ?>" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #666;text-decoration: none;margin-right: 10px;cursor: pointer;border-bottom: 1px solid #777777;border-top: 1px solid #FFFFFF;display: block;"><?php echo $sidebar_text_9; ?></a>
-								</li>
-							<?php } ?>
+							<?php 
+								}	
+							}
+							?>
+							
 						</ul>
 						
 						<!-- social & contact -->
 						<table class="social" width="100%" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;background-color: <?php echo $footer_bg_color;?> ;width: 100%;">
 							<tr style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
 								<td style="margin: 0;padding: 15px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-									
-									<!--
-										<table align="left" width="100%">
-										<tr>
-											<td>				
-												-->
-												<h6 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #444;font-weight: 900;font-size: 14px;text-transform: uppercase;">Connect with Us:</h6>
-												<p class="" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">
-													<?php if ($facebook_page_url) { ?>
-														<a href="<?php echo $facebook_page_url; ?>" class="soc-btn fb" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #3B5998!important;">Facebook</a>
-													<?php } ?>
-													<?php if ($twitter_handle) { ?>
-														<a href="<?php echo $twitter_handle; ?>" class="soc-btn tw" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #1daced!important;">Twitter</a> 
-													<?php } ?>
-													<?php if ($google_plus_url) { ?>
-														<a href="<?php echo $google_plus_url; ?>" class="soc-btn gp" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #DB4A39!important;">Google+</a>
-													<?php } ?>
-												</p>
-												
-												<?php if ( $phone_number || $email ) { ?>							
-													<h6 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #444;font-weight: 900;font-size: 14px;text-transform: uppercase;">Contact Info:</h6>	
-													<?php if ( $phone_number ) { ?>
-														<p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">Phone: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><?php echo $phone_number; ?></strong><br/>
-													<?php } ?>
-													<?php if ( $email ) { ?>
-														Email: <strong><a href="emailto:<?php echo $email; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;"><?php echo $email; ?></a></strong></p>
-													<?php } ?>
-												<?php } ?>
-											<!--	
-											</td>
-										</tr>
-									</table>
-									-->
+									<h6 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #444;font-weight: 900;font-size: 14px;text-transform: uppercase;">Connect with Us:</h6>
+									<p class="" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">
+										<?php if ($facebook_page_url) { ?>
+											<a href="<?php echo $facebook_page_url; ?>" class="soc-btn fb" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #3B5998!important;">Facebook</a>
+										<?php } ?>
+										<?php if ($twitter_handle) { ?>
+											<a href="<?php echo $twitter_handle; ?>" class="soc-btn tw" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #1daced!important;">Twitter</a> 
+										<?php } ?>
+										<?php if ($google_plus_url) { ?>
+											<a href="<?php echo $google_plus_url; ?>" class="soc-btn gp" style="margin: 0;padding: 3px 7px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;font-size: 12px;margin-bottom: 10px;text-decoration: none;font-weight: bold;display: block;text-align: center;background-color: #DB4A39!important;">Google+</a>
+										<?php } ?>
+									</p>
+
+									<?php if ( $phone_number || $email ) { ?>							
+										<h6 class="" style="margin: 0;padding: 0;font-family: &quot;HelveticaNeue-Light&quot;, &quot;Helvetica Neue Light&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, &quot;Lucida Grande&quot;, sans-serif;line-height: 1.1;margin-bottom: 15px;color: #444;font-weight: 900;font-size: 14px;text-transform: uppercase;">Contact Info:</h6>	
+										<?php if ( $phone_number ) { ?>
+											<p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;">Phone: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><?php echo $phone_number; ?></strong><br/>
+										<?php } ?>
+										<?php if ( $email ) { ?>
+											Email: <strong style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;"><a href="emailto:<?php echo $email; ?>" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #2BA6CB;"><?php echo $email; ?></a></strong></p>
+										<?php } ?>
+									<?php } ?>
 								</td>
 							</tr>
 						</table><!-- /social & contact -->

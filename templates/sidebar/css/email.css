@@ -39,7 +39,7 @@ a { color: #2BA6CB;}
 	display: inline-block;
 }
 
-div.callout {
+p.callout {
 	padding:15px;
 	background-color:#ECF8FF;
 	margin-bottom: 15px;

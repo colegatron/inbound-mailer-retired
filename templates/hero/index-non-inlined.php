@@ -27,7 +27,7 @@ $logo_url = get_field('logo_url', $post_id);
 $header_bg_color_array = get_field('header_bg_color', $post_id);
 $header_bg_color = $header_bg_color_array[1];
 
-/* Email Body */
+/* Email Body 
 $text_above_hero_image = get_field('text_above_hero_image', $post_id);
 $hero_image_url = get_field('hero_image', $post_id);
 $hero_image_callout = get_field('hero_image_callout', $post_id);
@@ -36,13 +36,15 @@ $hero_callout_background_color = $hero_callout_background_color_array[1];
 $main_email_content = get_field('main_email_content', $post_id);
 $button_link = get_field('button_link', $post_id);
 $button_text = get_field('button_text', $post_id);
+ * 
+ */
 
 /* Social Box */
 $facebook_page_url = get_field('facebook_page', $post_id);
 $twitter_handle = get_field('twitter_handle', $post_id);
 $google_plus_url = get_field('google_plus', $post_id);
-$footer_background_color_array = get_field('footer_background_color', $post_id);
-$footer_background_color = $footer_background_color_array[1];
+$social_bg_color_array = get_field('footer_background_color', $post_id);
+$social_bg_color = $social_bg_color_array[1];
 $phone_number = get_field('phone_number', $post_id);
 $email = get_field('email', $post_id);
 
@@ -93,8 +95,6 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 
 	.btn {
 		text-decoration:none;
-		color: #FFF;
-		background-color: #666;
 		padding:10px 16px;
 		font-weight:bold;
 		margin-right:10px;
@@ -115,7 +115,7 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 
 	table.social {
 	/* 	padding:15px; */
-		background-color: #ebebeb;
+		background-color: <?php  echo $social_bg_color; ?>
 
 	}
 	.social .soc-btn {
@@ -328,32 +328,51 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 			<table>
 				<tr>
 					<td>
-						
-						<?php 
-							if ( $text_above_hero_image ) {
-								echo $text_above_hero_image;
+					<?php
+						if ( function_exists('have_rows') ) {
+							if (have_rows('email_hero_box')) {
+								while ( have_rows('email_hero_box')) {
+									the_row();
+
+									switch( get_row_layout() ) {
+										case 'email_body':
+											?>
+											<!-- A Real Hero (and a real human being) -->
+											<p><?php if ( $hero_image_url = get_sub_field('hero_image_url') ) { ?>
+											<img alt="hero image" src="<?php  echo $hero_image_url; ?>" width="600" height="300"/>
+											<?php } ?></p><!-- /hero -->
+											<?php 
+											$main_email_content = get_sub_field('main_content'); 
+											?>
+											<?php 
+											echo $main_email_content; 
+											$button_link = get_sub_field('button_link'); 
+											$button_text = get_sub_field('button_text');
+											$style = 'color: ';
+											if ( $button_text_color = get_sub_field('button_text_color') ) {
+												$style .= $button_text_color[1] . ';';
+											} else { $style .= '#fff;'; }
+											$style .= 'background-color: ';
+											if ( $button_bg_color = get_sub_field('button_bg_color') ) {
+												$style .= $button_bg_color[1] . ';';
+											} else { $style .= '#666;'; }
+											?>
+											<a href="<?php echo $button_link; ?>" style="<?php echo $style; ?>
+												 margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;text-decoration: none;font-weight: bold;margin-right: 10px;text-align: center;cursor: pointer;display: inline-block;" class="btn"><?php echo $button_text; ?></a>
+											<?php
+											break;
+									}
+								}
 							}
-						?>
-						
-						<!-- A Real Hero (and a real human being) -->
-						<p><?php if ($hero_image_url) { ?>
-						<img src="<?php  echo $hero_image_url; ?>" width='600' height="300"/>
-						<?php } ?></p><!-- /hero -->
-						
-						<!-- Callout Panel -->
-						<?php
-						if ( $hero_image_callout ) {
-							?>
-							<div class="callout">
-								<?php echo $hero_image_callout; ?>
-							</div><!-- /Callout Panel -->
-							<?php
+							
+							if(!have_rows('email_hero_box')) {
+								echo '<div class="container">';
+								the_content();
+								echo "</div>";
+							}
 						}
-						?>
-						
-						<?php echo $main_email_content; ?>
-						<a href="<?php echo $button_link; ?>" class="btn"><?php echo $button_text; ?></a>
-												
+
+					?>					
 						<br/>
 						<br/>							
 												
