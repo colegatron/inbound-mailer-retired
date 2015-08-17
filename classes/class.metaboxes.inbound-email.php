@@ -17,6 +17,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
         static $sends;
         static $variation_stats;
         static $campaign_stats;
+        static $settings;
 
         function __construct() {
             self::load_hooks();
@@ -156,7 +157,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 }
                             ];
 
-                            console.log('here');
                             console.log(this.stats.variations);
                             for (id in this.stats.variations) {
                                 chart[0]['values'].push({
@@ -1112,7 +1112,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
         public static function get_email_type() {
             global $post;
 
-            $settings = Inbound_Email_Meta::get_settings($post->ID);
+            self::$settings = Inbound_Email_Meta::get_settings($post->ID);
             $vid = Inbound_Mailer_Variations::get_current_variation_id();
 
             if (isset($settings['email_type'])) {
@@ -1181,7 +1181,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
         }
 
         /**
-         * Display CTA Settings for templates AND extensions
+         * Display Mailer Settings for templates AND extensions
          */
         public static function render_settings($settings_key, $custom_fields, $post) {
 
@@ -1550,8 +1550,15 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                             jQuery('#postdivrich').hide();
 
                             /* Removes Permalink edit option */
-                            //jQuery('#edit-slug-box').hide();
+                            <?php
 
+                            if (!isset(self::$settings['customize-permalinks'])||self::$settings['customize-permalinks']!='yes' ) {
+
+                                ?>
+                                jQuery('#slugdiv').hide();
+                                <?php
+                            }
+                            ?>
                             /* store current slug */
                             Settings.current_slug = jQuery('#post_name').val();
 
