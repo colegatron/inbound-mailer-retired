@@ -38,7 +38,7 @@ class Inbound_Mailer_Ajax_Listeners {
 			return;
 		}
 
-		//error_log( print_r( $_POST , true ) );
+		/* error_log( print_r( $_POST , true ) ); */
 
 		/* update post type */
 		wp_update_post( array(
@@ -55,14 +55,12 @@ class Inbound_Mailer_Ajax_Listeners {
 
 		/* save all post vars as meta */
 		foreach ($_POST as $key => $value) {
+
 			if ( substr( $key , 0 , 8 ) == 'inbound_' ){
 				$key = str_replace( 'inbound_' , '' , $key );
 				$email_settings[ $key ] = $value;
 			} else {
 				if (self::check_whitelist( $key )) {
-					if (!is_array($value)) {
-						$value = stripslashes($value);
-					}
 					$email_settings['variations'][ $_POST[ 'inbvid'] ][ $key ] = $value;
 				}
 			}

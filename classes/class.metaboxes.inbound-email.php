@@ -2164,7 +2164,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
             /* Update Settings */
             Inbound_Email_Meta::update_settings($_POST['post_ID'], $email_settings);
 
-            /* updte slug */
+            /* update slug */
             remove_action('save_post', array(__CLASS__, 'action_save_data'));
             wp_update_post(
                 array (

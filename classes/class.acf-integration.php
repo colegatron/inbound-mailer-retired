@@ -61,8 +61,13 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 					$value = $new_value;
 				}
 			} else {
-				if ( strlen($value) && isset($field['default_value']) ) {
+
+				if ( !is_array($value) && strlen($value) && isset($field['default_value']) ) {
 					$value = $field['default_value'];
+				} else {
+					if ($field['type'] == 'color_picker' ) {
+						$value = $field['default_value'];
+					}
 				}
 			}
 			/**
