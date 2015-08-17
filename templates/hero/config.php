@@ -258,7 +258,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 				'class' => '',
 				'id' => '',
 			),
-			'default_value' => '',
+			'default_value' => '#a9a9a9',
 		),
 		array (
 			'key' => 'field_55c966404c413',

@@ -27,25 +27,6 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 
 
 		/**
-		*	Save ACF fields under variation
-		*/
-		public static function save_acf_fields(	$post_id ) {
-			global $post;
-
-			if ( !isset($post) || $post->post_type != 'inbound-email' || !isset($_POST['acf']) ) {
-				return;
-			}
-
-			/* get variation */
-			$vid = Inbound_Mailer_Variations::get_current_variation_id();
-
-			/* Update special variation object */
-			update_post_meta( $post_id , 'acf-' . $vid , $_POST['acf'] );
-
-		}
-
-
-		/**
 		* Finds the correct value given the variation
 		*
 		* @param MIXED $value contains the non-variation value

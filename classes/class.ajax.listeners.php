@@ -60,6 +60,9 @@ class Inbound_Mailer_Ajax_Listeners {
 				$email_settings[ $key ] = $value;
 			} else {
 				if (self::check_whitelist( $key )) {
+					if (!is_array($value)) {
+						$value = stripslashes($value);
+					}
 					$email_settings['variations'][ $_POST[ 'inbvid'] ][ $key ] = $value;
 				}
 			}
