@@ -159,117 +159,93 @@ $home_page_url	  = get_field('home_page_url', $post_id);
 
 						</table>            <!-- content -table -->
 						<table width="730" class="content-table" cellspacing="0" cellpadding="0" bgcolor="#ffffff">  
+								
+									<?php
+									if ( function_exists('have_rows') ) {
+										if (have_rows('news_line')) {
+											while ( have_rows('news_line')) {
+												the_row();
 
-						<!-- top gap -->
-							<tr class="sep-row"><td height="18"></td></tr>
-						<!-- entry content cell -->
-							<tr>
-							  <td>
+												switch( get_row_layout() ) {
+													case 'news_line':
+														$news_title = get_sub_field('news_title');
+														$news_url = get_sub_field('news_url');
+														$news_excerpt = get_sub_field('news_excerpt');
+														$featured_image = get_sub_field('featured_image');
+														$featured_image_url = get_sub_field('featured_image_url');
+														?>
+														<!-- top gap -->
+														<tr class="sep-row"><td height="18"></td></tr>
+														<!-- entry content cell -->
+														<tr>
+															<td>
+															<table width="100%" cellspacing="0" cellpadding="0" >
+																<tr>
+																	<td width="30" class="gap-cell"></td>
+																	<td class="post-cell" valign="top" style="color:#333333; font-size:14px; line-height:20px;font-family:Arial, sans serif;">
+																		<div class="img-wrap" style="float:right; margin-left:30px;">
+																			<a target="_blank" href="<?php echo $featured_image_url ?>">
+																				<img style="margin-top:4px;" width="150" border="0" height="150" alt="" align="right" src="<?php echo $featured_image ?>" />
+																			</a>
+																		</div>
+																		<h1 style='font-family:"HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", helvetica, arial, sans serif;color:#201f1f; font-size:22px; font-weight:bold; line-height:25px; margin:0 0 -10px 0;'>
+																			<a style='text-decoration: none;font-family:"HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", helvetica, arial, sans serif;color:#201f1f; font-size:22px; font-weight:bold; line-height:25px; margin:0 0 -10px 0;' target="_blank" href="<?php echo $news_url ?>"><?php echo $news_title ?></a>
+																		</h1>
+																		<div style="margin-right:140px;" class="pcont-text">
+																			<p><?php echo $news_excerpt ?></p>
+																		</div>
+																	</td>
+																	<td width="30" class="gap-cell"></td>
+																</tr>
+															</table>
+															</td>
+														</tr>
+														<!-- bottom gap -->
+														<tr class="mid-row"><td height="18"></td></tr>
 
-								<table width="100%" cellspacing="0" cellpadding="0" >
-								  <tr>
-
-									<td width="30" class="gap-cell"></td>
-
-
-									<td class="post-cell" valign="top" style="color:#333333; font-size:14px; line-height:20px;font-family:Arial, sans serif;">
-										<?php
-										if ( function_exists('have_rows') ) {
-											if (have_rows('news_line')) {
-												while ( have_rows('news_line')) {
-													the_row();
-
-													switch( get_row_layout() ) {
-														case 'news_line':
-															$news_title = get_sub_field('news_title');
-															$news_url = get_sub_field('news_url');
-															$news_excerpt = get_sub_field('news_excerpt');
-															$featured_image = get_sub_field('featured_image');
-															$featured_image_url = get_sub_field('featured_image_url');
-															?>
-															<p><?php if ( $hero_image_url = get_sub_field('hero_image_url') ) { ?>
-															<img alt="" src="<?php  echo $hero_image_url; ?>" width="600" height="300"/>
-															<?php } ?></p><!-- /hero -->
-															<?php 
-															?>
-															<?php 
-															echo $main_email_content; 
-															$button_link = get_sub_field('button_link'); 
-															$button_text = get_sub_field('button_text');
-															$style = 'color: ';
-															if ( $button_text_color = get_sub_field('button_text_color') ) {
-																$style .= $button_text_color[1] . ';';
-															} else { $style .= '#fff;'; }
-															$style .= 'background-color: ';
-															if ( $button_bg_color = get_sub_field('button_bg_color') ) {
-																$style .= $button_bg_color[1] . ';';
-															} else { $style .= '#666;'; }
-															?>
-															<a href="<?php echo $button_link; ?>" style="<?php echo $style; ?>
-																 margin: 0;padding: 10px 16px;font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;text-decoration: none;font-weight: bold;margin-right: 10px;text-align: center;cursor: pointer;display: inline-block;" class="btn"><?php echo $button_text; ?></a>
-															<?php
-															break;
-													}
+														<!-- separator -->
+														<tr class="sep-row">
+															<td>
+																<table width="100%" cellspacing="0" cellpadding="0">
+																	<tr>
+																		<td bgcolor="#eeeeee" height="1" ></td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+														<?php
+														break;
+													case 'callout':
+														?>
+														<tr class="sep-row"><td height="30"></td></tr>
+														<tr>
+															<td>
+																<table width="100%" cellpadding="10" cellspacing="0">
+																	<tr>
+																		<td width="10"></td>
+																		<td bgcolor="#efefef" align="center" style="font-size:15px; border:1px solid #ddd; color:#000; font-weight:bold; font-style:italic;"><?php echo (15724527 - 14540253 ); ?></td>
+																		<td width="10"></td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+														<tr class="sep-row"><td height="60"></td></tr>
+														<?php
 												}
 											}
-
-											if(!have_rows('email_hero_box')) {
-												echo '<div class="container">';
-												the_content();
-												echo "</div>";
-											}
 										}
-										?>
-										<div class="img-wrap" style="float:right; margin-left:30px;">
-											<a target="_blank" href="http://bigstock.7eer.net/c/165264/221496/1736">
-												<img style="margin-top:4px;" width="150" border="0" height="150" alt="" align="right" src="http://netdna.webdesignerdepot.com/uploads/2015/08/bigstock-aug20.jpg" />
-											</a>
 
-										</div>
-										<h1 style='font-family:"HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", helvetica, arial, sans serif;color:#201f1f; font-size:22px; font-weight:bold; line-height:25px; margin:0 0 -10px 0;'>25% off Images from Bigstock</h1>
-										<div style="margin-right:140px;" class="pcont-text">
-										<p><a target="_blank" style="color:#DD4D42; text-decoration:none; font-weight:bold;" href="http://bigstock.7eer.net/c/165264/221496/1736">Bigstock</a> is a royalty-free marketplace with millions of photos, illustrations, icons, and vectors. Their collection of high-quality design assets comes from artists and photographers around the world. They're currently offering 25% off any credit pack, so <a target="_blank" style="color:#DD4D42; text-decoration:none; font-weight:bold;" href="http://bigstock.7eer.net/c/165264/221496/1736">join Bigstock today</a> and get the design assets you need for your latest projects. <span style="color: #cfcfcf;"><strong>- AD</strong></span></p>
-										</div>
-									</td>
+										if(!have_rows('news_line')) {
+											echo '<div class="container">';
+											the_content();
+											echo "</div>";
+										}
+									}
+									?>
+																
+							
 
-									<td width="30" class="gap-cell"></td>
-
-								  </tr>
-								</table>
-
-							  </td>
-							</tr>
-
-							<!-- bottom gap -->
-							<tr class="mid-row"><td height="18"></td></tr>
-
-							<!-- separator -->
-							<tr class="sep-row">
-							  <td>
-								<table width="100%" cellspacing="0" cellpadding="0">
-								  <tr>
-
-								   <td bgcolor="#eeeeee" height="1" ></td>
-
-								  </tr>
-								</table>
-
-							  </td>
-							</tr>
-
-							<tr class="sep-row"><td height="30"></td></tr>
-							<tr>
-								<td>
-									<table width="100%" cellpadding="10" cellspacing="0">
-										<tr>
-											<td width="10"></td>
-											<td bgcolor="#efefef" align="center" style="font-size:15px; border:1px solid #ddd; color:#000; font-weight:bold; font-style:italic;">Want more cool news? <a style="color:#DD4D42; text-decoration:none; font-weight:bold;" href="http://www.webdesignernews.com/subscribe-email?email=*|EMAIL|*&amp;ref=wddnl186&amp;rd=1">Click here</a> to automatically subscribe to WebdesignerNews...</td>
-											<td width="10"></td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr class="sep-row"><td height="60"></td></tr>
+														
 
 
 							<tr class="shd-row" bgcolor="#dfdfdf"><td height="18"></td></tr>
