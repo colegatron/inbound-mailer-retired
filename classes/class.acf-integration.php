@@ -164,6 +164,7 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 		*/
 		public static function get_repeater_values( $array , $field ) {
 
+
 			/* Discover correct repeater pointer by parsing field name */
 			preg_match('/(_\d_)/', $field['name'], $matches, 0);
 
@@ -177,8 +178,11 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			foreach ($array as $key => $value) {
 				/* color pickers seem to be special */
 				if ($field['type'] == 'color_picker' ) {
-					if (is_array($value)) {
-						return $value[ $field['key'] ][1];
+					$field = get_field_object($field['key']);
+					if ($field['value']) {
+						return $field['value'];
+					} else {
+						return $field['default_value'];
 					}
 				}
 
