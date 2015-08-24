@@ -299,15 +299,15 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 			
 				<div class="content">
 					<table bgcolor="<?php  echo $header_bg_color; ?>">
-					<tr>
-						<td><?php if ($logo_url) { ?>
-						<img src="<?php  echo $logo_url; ?>" width='188'/>
-						<?php } ?></td>
-						<td align="right" height="70" class="viewWebsite">
-						<p style="font-family: Arial, Helvetica, sans-serif; color: #555555; font-size: 10px; padding: 0; margin: 0;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;" class='do-not-tracks'><?php _e('online' , 'inbound-email' ); ?></a>.</p>
-						</td>
-					</tr>
-				</table>
+						<tr>
+							<td><?php if ($logo_url) { ?>
+							<img src="<?php  echo $logo_url; ?>" width='188'/>
+							<?php } ?></td>
+							<td align="right" height="70" class="viewWebsite">
+							<p style="font-family: Arial, Helvetica, sans-serif; color: #555555; font-size: 10px; padding: 0; margin: 0;">Trouble viewing? Read this <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;" class='do-not-tracks'><?php _e('online' , 'inbound-email' ); ?></a>.</p>
+							</td>
+						</tr>
+					</table>
 				</div>
 				
 		</td>
@@ -348,11 +348,11 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 											$button_text = get_sub_field('button_text');
 											$style = 'color: ';
 											if ( $button_text_color = get_sub_field('button_text_color') ) {
-												$style .= $button_text_color[1] . ';';
+												$style .= $button_text_color . ';';
 											} else { $style .= '#fff;'; }
 											$style .= 'background-color: ';
 											if ( $button_bg_color = get_sub_field('button_bg_color') ) {
-												$style .= $button_bg_color[1] . ';';
+												$style .= $button_bg_color . ';';
 											} else { $style .= '#666;'; }
 											?>
 											<a href="<?php echo $button_link; ?>" style="<?php echo $style; ?>
