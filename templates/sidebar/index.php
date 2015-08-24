@@ -335,11 +335,11 @@ $sidebar_header_url = get_field('sidebar_header_link', $post_id);
 											$button_text = get_sub_field('button_text');
 											$style = 'color: ';
 											if ( $button_text_color = get_sub_field('button_text_color') ) {
-												$style .= $button_text_color[1] . ';';
+												$style .= $button_text_color . ';';
 											} else { $style .= '#fff;'; }
 											$style .= 'background-color: ';
 											if ( $button_bg_color = get_sub_field('button_bg_color') ) {
-												$style .= $button_bg_color[1] . ';';
+												$style .= $button_bg_color . ';';
 											} else { $style .= '#666;'; }
 											?>
 											<a href="<?php echo $button_link; ?>" style="<?php echo $style; ?>
