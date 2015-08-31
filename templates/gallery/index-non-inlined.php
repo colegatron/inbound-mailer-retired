@@ -1027,11 +1027,6 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     display: inline-block;
 }
 
-.header-row
-{
-    background: file:;
-}
-
 .before-title
 {
     height: 30px;
