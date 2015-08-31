@@ -21,19 +21,20 @@ do_action('inbound_mail_header');
 /* Load post */
 if (have_posts()) : while (have_posts()) : the_post();
 
-/* Main content */
 $post_id		 = get_the_ID();
+
+/* Main content */
 $logo_url		 = get_field('logo_url', $post_id);
 $header_bg_color = get_field('header_bg_color', $post_id);
-$callout_text	 = get_field('callout_text', $post_id);
+$header_bg_image  = get_field('header_bg_image', $post_id);
+$home_page_url	  = get_field('home_page_url', $post_id);
+
+/* Email Body */
+$email_title = get_field('email_title', $post_id);
+$email_bg_color = get_field('email_bg_color', $post_id);
 
 /* Footer */
 $footer_bg_color   = get_field('footer_bg_color', $post_id);
-$facebook_page_url = get_field('facebook_page', $post_id);
-$twitter_handle	   = get_field('twitter_handle', $post_id);
-$google_plus_url   = get_field('google_plus', $post_id);
-$phone_number	   = get_field('phone_number', $post_id);
-$email			   = get_field('email', $post_id);
 $terms_page_url    = get_field('terms_page_url', $post_id);
 $privacy_page_url  = get_field('privacy_page_url', $post_id);
 
@@ -1030,12 +1031,10 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .before-title
 {
     height: 30px;
-    background-color: #dfdfdf;
 }
 
 .title-cell
 {
-    background-color: #dfdfdf;
     height: 18px;
     padding-top: 0 !important;
     padding-bottom: 20px !important;
@@ -1056,13 +1055,11 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .after-title
 {
     height: 30px;
-    background-color: #dfdfdf;
     padding-top: 0 !important;
 }
 
 .gallery-cell
 {
-    background-color: #dfdfdf;
     padding-top: 0 !important;
 }
 
@@ -1081,13 +1078,11 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .vert-gap
 {
     height: 10px;
-    background-color: #dfdfdf;
 }
 
 .cell-caption
 {
     height: 40px;
-    background-color: #dfdfdf;
 }
 
 .cell-caption.left
@@ -1103,7 +1098,6 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .gallery-gap
 {
     height: 30px;
-    background-color: #dfdfdf;
 }
 
 .callout
@@ -1237,6 +1231,11 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     background-color: #e9baba;
 }
 
+.email-body-cell
+{
+    background-color: <?php echo $email_bg_color ?>;
+}
+
 
 </style>
     </head>
@@ -1255,7 +1254,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                                 <a href="<?php echo get_permalink( $post_id ); ?>" style="color: #990000;" class='do-not-tracks'>online</a>.
                                             </div>
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1273,7 +1272,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="twelve columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1285,7 +1284,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="one columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1293,11 +1292,11 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="ten columns">
                                     <tr class="">
                                         <td class="logo-cell">
-                                            <a name="anchor">
-                                                <img src="file:///C:/Program%20Files%20(x86)/Pinegrow%20Web%20Designer/placeholders/img2.jpg" />
+                                            <a name="anchor" href="<?php echo $home_page_url; ?>">
+                                                <img src="<?php echo $logo_url; ?>" />
                                             </a>
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1305,7 +1304,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="one columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1317,7 +1316,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="twelve columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1328,14 +1327,14 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
         </table>
         <table class="container mail-body">
             <tr class="">
-                <td class="">
+                <td class="email-body-cell">
                     <table class="row mail-title">
                         <tr class="">
                             <td class="wrapper last before-title">
                                 <table class="twelve columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1345,9 +1344,9 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="twelve columns">
                                     <tr class="">
                                         <td class="main-title left-text-pad">
-                                            <h2>Heading 2</h2>
+                                            <h2><?php echo $email_title; ?></h2>
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1363,7 +1362,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                                 <img src="file:///C:/Program%20Files%20(x86)/Pinegrow%20Web%20Designer/placeholders/img8.jpg" />
                                             </a>                                                                                                                                                                                                                                                                                                                                                                                                                                                        &nbsp;
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1375,7 +1374,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                                 <img src="file:///C:/Program%20Files%20(x86)/Pinegrow%20Web%20Designer/placeholders/img6.jpg" />
                                             </a>                                                                                                                                                                                                                                                                                                                                                                                                                                                        &nbsp;
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1391,7 +1390,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                             <br />
                                             <span>Author</span>
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1403,7 +1402,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                             <br />
                                             <span>Author</span>
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1415,7 +1414,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                 <table class="twelve columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1436,7 +1435,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                                 </tr>
                                             </table>                                            &nbsp;
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1451,22 +1450,22 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                     <table class="row">
                         <tr class="">
                             <td class="top-gap">
-                                <table class="pg-empty-placeholder twelve columns">
+                                <table class="twelve columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
                     </table>
-                    <table class="pg-empty-placeholder row">
+                    <table class="row">
                         <tr class="">
                             <td class="bottom-gap">
-                                <table class="pg-empty-placeholder tewlve columns">
+                                <table class="tewlve columns">
                                     <tr class="">
                                         <td class="">&nbsp;</td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -1482,7 +1481,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                                                     <?php _e('Unsubscribe from this list' , 'inbound-mailer' ); ?>                                                    Unsubscribe from this list
                                                 </a></p>
                                         </td>
-                                        <td class="pg-empty-placeholder expander"></td>
+                                        <td class="expander"></td>
                                     </tr>
                                 </table>
                             </td>
