@@ -133,7 +133,7 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 						<table style="width:730px; border:0;" class="header-table header-cell-table" id="header-cell" cellspacing="0" cellpadding="0" >
 
 							<tr class="image-row">
-								<td class="logo-cell-with-bg" style="background-color:<?php echo $header_bg_color ?>; background-image:url(<?php echo $title_date_color ?>); height:100px; vertical-align:middle;">
+								<td class="logo-cell-with-bg" style="background-color:<?php echo $header_bg_color ?>; background-image:url(<?php echo $header_bg_image ?>); height:100px; vertical-align:middle;">
 
 									<table style="width:100%; vertical-align:middle;" cellspacing="0" cellpadding="0">
 										<tr>
