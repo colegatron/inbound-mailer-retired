@@ -1153,8 +1153,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .callout-button-cell a
 {
     color: <?php echo $callout_button_font_color; ?> !important;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding: 10px 20px;
 }
 
 .callout .callout-button-cell
