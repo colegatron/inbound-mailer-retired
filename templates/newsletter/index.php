@@ -219,7 +219,7 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 												$callout_text     = get_sub_field('callout_text');
 												$callout_bg_color = get_sub_field('callout_bg_color');
 												$bg_color_dec	  = hexdec(substr($callout_bg_color, 1));
-												$border_color	  = dechex($bg_color_dec + 1184274);
+												$border_color	  = dechex($bg_color_dec - 1184274);
 												?>
 												<tr class="sec-separator"><td height="30"></td></tr>
 												<tr>
