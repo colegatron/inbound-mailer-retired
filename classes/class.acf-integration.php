@@ -51,7 +51,7 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			}
 
 			if ( isset( $variations[ $vid ][ 'acf' ] ) ) {
-				$new_value = self::search_field_array( $variations[ $vid ][ 'acf' ] , $field );
+				$new_value = self::get_variation_values( $variations[ $vid ][ 'acf' ] , $field );
 
 				/* sometimes value is an array count when new_value believes it should be an array in this case get new count */
 				if (!is_array($value) && is_array($new_value)) {
@@ -59,6 +59,7 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 				} else {
 					$value = $new_value;
 				}
+
 			} else {
 				if ( !is_array($value) && strlen($value) && isset($field['default_value']) ) {
 					$value = $field['default_value'];
@@ -82,52 +83,50 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 		* Searches ACF variation array and returns the correct field value given the field key
 		*
 		* @param ARRAY $array of custom field keys and values stored for variation
-		* @param STRING $needle acf form field key
+		* @param STRING $field['key'] acf form field key
 		*
 		* @return $feild value
 		*/
-		public static function search_field_array( $array , $field ) {
+		public static function get_variation_values( $array , $field ) {
 
+			$value = self::key_search( $array , $field['key']  ) ;
 
-			$needle = $field['key'];
+			/* color pickers seem to be special */
+			if ($field['type'] == 'color_picker' ) {
+				if (is_array($value)) {
+					$value = $value[1];
+				}
+			}
+
+			if (!is_array($value)) {
+				return $value;
+			}
 
 			foreach ($array as $key => $value ){
 
-				if ($key === $needle && !is_array($value) ) {
-					return $value;
+				/* Arrays could be repeaters or any custom field with sets of multiple values */
+				if ( !is_array($value) ) {
+					continue;
 				}
 
-				/* Arrays could be repeaters or any custom field with sets of multiple values */
-				if ( is_array($value) ) {
+				/* Check if this array contains a repeater field layouts. If it does then return layouts, else this array is a non-repeater value set so return it */
+				if ( $key === $field['key'] ) {
 
-					/* Check if this array contains a repeater field layouts. If it does then return layouts, else this array is a non-repeater value set so return it */
-					if ( $key === $needle ) {
-						$repeater_array = self::get_repeater_layouts( $value );
-						if ($repeater_array) {
-							return $repeater_array;
+					$repeater_array = self::get_repeater_layouts( $value );
+					if ($repeater_array) {
+						return $repeater_array;
+					} else	{
 
-						} else	{
-
-							/* color pickers seem to be special */
-							if ($field['type'] == 'color_picker' ) {
-								if (is_array($value)) {
-									$value = $array[ $field['key'] ][1];
-								}
+						/* color pickers seem to be special */
+						if ($field['type'] == 'color_picker' ) {
+							if (is_array($value)) {
+								$value = $array[ $field['key'] ][1];
 							}
-
-							return $value;
 						}
 
+						return $value;
 					}
 
-
-					/* Check if array is repeater fields and determine correct value given a parsed field name with field key */
-					$repeater_value = self::get_repeater_values( $value , $field );
-
-					/* If target key is not in these repeater fields, or this array is not determined to be a repeater field then move on. */
-					if ($repeater_value) {
-						return $repeater_value;
-					}
 				}
 
 			}
@@ -231,6 +230,26 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 					</script>
 				";
 				}
+		}
+
+		public static function key_search($array, $search) {
+			$value = false;
+
+			foreach ($array as $key => $item) {
+				if ($key === $search) {
+					return $item;
+				} else {
+					if (is_array($item)) {
+						$value = self::key_search($item, $search);
+					}
+				}
+
+				if ($value) {
+					return $value;
+				}
+			}
+
+			return false;
 		}
 	}
 
