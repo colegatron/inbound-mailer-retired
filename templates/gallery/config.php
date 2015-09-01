@@ -340,7 +340,7 @@ Please notice that png files are not read correctly by Outlook, if you want maxi
 						array (
 							'key' => 'field_55e4711a60946',
 							'label' => 'Right Image Title',
-							'name' => 'right_image_title_copy',
+							'name' => 'right_image_title',
 							'type' => 'text',
 							'instructions' => 'Add the title of your image',
 							'required' => 0,
