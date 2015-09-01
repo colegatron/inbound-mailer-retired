@@ -26,15 +26,16 @@ $post_id		 = get_the_ID();
 /* Main content */
 $logo_url		 = get_field('logo_url', $post_id);
 $header_bg_color = get_field('header_bg_color', $post_id);
-$header_bg_image  = get_field('header_bg_image', $post_id);
-$home_page_url	  = get_field('home_page_url', $post_id);
+$header_bg_image = get_field('header_bg_image', $post_id);
+$home_page_url	 = get_field('home_page_url', $post_id);
 
 /* Email Body */
-$email_title = get_field('email_title', $post_id);
+$email_title	= get_field('email_title', $post_id);
 $email_bg_color = get_field('email_bg_color', $post_id);
+$bg_color_dec	= hexdec(substr($email_bg_color, 1));
+$divider_color	= dechex($bg_color_dec - 1184274);
 
 /* Footer */
-$footer_bg_color   = get_field('footer_bg_color', $post_id);
 $terms_page_url    = get_field('terms_page_url', $post_id);
 $privacy_page_url  = get_field('privacy_page_url', $post_id);
 
@@ -125,7 +126,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
             table, tr, td
             {
             padding: 0;
-            vertical-align: top;
+            //vertical-align: top;
             text-align: left;
             }
             hr
@@ -972,7 +973,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     vertical-align: middle;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
-    color: #555;
+    color: #555555;
     line-height: 20px;
 }
 
@@ -1045,7 +1046,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     font-size: 16px;
     font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     line-height: 18px;
-    color: #7b7771;
+    color: #777777;
     margin: 0;
     padding: 0 0 0 5px;
     text-align: left;
@@ -1119,21 +1120,9 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     font-weight: bold;
 }
 
-.header
-{
-}
-
 .callout-cell
 {
-    background-color: #b5b5b5;
-}
-
-.gallery
-{
-}
-
-.gallery.left
-{
+    background-color: <?php echo $callout_bg_color ?>;
 }
 
 .gallery.right
@@ -1156,10 +1145,9 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 {
     text-align: center;
     height: 49px;
-    color: #ffffff;
     font-family: 'helvetica neue',helvetica,arial,sans-serif;
     font-size: 20px;
-    background-color: #599351;
+    background-color: <?php echo $callout_button_color ?>;
     vertical-align: middle;
     text-decoration: none;
 }
@@ -1172,7 +1160,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 
 .callout-button-cell a
 {
-    color: #ffffff;
+    color: <?php echo $callout_button_font_color ?>;
     padding-right: 20px;
     padding-left: 20px;
 }
@@ -1185,8 +1173,8 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .callout-text
 {
     font-family: 'helvetica neue',helvetica,arial,sans-serif;
-    font-size: 20px;
-    color: #797771;
+    font-size: <?php echo $callout_font_size ?>;
+    color: <?php echo $callout_font_color ?>;
 }
 
 .footer-cell
@@ -1194,6 +1182,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+	border-top: 1px solid #<?php echo $divider_color ?>;
 }
 
 .footer-cell p
@@ -1208,32 +1197,25 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     text-decoration: none;
 }
 
-.top-gap
-{
-    border-bottom: 1px solid #dcdbd7;
-    height: 40px;
-}
-
 .footer-container
 {
-    background-color: #dfdfdf;
-}
-
-.bottom-gap
-{
-    height: 40px;
+    background-color: <?php echo $email_bg_color ?>;
 }
 
 .header-cell
 {
-    background-image: url('file:///G:/IM-Index/Repos/Graphics%20&%20Images%20Repo/Backgrounds/Material%20design%20BGs/pngs/mb-bg-fb-17.png');
+    background-image: url('<?php echo $header_bg_image ?>');
     background-size: cover;
-    background-color: #e9baba;
+    background-color: <?php echo $header_bg_color ?>;
 }
 
 .email-body-cell
 {
     background-color: <?php echo $email_bg_color ?>;
+}
+
+.header-cell .header-row .main-header table.ten.columns {
+	vertical-align: middle;
 }
 
 
@@ -1352,101 +1334,154 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                             </td>
                         </tr>
                     </table>
-                    <table class="row">
-                        <tr class="">
-                            <td class="wrapper gallery-cell left">
-                                <table class="six columns">
-                                    <tr class="">
-                                        <td class="gallery left">
-                                            <a name="anchor" href="#">
-                                                <img src="file:///C:/Program%20Files%20(x86)/Pinegrow%20Web%20Designer/placeholders/img8.jpg" />
-                                            </a>                                                                                                                                                                                                                                                                                                                                                                                                                                                        &nbsp;
-                                        </td>
-                                        <td class="expander"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td class="wrapper last gallery-cell">
-                                <table class="six columns">
-                                    <tr class="">
-                                        <td class="gallery right">
-                                            <a name="anchor" href="#">
-                                                <img src="file:///C:/Program%20Files%20(x86)/Pinegrow%20Web%20Designer/placeholders/img6.jpg" />
-                                            </a>                                                                                                                                                                                                                                                                                                                                                                                                                                                        &nbsp;
-                                        </td>
-                                        <td class="expander"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <table class="row">
-                        <tr class="">
-                            <td class="wrapper cell-caption left">
-                                <table class="six columns">
-                                    <tr class="">
-                                        <td class="caption left-text-pad">
-                                            <a name="anchor" href="#">This is The Picture Title</a>
-                                            <br />
-                                            <span>Author</span>
-                                        </td>
-                                        <td class="expander"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td class="wrapper last cell-caption">
-                                <table class="six columns">
-                                    <tr class="">
-                                        <td class="caption left-text-pad">
-                                            <a name="anchor" href="#">This is The Picture Title</a>
-                                            <br />
-                                            <span>Author</span>
-                                        </td>
-                                        <td class="expander"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <table class="row">
-                        <tr class="">
-                            <td class="wrapper last gallery-gap">
-                                <table class="twelve columns">
-                                    <tr class="">
-                                        <td class="">&nbsp;</td>
-                                        <td class="expander"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <table class="row">
-                        <tr class="">
-                            <td class="wrapper last callout-cell">
-                                <table class="twelve columns">
-                                    <tr class="">
-                                        <td class="callout">
-                                            <span class="callout-text">This is the text of the callout</span>
-                                            <table class="callout-button-container">
-                                                <tr class="">
-                                                    <td class="callout-button-cell">
-                                                        <a name="anchor">Go There</a>
-                                                    </td>
-                                                </tr>
-                                            </table>                                            &nbsp;
-                                        </td>
-                                        <td class="expander"></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+					
+					<?php
+						if ( function_exists('have_rows') ) {
+							if (have_rows('gallery')) {
+								while ( have_rows('gallery')) {
+									the_row();
+
+									switch( get_row_layout() ) {
+										case 'gallery_row':
+											$left_image				= get_sub_field('left_image');
+											$left_image_url			= get_sub_field('left_image_url');
+											$left_image_title		= get_sub_field('left_image_title');
+											$left_image_title_url	= get_sub_field('left_image_title_url');
+											$left_image_author		= get_sub_field('left_image_author');
+											$right_image			= get_sub_field('right_image');
+											$right_image_url		= get_sub_field('right_image_url');
+											$right_image_title		= get_sub_field('right_image_title');
+											$right_image_title_url	= get_sub_field('right_image_title_url');
+											$right_image_author		= get_sub_field('right_image_author');
+											?>
+											<table class="row">
+												<tr class="">
+													<td class="wrapper gallery-cell left">
+														<table class="six columns">
+															<tr class="">
+																<td class="gallery left">
+																	<a name="anchor" href="<?php echo $left_image_url; ?>">
+																		<img src="<?php echo $left_image; ?>" />
+																	</a>                                                                                                                                                                                                                                                                                                                                                                                                                                                        &nbsp;
+																</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+													<td class="wrapper last gallery-cell">
+														<table class="six columns">
+															<tr class="">
+																<td class="gallery right">
+																	<a name="anchor" href="<?php echo $right_image_url; ?>">
+																		<img src="<?php echo $right_image; ?>" />
+																	</a>                                                                                                                                                                                                                                                                                                                                                                                                                                                        &nbsp;
+																</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+											<table class="row">
+												<tr class="">
+													<td class="wrapper cell-caption left">
+														<table class="six columns">
+															<tr class="">
+																<td class="caption left-text-pad">
+																	<a name="anchor" href="<?php echo $left_image_title_url; ?>"><?php echo $left_image_title; ?></a>
+																	<br />
+																	<span><?php echo $left_image_author; ?></span>
+																</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+													<td class="wrapper last cell-caption">
+														<table class="six columns">
+															<tr class="">
+																<td class="caption left-text-pad">
+																	<a name="anchor" href="<?php echo $right_image_title_url; ?>"><?php echo $right_image_title; ?></a>
+																	<br />
+																	<span><?php echo $right_image_author; ?></span>
+																</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+											<table class="row">
+												<tr class="">
+													<td class="wrapper last gallery-gap">
+														<table class="twelve columns">
+															<tr class="">
+																<td class="">&nbsp;</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+											<?php
+											break;
+										
+										case 'callout':
+											$callout_message = get_sub_field('callout_message');
+											$callout_font_size = get_sub_field('callout_font_size');
+											$callout_font_color = get_sub_field('callout_font_color');
+											$callout_bg_color = get_sub_field('callout_bg_color');
+											$callout_button_message = get_sub_field('callout_button_message');
+											$callout_button_link = get_sub_field('callout_button_link');
+											$callout_button_color = get_sub_field('callout_button_color');
+											$callout_button_font_color = get_sub_field('callout_button_font_color');
+											?>
+											<table class="row">
+												<tr class="">
+													<td class="wrapper last callout-cell" style="background-color: #777777">
+														<table class="twelve columns">
+															<tr class="">
+																<td class="callout">
+																	<span class="callout-text"><?php echo $callout_message; ?></span>
+																	<table class="callout-button-container">
+																		<tr class="">
+																			<td class="callout-button-cell">
+																				<a name="anchor" href="<?php echo $callout_button_link; ?>"><?php echo $callout_button_text; ?></a>
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+											<table class="row">
+												<tr class="">
+													<td class="wrapper last gallery-gap">
+														<table class="twelve columns">
+															<tr class="">
+																<td class="">&nbsp;</td>
+																<td class="expander"></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+											<?php
+											break;
+									}
+								}
+							}
+						}
+						?>										
                 </td>
             </tr>
         </table>
         <table class="footer-container container">
             <tr class="">
                 <td class="center">
+					<!--
                     <table class="row">
                         <tr class="">
                             <td class="top-gap">
@@ -1471,14 +1506,24 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
                             </td>
                         </tr>
                     </table>
+					-->
                     <table class="row">
                         <tr class="">
                             <td class="wrapper last">
                                 <table class="twelve columns">
                                     <tr class="">
                                         <td class="center footer-cell">
-                                            <p><?php if ( $terms_page_url ) { ?><a href="<?php echo $terms_page_url; ?>">Terms</a> |<?php } ?><?php if ( $privacy_page_url ) { ?><a href="<?php echo $privacy_page_url; ?>">Privacy</a> |<?php } ?><a href="<?php echo do_shortcode('[unsubscribe-link]'); ?>">
-                                                    <?php _e('Unsubscribe from this list' , 'inbound-mailer' ); ?>                                                    Unsubscribe from this list
+                                            <p>
+												<?php 
+												if ( $terms_page_url ) { 
+													?><a href="<?php echo $terms_page_url; ?>">Terms</a> |
+												<?php } ?>
+												<?php 
+												if ( $privacy_page_url ) { 
+													?><a href="<?php echo $privacy_page_url; ?>">Privacy</a> |
+												<?php } 
+												?><a href="<?php echo do_shortcode('[unsubscribe-link]'); ?>">
+                                                    <?php _e('Unsubscribe from this list' , 'inbound-mailer' ); ?>
                                                 </a></p>
                                         </td>
                                         <td class="expander"></td>
