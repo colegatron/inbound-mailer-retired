@@ -197,7 +197,7 @@ Please notice that png files are not read correctly by Outlook, if you want maxi
 					'key' => '55e465131439e',
 					'name' => 'gallery_row',
 					'label' => 'Gallery Row',
-					'display' => 'block',
+					'display' => 'row',
 					'sub_fields' => array (
 						array (
 							'key' => 'field_55e466d8ff1e3',
