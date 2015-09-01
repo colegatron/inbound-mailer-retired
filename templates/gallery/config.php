@@ -462,7 +462,7 @@ Please notice that png files are not read correctly by Outlook, if you want maxi
 								'class' => '',
 								'id' => '',
 							),
-							'default_value' => '#777777',
+							'default_value' => '#ffffff',
 						),
 						array (
 							'key' => 'field_55e51187b8cc3',
