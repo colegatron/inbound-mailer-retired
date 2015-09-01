@@ -385,7 +385,7 @@ $sidebar_header_url = get_field('sidebar_header_link', $post_id);
 							</li>
 							<?php
 
-							if ( have_rows('sidebar_sections') ) {
+							if ( @have_rows('sidebar_sections') ) {
 
 								while( have_rows('sidebar_sections') ){
 									the_row();
