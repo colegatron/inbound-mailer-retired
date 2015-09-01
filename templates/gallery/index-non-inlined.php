@@ -126,7 +126,6 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
             table, tr, td
             {
             padding: 0;
-            //vertical-align: top;
             text-align: left;
             }
             hr
@@ -957,13 +956,6 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
             }
             }
 
-
-
-
-
-
-
-
 </style>
         <style type="text/css">
             /* Your custom styles go here */
@@ -1122,7 +1114,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 
 .callout-cell
 {
-    background-color: <?php echo $callout_bg_color ?>;
+    background-color: <?php echo $callout_bg_color; ?>;
 }
 
 .gallery.right
@@ -1147,7 +1139,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     height: 49px;
     font-family: 'helvetica neue',helvetica,arial,sans-serif;
     font-size: 20px;
-    background-color: <?php echo $callout_button_color ?>;
+    background-color: <?php echo $callout_button_color; ?>;
     vertical-align: middle;
     text-decoration: none;
 }
@@ -1160,7 +1152,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 
 .callout-button-cell a
 {
-    color: <?php echo $callout_button_font_color ?>;
+    color: <?php echo $callout_button_font_color; ?> !important;
     padding-right: 20px;
     padding-left: 20px;
 }
@@ -1173,8 +1165,8 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 .callout-text
 {
     font-family: 'helvetica neue',helvetica,arial,sans-serif;
-    font-size: <?php echo $callout_font_size ?>;
-    color: <?php echo $callout_font_color ?>;
+    font-size: <?php echo $callout_font_size; ?>;
+    color: <?php echo $callout_font_color; ?>;
 }
 
 .footer-cell
@@ -1182,7 +1174,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-	border-top: 1px solid #<?php echo $divider_color ?>;
+	border-top: 1px solid #<?php echo $divider_color; ?>;
 }
 
 .footer-cell p
@@ -1199,19 +1191,19 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 
 .footer-container
 {
-    background-color: <?php echo $email_bg_color ?>;
+    background-color: <?php echo $email_bg_color; ?>;
 }
 
 .header-cell
 {
-    background-image: url('<?php echo $header_bg_image ?>');
+    background-image: url('<?php echo $header_bg_image; ?>');
     background-size: cover;
-    background-color: <?php echo $header_bg_color ?>;
+    background-color: <?php echo $header_bg_color; ?>;
 }
 
 .email-body-cell
 {
-    background-color: <?php echo $email_bg_color ?>;
+    background-color: <?php echo $email_bg_color; ?>;
 }
 
 .header-cell .header-row .main-header table.ten.columns {
@@ -1445,7 +1437,7 @@ $privacy_page_url  = get_field('privacy_page_url', $post_id);
 																	<table class="callout-button-container">
 																		<tr class="">
 																			<td class="callout-button-cell">
-																				<a name="anchor" href="<?php echo $callout_button_link; ?>"><?php echo $callout_button_text; ?></a>
+																				<a name="anchor" href="<?php echo $callout_button_link; ?>"><?php echo $callout_button_message; ?></a>
 																			</td>
 																		</tr>
 																	</table>
