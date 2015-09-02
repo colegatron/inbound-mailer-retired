@@ -175,7 +175,7 @@ $privacy_page_url = get_field('privacy_page_url', $post_id);
 								if (have_rows('news_line')) {
 									while ( have_rows('news_line')) {
 										the_row();
-										
+
 										switch( $layout = get_sub_field('acf_fc_layout') ) {
 											case 'news_line':
 												$news_title			= get_sub_field('news_title');

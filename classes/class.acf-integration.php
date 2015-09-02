@@ -89,7 +89,10 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 		*/
 		public static function get_variation_values( $array , $field ) {
 
-			$value = self::key_search( $array , $field['key']  ) ;
+			/* first check for repeater values */
+			$value = self::get_repeater_values( $array , $field );
+
+			$value = ( $value ) ? $value : self::key_search( $array , $field  ) ;
 
 			/* color pickers seem to be special */
 			if ($field['type'] == 'color_picker' ) {
@@ -99,6 +102,7 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			}
 
 			if (!is_array($value)) {
+
 				return $value;
 			}
 
@@ -111,25 +115,12 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 
 				/* Check if this array contains a repeater field layouts. If it does then return layouts, else this array is a non-repeater value set so return it */
 				if ( $key === $field['key'] ) {
-
 					$repeater_array = self::get_repeater_layouts( $value );
-					if ($repeater_array) {
-						return $repeater_array;
-					} else	{
-
-						/* color pickers seem to be special */
-						if ($field['type'] == 'color_picker' ) {
-							if (is_array($value)) {
-								$value = $array[ $field['key'] ][1];
-							}
-						}
-
-						return $value;
-					}
-
+					return $repeater_array;
 				}
 
 			}
+
 
 			return '';
 		}
@@ -168,28 +159,10 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			}
 
 			$pointer = str_replace('_' , '' , $matches[0]);
+			$repeater_key = self::key_search($array, $field , true );
 
-			$i = 0;
-			foreach ($array as $key => $value) {
+			return $array[$repeater_key][$pointer][$field['key']];
 
-				/* color pickers seem to be special */
-				if ($field['type'] == 'color_picker' ) {
-
-					if (isset($value[ $field['key'] ])) {
-						return $value[ $field['key'] ];
-					} else {
-						$field = get_field_object($field['key']);
-						return $field['default_value'];
-					}
-				}
-
-				if (isset($value[ $field['key'] ])	&& $pointer == $i ) {
-					return $value[ $field['key'] ];
-				}
-
-				$i++;
-			}
-			return false;
 		}
 
 		/**
@@ -232,20 +205,62 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 				}
 		}
 
-		public static function key_search($array, $search) {
+		/**
+		 * This is a complicated array search method for working with ACF repeater fields.
+		 * @param $array
+		 * @param $field
+		 * @param bool|false $get_parent if get_parent is set to true to will return the parent field group key of the repeater fields
+		 * @param mixed $last_key placeholder for storing the last key...
+		 * @return bool|int|string
+		 */
+		public static function key_search($array, $field , $get_parent = false , $last_key = false) {
 			$value = false;
 
 			foreach ($array as $key => $item) {
-				if ($key === $search) {
-					return $item;
+				if ($key === $field['key'] ) {
+					$value = $item;
 				} else {
 					if (is_array($item)) {
-						$value = self::key_search($item, $search);
+						$last_key = ( !is_numeric($key)) ? $key : $last_key;
+						$value = self::key_search($item, $field , $get_parent , $last_key );
 					}
 				}
 
 				if ($value) {
-					return $value;
+					if (!$get_parent) {
+						return $value;
+					} else {
+						return $last_key;
+					}
+
+				}
+			}
+
+			return false;
+		}
+
+		public static function unset_key_occurance($array, $field , $get_parent = false , $last_key = false) {
+			$value = false;
+
+			foreach ($array as $key => $item) {
+				if ($key === $field['key'] ) {
+					$value = $item;
+				} else {
+					if (is_array($item)) {
+						$value = self::key_search($item, $field , $get_parent , $key );
+					}
+				}
+
+				if ($value) {
+					if (!$get_parent) {
+						return $value;
+					} else {
+						echo 'here'.$value;
+						echo "\r\n";
+						echo $last_key;exit;
+						return $key;
+					}
+
 				}
 			}
 
