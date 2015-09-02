@@ -154,12 +154,13 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			/* Discover correct repeater pointer by parsing field name */
 			preg_match('/(_\d_)/', $field['name'], $matches, 0);
 
+			/* if not a repeater subfield then bail */
 			if (!$matches) {
 				return false;
 			}
 
 			$pointer = str_replace('_' , '' , $matches[0]);
-			$repeater_key = self::key_search($array, $field , true );
+			$repeater_key = self::key_search($array, $field , true ); /* returns parent flexible content field key using sub field key */
 
 			return $array[$repeater_key][$pointer][$field['key']];
 
@@ -239,33 +240,6 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 			return false;
 		}
 
-		public static function unset_key_occurance($array, $field , $get_parent = false , $last_key = false) {
-			$value = false;
-
-			foreach ($array as $key => $item) {
-				if ($key === $field['key'] ) {
-					$value = $item;
-				} else {
-					if (is_array($item)) {
-						$value = self::key_search($item, $field , $get_parent , $key );
-					}
-				}
-
-				if ($value) {
-					if (!$get_parent) {
-						return $value;
-					} else {
-						echo 'here'.$value;
-						echo "\r\n";
-						echo $last_key;exit;
-						return $key;
-					}
-
-				}
-			}
-
-			return false;
-		}
 	}
 
 	/**
