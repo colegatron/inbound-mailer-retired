@@ -133,7 +133,7 @@ print_r($settings);exit;
 </style>
 <body bgcolor="#f6f6f6" style="font-family: Arial; background-color: #f6f6f6;">
 
-<table width="630" class="container" align="center" cellpadding="0" cellspacing="0">
+<table style="max-width:630px;" class="container" align="center" cellpadding="0" cellspacing="0">
 	<tr>
 		<td>
 			<table align="left">
@@ -156,7 +156,7 @@ print_r($settings);exit;
 	</tr>
 </table>
 
-<table width="630" bgcolor="#fcfcfc" style="border: 1px solid #dddddd; line-height: 135%;" class="container" align="center" cellpadding="0" cellspacing="0">
+<table style="max-width:630px;" bgcolor="#fcfcfc" style="border: 1px solid #dddddd; line-height: 135%;" class="container" align="center" cellpadding="0" cellspacing="0">
 	<tr>
 		<td bgcolor="#fcfcfc" colspan="3" width="100%" height="10">&nbsp;</td>
 	</tr>
@@ -179,7 +179,7 @@ print_r($settings);exit;
 	</tr>
 </table>
 
-<table width="630" bgcolor="" style="line-height: 135%;text-align:center;font-size:10px;padding:10px;" class="container" align="center" cellpadding="0" cellspacing="0">
+<table style="max-width:630px;" bgcolor="" style="line-height: 135%;text-align:center;font-size:10px;padding:10px;" class="container" align="center" cellpadding="0" cellspacing="0">
 	<tr>
 		<td bgcolor="" colspan="3" width="100%" height="10"><a href="<?php echo do_shortcode('[unsubscribe-link]'); ?>"><?php _e('Unsubscribe from this list' , 'inbound-mailer' ); ?></a></td>
 	</tr>
