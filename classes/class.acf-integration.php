@@ -176,7 +176,7 @@ if (!class_exists('Inbound_Mailer_ACF')) {
 		public static function load_acf_on_template( $allow , $rule, $args ) {
 			global $post;
 
-			if ($post->post_type != 'inbound-email' ) {
+			if (!isset($post) || $post->post_type != 'inbound-email' ) {
 				 return $allow;
 			}
 
