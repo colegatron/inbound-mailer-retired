@@ -1127,11 +1127,12 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
          */
         public static function get_template_thumbnail($template) {
 
-            // Get Thumbnail
-            if (file_exists(INBOUND_EMAIL_PATH . 'templates/' . $template . "/thumbnail.png")) {
-                $thumbnail = INBOUND_EMAIL_URLPATH . 'templates/' . $template . "/thumbnail.png";
-            } else {
-                $thumbnail = INBOUND_EMAIL_UPLOADS_URLPATH . $template . "/thumbnail.png";
+            if (file_exists(INBOUND_EMAIL_PATH . 'templates/' . $template . '/thumbnail.png')) {
+                $thumbnail = INBOUND_EMAIL_URLPATH . 'templates/' . $template . '/thumbnail.png';
+            } else if (file_exists(INBOUND_EMAIL_UPLOADS_PATH .  $template . '/thumbnail.png')) {
+                $thumbnail = INBOUND_EMAIL_UPLOADS_URLPATH . $template . '/thumbnail.png';
+            } else if (file_exists(INBOUND_EMAIL_THEME_TEMPLATES_PATH . $template . '/thumbnail.png')) {
+                $thumbnail = INBOUND_EMAIL_THEME_TEMPLATES_URLPATH . $template . '/thumbnail.png';
             }
 
             return $thumbnail;
