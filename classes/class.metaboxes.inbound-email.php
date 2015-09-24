@@ -1340,6 +1340,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                             echo '<option value="' . $value . '" ' . $selected . ' >' . $label . '</option>';
                         }
                         echo '</select><i class="fa fa-question-circle inbound-tooltip"title="' . $field['description'] . '"></i>';
+                        echo '<script type="text/javascript"> jQuery("#'.$field_id.'").select2({width: "300px"});</script>';
                         break;
 
 
@@ -1537,9 +1538,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                          *    Initialize immediate UI modifications
                          */
                         init: function () {
-
-                            /* Initiate Select2 */
-                            jQuery('.select2').select2({width: '300px'});
 
                             /* Move publsihing actions	*/
                             //var clone = jQuery('.major-publishing-actions');
