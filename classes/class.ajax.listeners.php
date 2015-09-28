@@ -123,20 +123,19 @@ class Inbound_Mailer_Ajax_Listeners {
 	*/
 	public static function get_email_row_statistics() {
 		$stats = get_transient( 'inbound-email-stats-cache');
-		$stats = "";
 
 		if (!is_array($stats)) {
 			$stats = array();
 		}
 
 		if (isset($stats[$_REQUEST['email_id']])) {
-			echo $stats[$_REQUEST['email_id']];
+			echo json_encode($stats[$_REQUEST['email_id']]);
 			header('HTTP/1.1 200 OK');
 			exit;
 		}
 
 		$stats[$_REQUEST['email_id']] = Inbound_Email_Stats::get_email_timeseries_stats( $_REQUEST['email_id'] );
-		set_transient('inbound-email-stats-cache' , $stats , 60* 3);
+		set_transient('inbound-email-stats-cache' , $stats , 60* 5);
 
 		echo json_encode($stats[$_REQUEST['email_id']]);
 		header('HTTP/1.1 200 OK');
