@@ -32,13 +32,25 @@ class Inbound_Mailer_Enqueues {
 			return;
 		}
 
-		wp_enqueue_script('jquery');
-
+		self::load_frontend_global_enqueue();
 		self::load_frontend_inbound_email_enqueue();
 	}
 
 	/**
-	 *  Loads frontend enqueues when call to action post type is being loaded
+	 *  Loads frontend enqueues for global frontend
+	 */
+	public static function load_frontend_global_enqueue() {
+		global $post;
+
+		/* Enqueues css for unsubscribe page */
+		wp_enqueue_style('inbound-mailer-unsubsribe-css', INBOUND_EMAIL_URLPATH . 'assets/css/frontend/style-unsubscribe.css');
+
+		/* Enqueues js for unsubscribe page */
+		wp_enqueue_script('inbound-mailer-unsubsribe-js', INBOUND_EMAIL_URLPATH . 'assets/js/frontend/unsubscribe.js');
+	}
+
+	/**
+	 *  Loads frontend enqueues when inbound-email post type is being loaded
 	 */
 	public static function load_frontend_inbound_email_enqueue() {
 		global $post;
@@ -59,7 +71,7 @@ class Inbound_Mailer_Enqueues {
 		self::dequeue_3rd_party_scripts();
 
 		/* Enqueues general & unorganized admin stylings */
-		wp_enqueue_style('inbound-mailer-admin-css', INBOUND_EMAIL_URLPATH . 'css/admin-style.css');
+		wp_enqueue_style('inbound-mailer-admin-css', INBOUND_EMAIL_URLPATH . 'assets/css/admin-style.css');
 
 		/* Load enqueues directly related to inbound-email post type */
 		self::load_inbound_email_post_type_enqueues( $hook );
@@ -74,7 +86,7 @@ class Inbound_Mailer_Enqueues {
 	public static function load_inbound_email_post_type_enqueues( $hook ) {
 		global $post;
 
-		$CTAExtensions = Inbound_Mailer_Load_Extensions();
+		$Templates = Inbound_Mailer_Load_Templates();
 		$screen = get_current_screen();
 
 		if ( ( isset($screen) && $screen->post_type != 'inbound-email' ) ){
@@ -85,33 +97,33 @@ class Inbound_Mailer_Enqueues {
 		wp_enqueue_script(array('jquery', 'jqueryui', 'editor', 'thickbox', 'media-upload'));
 
 		/* Enqueue jpicker for color selectors  */
-		wp_enqueue_script('jpicker', INBOUND_EMAIL_URLPATH . 'lib/jpicker/jpicker-1.1.6.min.js');
-		wp_localize_script( 'jpicker', 'jpicker', array( 'thispath' => INBOUND_EMAIL_URLPATH.'lib/jpicker/images/' ));
-		wp_enqueue_style('jpicker-css', INBOUND_EMAIL_URLPATH . 'lib/jpicker/css/jPicker-1.1.6.min.css');
+		wp_enqueue_script('jpicker', INBOUND_EMAIL_URLPATH . 'assets/libraries/jpicker/jpicker-1.1.6.min.js');
+		wp_localize_script( 'jpicker', 'jpicker', array( 'thispath' => INBOUND_EMAIL_URLPATH.'assets/libraries/jpicker/images/' ));
+		wp_enqueue_style('jpicker-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/jpicker/css/jPicker-1.1.6.min.css');
 
 		/* Enqueue datepicker support */
-		wp_enqueue_script('jquery-datepicker', INBOUND_EMAIL_URLPATH . 'lib/jquery-datepicker/jquery.timepicker.min.js');
-		wp_enqueue_script('jquery-datepicker-functions', INBOUND_EMAIL_URLPATH . 'lib/jquery-datepicker/picker_functions.js');
-		wp_enqueue_script('jquery-datepicker-base', INBOUND_EMAIL_URLPATH . 'lib/jquery-datepicker/lib/base.js');
-		wp_enqueue_script('jquery-datepicker-datepair', INBOUND_EMAIL_URLPATH . 'lib/jquery-datepicker/lib/datepair.js');
-		wp_localize_script( 'jquery-datepicker', 'jquery_datepicker', array( 'thispath' => INBOUND_EMAIL_URLPATH.'lib/jquery-datepicker/' ));
+		wp_enqueue_script('jquery-datepicker', INBOUND_EMAIL_URLPATH . 'assets/libraries/jquery-datepicker/jquery.timepicker.min.js');
+		wp_enqueue_script('jquery-datepicker-functions', INBOUND_EMAIL_URLPATH . 'assets/libraries/jquery-datepicker/picker_functions.js');
+		wp_enqueue_script('jquery-datepicker-base', INBOUND_EMAIL_URLPATH . 'assets/libraries/jquery-datepicker/lib/base.js');
+		wp_enqueue_script('jquery-datepicker-datepair', INBOUND_EMAIL_URLPATH . 'assets/libraries/jquery-datepicker/lib/datepair.js');
+		wp_localize_script( 'jquery-datepicker', 'jquery_datepicker', array( 'thispath' => INBOUND_EMAIL_URLPATH.'assets/libraries/lib/jquery-datepicker/' ));
 
 		/* Enqueue timepicker support */
-		wp_enqueue_style('jquery-timepicker-css', INBOUND_EMAIL_URLPATH . 'lib/jquery-datepicker/jquery.timepicker.css');
-		wp_enqueue_style('jquery-datepicker-base.css', INBOUND_EMAIL_URLPATH . 'lib/jquery-datepicker/lib/base.css');
+		wp_enqueue_style('jquery-timepicker-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/jquery-datepicker/jquery.timepicker.css');
+		wp_enqueue_style('jquery-datepicker-base.css', INBOUND_EMAIL_URLPATH . 'assets/libraries/jquery-datepicker/lib/base.css');
 
 		/* Enqueue select2 support */
-		wp_enqueue_script('select2', INBOUND_EMAIL_URLPATH . 'lib/Select2/select2.min.js');
-		wp_enqueue_style('select2-css', INBOUND_EMAIL_URLPATH . 'lib/Select2/select2.css');
-		wp_enqueue_style('select2-bootstrap-css', INBOUND_EMAIL_URLPATH . 'lib/Select2/select2.css');
+		wp_enqueue_script('select2', INBOUND_EMAIL_URLPATH . 'assets/libraries/Select2/select2.min.js');
+		wp_enqueue_style('select2-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/Select2/select2.css');
+		wp_enqueue_style('select2-bootstrap-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/Select2/select2.css');
 
 		/* Enqueue Sweet Alert support  */
-		wp_enqueue_script('sweet-alert-js', INBOUND_EMAIL_URLPATH . 'lib/SweetAlert/sweet-alert.js');
-		wp_enqueue_style('sweet-alert-css', INBOUND_EMAIL_URLPATH . 'lib/SweetAlert/sweet-alert.css');
-		
+		wp_enqueue_script('sweet-alert-js', INBOUND_EMAIL_URLPATH . 'assets/libraries/SweetAlert/sweet-alert.js');
+		wp_enqueue_style('sweet-alert-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/SweetAlert/sweet-alert.css');
+
 		/*  Enqueue supporting js for Global Settings page */
 		if (isset($_GET['page']) && $_GET['page'] === 'inbound_email_global_settings') {
-			wp_enqueue_script('cta-settings-js', INBOUND_EMAIL_URLPATH . 'js/admin/admin.global-settings.js');
+			wp_enqueue_script('cta-settings-js', INBOUND_EMAIL_URLPATH . 'assets/js/admin/admin.global-settings.js');
 		}
 
 		/* Enqueue scripts required on create cta page and edit cta page */
@@ -121,12 +133,12 @@ class Inbound_Mailer_Enqueues {
 			add_filter( 'wp_default_editor', array( __CLASS__ , 'set_default_editor_mode' ) );/* force visual editor to open in text mode */
 
 			/* Enqueue UI assisting js */
-			wp_enqueue_script('inbound-mailer-post-edit-ui', INBOUND_EMAIL_URLPATH . 'js/admin/admin.post-edit.js');
+			wp_enqueue_script('inbound-mailer-post-edit-ui', INBOUND_EMAIL_URLPATH . 'assets/js/admin/admin.post-edit.js');
 			wp_localize_script( 'inbound-mailer-post-edit-ui', 'inbound_email_post_edit_ui', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'post_id' => $post->ID , 'wp_call_to_action_meta_nonce' => wp_create_nonce('inbound-email-meta-nonce'), 'wp_call_to_action_template_nonce' => wp_create_nonce('inbound-mailer-nonce') ) );
 
 			/* Enqueue supportive js for template switching */
-			wp_enqueue_script('inbound-mailer-js-metaboxes', INBOUND_EMAIL_URLPATH . 'js/admin/admin.metaboxes.js');
-			$template_data = $CTAExtensions->definitions;
+			wp_enqueue_script('inbound-mailer-js-metaboxes', INBOUND_EMAIL_URLPATH . 'assets/js/admin/admin.metaboxes.js');
+			$template_data = $Templates->definitions;
 			$template_data = json_encode($template_data);
 			$template = get_post_meta($post->ID, 'inbound-mailer-selected-template', true);
 			$template = apply_filters('inbound_email_selected_template',$template);
@@ -134,14 +146,19 @@ class Inbound_Mailer_Enqueues {
 			$params = array('selected_template'=>$template, 'templates'=>$template_data);
 			wp_localize_script('inbound-mailer-js-metaboxes', 'data', $params);
 
-			wp_enqueue_style('admin-post-edit-css', INBOUND_EMAIL_URLPATH . 'css/admin-post-edit.css');
+			wp_enqueue_style('admin-post-edit-css', INBOUND_EMAIL_URLPATH . 'assets/css/admin-post-edit.css');
 		}
 
 
-		/* Enqueue scripts & styles for cta creation page alone */
+		/* Enqueue scripts & styles for creation page alone */
 		if ( $hook == 'post-new.php'){
-			wp_enqueue_script('inbound-mailer-js-create-new', INBOUND_EMAIL_URLPATH . 'js/admin/admin.post-new.js', array('jquery'), '1.0', true );
-			wp_enqueue_style('inbound-mailer-css-post-new', INBOUND_EMAIL_URLPATH . 'css/admin-post-new.css');
+			wp_enqueue_script('inbound-mailer-js-create-new', INBOUND_EMAIL_URLPATH . 'assets/js/admin/admin.post-new.js', array('jquery'), '1.0', true );
+			wp_enqueue_style('inbound-mailer-css-post-new', INBOUND_EMAIL_URLPATH . 'assets/css/admin-post-new.css');
+		}
+
+		/* Enqueue scripts and styles for mailer listing page */
+		if ( $hook == 'edit.php' ){
+			wp_enqueue_script('inbound-mailer-list', INBOUND_EMAIL_URLPATH . 'assets/js/admin/admin.list.js', array('jquery'), '1.0', true );
 		}
 	}
 
@@ -153,31 +170,30 @@ class Inbound_Mailer_Enqueues {
 		if (!isset($_GET['page'])||$_GET['page']!='inbound-mailer-frontend-editor') {
 			return;
 		}
-		 
-		 
+
+
 		/* dequeue heartbeat */
 		wp_deregister_script('heartbeat');
-		
+
 		wp_enqueue_script(array('jquery', 'editor', 'thickbox', 'media-upload'));
 		wp_dequeue_script('jquery-cookie');
-		wp_enqueue_script('jquery-cookie', INBOUND_EMAIL_URLPATH . 'js/jquery.cookie.js');
+		wp_enqueue_script('jquery-cookie', INBOUND_EMAIL_URLPATH . 'assets/js/jquery.cookie.js');
 		wp_enqueue_style( 'wp-admin' );
 		wp_admin_css('thickbox');
 		add_thickbox();
 
-		wp_enqueue_style('inbound-mailer-admin-css', INBOUND_EMAIL_URLPATH . 'css/admin-style.css');
+		wp_enqueue_style('inbound-mailer-admin-css', INBOUND_EMAIL_URLPATH . 'assets/css/admin-style.css');
 
-		wp_enqueue_script('inbound-mailer-post-edit-ui', INBOUND_EMAIL_URLPATH . 'js/admin/admin.post-edit.js');
+		wp_enqueue_script('inbound-mailer-post-edit-ui', INBOUND_EMAIL_URLPATH . 'assets/js/admin/admin.post-edit.js');
 		wp_localize_script( 'inbound-mailer-post-edit-ui', 'inbound_email_post_edit_ui', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'wp_call_to_action_meta_nonce' => wp_create_nonce('inbound-email-meta-nonce') ) );
-		wp_enqueue_script('inbound-mailer-frontend-editor-js', INBOUND_EMAIL_URLPATH . 'js/customizer.save.js');
 
 		//jpicker - color picker
-		wp_enqueue_script('jpicker', INBOUND_EMAIL_URLPATH . 'lib/jpicker/jpicker-1.1.6.min.js');
-		wp_localize_script( 'jpicker', 'jpicker', array( 'thispath' => INBOUND_EMAIL_URLPATH.'lib/jpicker/images/' ));
-		wp_enqueue_style('jpicker-css', INBOUND_EMAIL_URLPATH . 'lib/jpicker/css/jPicker-1.1.6.min.css');
-		wp_enqueue_style('jpicker-css', INBOUND_EMAIL_URLPATH . 'lib/jpicker/css/jPicker.css');
-		wp_enqueue_style('inbound-mailer-customizer-frontend', INBOUND_EMAIL_URLPATH . 'css/customizer.frontend.css');
-		wp_enqueue_script('jquery-easing', INBOUND_EMAIL_URLPATH . 'js/jquery.easing.min.js');
+		wp_enqueue_script('jpicker', INBOUND_EMAIL_URLPATH . 'assets/libraries/jpicker/jpicker-1.1.6.min.js');
+		wp_localize_script( 'jpicker', 'jpicker', array( 'thispath' => INBOUND_EMAIL_URLPATH.'assets/libraries/jpicker/images/' ));
+		wp_enqueue_style('jpicker-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/jpicker/css/jPicker-1.1.6.min.css');
+		wp_enqueue_style('jpicker-css', INBOUND_EMAIL_URLPATH . 'assets/libraries/jpicker/css/jPicker.css');
+		wp_enqueue_style('inbound-mailer-customizer-frontend', INBOUND_EMAIL_URLPATH . 'assets/css/customizer.frontend.css');
+		wp_enqueue_script('jquery-easing', INBOUND_EMAIL_URLPATH . 'assets/js/jquery.easing.min.js');
 	}
 
 	/**
@@ -198,14 +214,14 @@ class Inbound_Mailer_Enqueues {
 	 *  re-enqueues 3rd party scripts
 	 */
 	public static function reload_3rd_party_scripts() {
-		
+
 		if(isset(self::$scripts_queue)) {
 			foreach ( self::$scripts_queue as $handle ) {
 			    wp_enqueue_script( $handle );
 			}
 		}
 	}
-	
+
 	/**
 	*  Sets default editor mode
 	*/

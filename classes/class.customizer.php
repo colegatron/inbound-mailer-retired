@@ -21,22 +21,18 @@ class Inbound_Mailer_Customizer {
 	*/
 	public static function load_hooks() {
 
-
 		/* Load only on iframe container window */
 		if (isset($_GET['inbound_email_iframe_window'])) 	{
 			/* Enqueue Scripts  */
 			add_action( 'admin_enqueue_scripts' , array( __CLASS__ , 'enqueue_preview_container_scripts' ));
-
-			/* Loads Preview Iframe in wp_head */
-			add_action('wp_head', array( __CLASS__ , 'load_preview_iframe' ) );
 		}
 
 		/* Load customizer launch */
 		if (isset($_GET['email-customizer']) && $_GET['email-customizer']=='on') {
-			add_filter('wp_head', array( __CLASS__ , 'launch_customizer' ) );
+			add_action('inbound_mail_header', array( __CLASS__ , 'launch_customizer' ) );
 		}
 
-		/* Load only on cta settings page when it customizer mode */
+		/* Load only on imbound-mail settings page when it customizer mode */
 		if (isset($_GET['frontend']) && $_GET['frontend'] === 'true') {
 			/* Enqueue Scripts  */
 			add_action( 'admin_enqueue_scripts' , array( __CLASS__ , 'enqueue_settings_scripts' ));
@@ -51,15 +47,15 @@ class Inbound_Mailer_Customizer {
 	}
 
 	public static function enqueue_preview_container_scripts() {
-
+		wp_enqueue_script('jquery');
 		/* Enqueue customizer CSS */
-		wp_enqueue_style('inbound_email_ab_testing_customizer_css', INBOUND_EMAIL_URLPATH . 'css/customizer-ab-testing.css');
+		wp_enqueue_style('inbound_email_ab_testing_customizer_css', INBOUND_EMAIL_URLPATH . 'assets/css/customizer-ab-testing.css');
 
 	}
 
 	public static function enqueue_preview_iframe_scripts() {
 		show_admin_bar( false );
-		wp_register_script('lp-customizer-load-js', INBOUND_EMAIL_URLPATH . 'js/customizer.load.js', array('jquery'));
+		wp_register_script('lp-customizer-load-js', INBOUND_EMAIL_URLPATH . 'assets/js/customizer.load.js', array('jquery'));
 		wp_enqueue_script('lp-customizer-load-js');
 	}
 
@@ -67,74 +63,12 @@ class Inbound_Mailer_Customizer {
 	public static function enqueue_settings_scripts() {
 		//show_admin_bar( false ); // doesnt work
 		$screen = get_current_screen();
-		wp_enqueue_style('cta-customizer-admin', INBOUND_EMAIL_URLPATH . 'css/new-customizer-admin.css');
+		wp_enqueue_style('inbound-email-customizer-admin-css', INBOUND_EMAIL_URLPATH . 'assets/css/new-customizer-admin.css');
 		if ( ( isset($screen) && $screen->post_type != 'inbound-email' ) ){
 			return;
 		}
 
-		wp_enqueue_script('cta-customizer-admin', INBOUND_EMAIL_URLPATH . 'js/admin/new-customizer-admin.js');
-
-	}
-
-	/* Adds CTA Preview Iframe */
-	public static function load_preview_iframe() {
-		global $Inbound_Mailer_Variations;
-
-		$inbound_email_variation = (isset($_GET['inbvid'])) ? $_GET['inbvid'] : '0';
-		$inbound_email_id = $_GET['post_id'];
-
-		$variations = $Inbound_Mailer_Variations->get_variations( $inbound_email_id );
-		$post_type_is = get_post_type($inbound_email_id);
-		?>
-
-		<link rel="stylesheet" href="<?php echo INBOUND_EMAIL_URLPATH . 'css/customizer-ab-testing.css';?>" />
-		<style type="text/css">
-
-		#variation-list {
-			position: absolute;
-			top: 0px;
-			left:0px;
-			padding-left: 5px;
-		}
-		#variation-list h3 {
-			text-decoration: none;
-			border-bottom: none;
-		}
-		#variation-list div {
-			display: inline-block;
-		}
-		#current_variation_id, #current-post-id {
-			display: none !important;
-		}
-
-
-		<?php if ($post_type_is !== "inbound-email") {
-		echo "#variation-list {display:none !important;}";
-		} ?>
-		</style>
-		<script type="text/javascript">
-			jQuery(document).ready(function($) {
-				var current_page = jQuery("#current_variation_id").text();
-				// reload the iframe preview page (for option toggles)
-				jQuery('.variation-wp-cta').on('click', function (event) {
-					varaition_is = jQuery(this).attr("id");
-					var original_url = jQuery(parent.document).find("#TB_iframeContent").attr("src");
-					var current_id = jQuery("#current-post-id").text();
-					someURL = original_url;
-
-					splitURL = someURL.split('?');
-					someURL = splitURL[0];
-					new_url = someURL + "?inbvid=" + varaition_is + "&inbound_email_iframe_window=on&post_id=" + current_id;
-					//console.log(new_url);
-					jQuery(parent.document).find("#TB_iframeContent").attr("src", new_url);
-				});
-
-			 });
-			</script>
-		<?php
-		echo "<span id='current-post-id'>$inbound_email_id</span>";
-
-		echo '</div>';
+		wp_enqueue_script('inbound-email-customizer-admin-js', INBOUND_EMAIL_URLPATH . 'assets/js/customizer.admin.js');
 
 	}
 
@@ -157,9 +91,9 @@ class Inbound_Mailer_Customizer {
 		$admin_url = admin_url();
 		$customizer_link = add_query_arg( array( 'inbvid' => $inbound_email_variation , 'action' => 'edit' , 'frontend' => 'true' ), admin_url() .'post.php?post='.$page_id );
 
-		wp_enqueue_style('inbound_email_ab_testing_customizer_css', INBOUND_EMAIL_URLPATH . 'css/customizer-ab-testing.css');
+		wp_enqueue_style('inbound_email_ab_testing_customizer_css', INBOUND_EMAIL_URLPATH . 'assets/css/customizer-ab-testing.css');
 		?>
-
+		<head>
 		<style type="text/css">
 			#wpadminbar {
 				z-index: 99999999999 !important;
@@ -173,39 +107,32 @@ class Inbound_Mailer_Customizer {
 				z-index: 999999;
 				background-color: #000;
 				opacity: 0;
-				background: -moz-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
-				background: -webkit-gradient(radial,center center,0px,center center,100%,color-stop(0%,rgba(0,0,0,0.4)),color-stop(100%,rgba(0,0,0,0.9)));
-				background: -webkit-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
-				background: -o-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
-				background: -ms-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
-				background: radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
-				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66000000',endColorstr='#e6000000',GradientType=1);
-				-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-				filter: alpha(opacity=50);
-
 			}
 
 			body.customize-support, body {
 				background-color: #eee !important;
-			background-image: linear-gradient(45deg, rgb(213, 213, 213) 25%, transparent 25%, transparent 75%, rgb(213, 213, 213) 75%, rgb(213, 213, 213)), linear-gradient(45deg, rgb(213, 213, 213) 25%, transparent 25%, transparent 75%, rgb(213, 213, 213) 75%, rgb(213, 213, 213)) !important;
-			background-size: 60px 60px !important;
-			background-position: 0 0, 30px 30px !important;
+				//background-image: linear-gradient(45deg, rgb(213, 213, 213) 25%, transparent 25%, transparent 75%, rgb(213, 213, 213) 75%, rgb(213, 213, 213)), linear-gradient(45deg, rgb(213, 213, 213) 25%, transparent 25%, transparent 75%, rgb(213, 213, 213) 75%, rgb(213, 213, 213)) !important;
+				background-size: 60px 60px !important;
+				background-position: 0 0, 30px 30px !important;
 			}
 
 
 		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
-			jQuery("#wp-admin-bar-edit a").text("Main Edit Screen");
 
-			setTimeout(function() {
-				jQuery(document).find("#inbound-mailer-live-preview").contents().find("#wpadminbar").hide()
-				jQuery(document).find("#inbound-mailer-live-preview").contents().find("html").css("margin-bottom", "-28px");
-
-			}, 2000);
+			jQuery('#inbound_email_customizer_options').load(function(){
+				jQuery('#inbound_email_customizer_options').contents().find(".action-save").on('click', function(event) {
+					setTimeout( function() {
+						document.getElementById('inbound-mailer-live-preview').src = document.getElementById('inbound-mailer-live-preview').src;
+					} , 1500 );
+				});
+			});
 		 });
 
 		</script>
+		</head>
 
 		<?php
 		global $post;
@@ -233,7 +160,7 @@ class Inbound_Mailer_Customizer {
 		echo '		</td>';
 
 		echo '		<td>';
-		echo '			<iframe id="inbound-mailer-live-preview" scrolling="no" src="'.$preview_link.'" style="max-width: 68%; '.$correct_width.' height:1000px; left: 32%; position: fixed;  top: 20%; z-index: 1; border: none; overflow:hidden;
+		echo '			<iframe id="inbound-mailer-live-preview" scrolling="yes" src="'.$preview_link.'" style="margin-top:25px;max-width: 68%; '.$correct_width.' height:1000px; left: 32%; position: fixed;  z-index: 1; border: none; overflow:hidden;
 		//background-image: linear-gradient(45deg, rgb(194, 194, 194) 25%, transparent 25%, transparent 75%, rgb(194, 194, 194) 75%, rgb(194, 194, 194)), linear-gradient(-45deg, rgb(194, 194, 194) 25%, transparent 25%, transparent 75%, rgb(194, 194, 194) 75%, rgb(194, 194, 194));
 		 background-position: initial initial; background-repeat: initial initial;"></iframe>';
 		echo '		</td>';

@@ -2,7 +2,7 @@
 /**
 * Template Name: Simple Responsive
 * @package	Inbound Email
-* 
+*
 */
 
 $key = basename(dirname(__FILE__));
@@ -30,32 +30,36 @@ register_field_group(array (
 	'fields' => array (
 		array (
 			'key' => 'field_544ebf0aa4133',
-			'label' => 'Logo URL',
+			'label' => __('Logo URL','inbound-email'),
 			'name' => 'logo_url',
 			'prefix' => '',
 			'type' => 'image',
-			'instructions' => 'Enter or upload your logo here',
+			'instructions' => __('Enter or upload your logo here','inbound-email'),
 			'required' => false,
 			'conditional_logic' => 0,
 			'return_format' => 'url',
 			'preview_size' => 'thumbnail',
-			'library' => 'uploadedTo',
+			'wrapper' => array (
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
 			'default_value' => INBOUND_EMAIL_URLPATH.'templates/'.$key.'/images/logo-wide-3.png'
 		),
 		array (
 			'key' => 'field_544ebfe4a4135',
-			'label' => 'Main Email Content',
+			'label' => __('Main Email Content','inbound-email'),
 			'name' => 'main_email_content',
 			'prefix' => '',
 			'type' => 'wysiwyg',
-			'instructions' => 'The content of your email should go here. ',
+			'instructions' => __('The content of your email should go here. ','inbound-email'),
 			'required' => 0,
 			'conditional_logic' => 0,
-			'default_value' => 'Dear {{first-name}},
+			'default_value' => 'Dear [lead-field id="wpleads_first_name" default="Subscriber"],
 
 Thank you for taking the time to read this email.
 
-Warm regards from {{site-name}}',
+Warm regards from Inbound Now',
 			'tabs' => 'all',
 			'toolbar' => 'full',
 			'media_upload' => 1,
@@ -84,4 +88,3 @@ Warm regards from {{site-name}}',
 ));
 
 endif;
-	
