@@ -4,30 +4,27 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 
 	class Inbound_Mailer_Variations {
 
-		public function __construct() {		
-			self::load_hooks();		
+		public function __construct() {
+			self::load_hooks();
 		}
 
 		public static function load_hooks() {
-			
-			/* Builds variation object on CTA save */
-			add_action( 'save_post', array( __CLASS__ , 'save_variation_object_data' ) );
-			
+
 			/* Filter to add variation id to end of meta key */
 			add_filter( 'inbound_email_prepare_input_id' , array( __CLASS__ , 'prepare_input_id' ) );
-			
+
 			/* Appends variation id to given url */
 			add_filter( 'inbound_email_customizer_customizer_link', array( __CLASS__ , 'append_variation_id_to_url') );
 			add_filter( 'post_type_link', array( __CLASS__ , 'append_variation_id_to_url') );
-		
+
 			/* Records impression for cta */
 			add_action( 'inbound_email_record_impression' , array( __CLASS__ , 'record_impression' ) , 10, 2);
-		
+
 			/* Records conversion for cta */
 			add_action( 'inbound_email_record_conversion' , array( __CLASS__ , 'record_conversion' ) , 10, 2);
 		}
 
-		
+
 		/**
 		* Deletes variation for	a call to action
 		*
@@ -36,19 +33,19 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*
 		*/
 		public static function delete_variation( $inbound_email_id	,	$vid ) {
-			
+
 			/* Update variations meta object */
 			$variations = self::get_variations( $inbound_email_id );
 			unset($variations[$vid]);
-			
+
 			self::update_variations( $inbound_email_id , $variations );
-			
+
 			/* Get first array variation and set it as open variation */
 			reset($variations);
 			$vid = key($variations);
 			$_SESSION[ $inbound_email_id . '-variation-id'] = $vid;
 		}
-		
+
 		/**
 		* Pauses variation for a call to action
 		*
@@ -57,14 +54,14 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*
 		*/
 		public static function pause_variation( $inbound_email_id	,	$vid ) {
-			
+
 			/* Update variations meta object */
 			$variations = self::get_variations( $inbound_email_id );
 			$variations[ $vid ]['status'] = 'paused';
 
 			self::update_variations( $inbound_email_id , $variations );
 		}
-		
+
 		/**
 		* Activations variation for a call to action
 		*
@@ -73,65 +70,31 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*
 		*/
 		public static function play_variation( $inbound_email_id	,	$vid ) {
-			
+
 			/* Update variations meta object */
 			$variations = self::get_variations( $inbound_email_id );
 			$variations[ $vid ]['status'] = 'active';
-			
+
 			self::update_variations( $inbound_email_id , $variations );
 		}
-		
+
 		/**
 		* Sets the variation status to a custom status
 		*
 		* @param INT $inbound_email_id id of call to action
 		* @param INT $vid id of variation to delete
-		* @param STRING $status custom status 
+		* @param STRING $status custom status
 		*
 		*/
 		public static function set_variation_status( $inbound_email_id , $vid , $status = 'play' ) {
-			
+
 			/* Update variations meta object */
 			$variations = self::get_variations( $inbound_email_id );
 			$variations[ $vid ]['status'] = $status ;
 
 			self::update_variations( $inbound_email_id , $variations );
 		}
-		
-		/* Updates variation object data on post save
-		*
-		* @param INT $inbound_email_id of call to action id
-		*
-		*/
-		public static function save_variation_object_data( $inbound_email_id )
-		{
-			
-			global $post;
 
-			if ( wp_is_post_revision( $inbound_email_id ) ) {
-				return;
-			}
-			
-			if (	!isset($_POST['post_type']) || $_POST['post_type'] != 'inbound-email' ) {
-				return;
-			}
-
-			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
-				return;
-			}
-
-			$current_variation = (isset($_POST['inbvid'])) ? $_POST['inbvid'] : '0';
-			$variations = self::get_variations( $inbound_email_id );
-		
-			/* Set current variation status */		
-			$variations[ $current_variation ]['status'] = apply_filters( 'inbound_email_save_variation_status' ,  $_POST['inbound-mailer-variation-status'][ $current_variation ] );
-			
-			/* Update variation meta object */
-			self::update_variations( $inbound_email_id , $variations );
-			
-		}
-
-		
 
 		/**
 		* Returns array of variation data given a call to action id
@@ -142,19 +105,14 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @returns ARRAY of variation data
 		*/
 		public static function get_variations( $inbound_email_id	, $vid = null ) {
-			
+
 
 			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
-			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : null;
-			
-			if (!$variations) {
-				$variations =  array( 0 => array( 'status' => 'active' ) );
-			}
-			
-			
+			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : array( 0 => array( 'status' => 'active' ) );
+
 			return $variations;
 		}
-				
+
 
 		/**
 		* Returns the status of a variation given inbound_email_id and vid
@@ -165,17 +123,82 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @returns STRING status
 		*/
 		public static function get_variation_status( $inbound_email_id , $vid = null ) {
-			
+
 			if ( $vid === null ) {
 				$vid = Inbound_Mailer_Variations::get_current_variation_id();
 			}
 
 			$variations = Inbound_Mailer_Variations::get_variations( $inbound_email_id );
 			$status = ( is_array( $variations ) && isset($variations[ $vid ][ 'status' ]) ) ? $variations[ $vid ][ 'status' ] : 'active';
-			
+
 			return $status;
 		}
-		
+
+
+		/**
+		*  Set Variant Marker - When automated emails are sent we still want to rotate variations if they exist. When an email is bein sent to one lead, batching needs a consistant way to rotate variations
+		*  @param INT $inbound_email_id
+		*  @return INT $next_variant_marker
+		*/
+		public static function get_next_variant_marker( $inbound_email_id ) {
+
+			/* get email settins */
+			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
+
+			/* get variations */
+			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : array( 0 => array( 'status' => 'active' ) );
+
+			/* count variatons */
+			$variation_count = count($variations);
+
+			/* if only one variation return appropraite variant id */
+			if ( $variation_count == 1 ) {
+				return current(array_keys($variations));
+			}
+
+			/* get last known variation marker if it exists else create it with first key in array */
+			$variation_marker = ( !empty($settings['variation_marker']) ) ? $settings['variation_marker'] : current(array_keys($variations));
+
+			/* safety fallback */
+			if (empty($variation_marker) && $variation_marker !== 0 ) {
+				return 0;
+			}
+
+			/* set pointer to variation id in array */
+            $i = 0;
+			while (key($variations) !== $variation_marker) {
+
+			    next($variations);
+
+                $i++;
+
+                if ($i>99999) {
+                    echo 'break';
+                    break;
+                }
+            }
+
+			/* Save future variation marker */
+            next($variations);
+			Inbound_Mailer_Variations::set_variation_marker( $inbound_email_id , key($variations) );
+
+			/* return next pointer in line */
+			return $variation_marker;
+
+		}
+
+		/**
+		*  Updates variation marker (used for single sends)
+		*  @param INT $inbound_email_id
+		*  @param INT $variation_marker
+		*/
+		public static function set_variation_marker( $inbound_email_id , $variation_marker ) {
+			/* get email settins */
+			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
+			$settings['variation_marker'] = $variation_marker;
+			Inbound_Email_Meta::update_settings( $inbound_email_id , $settings );
+		}
+
 		/**
 		* Returns the permalink of a variation given inbound_email_id and vid
 		*
@@ -185,16 +208,16 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @returns STRING permalink
 		*/
 		public static function get_variation_permalink( $inbound_email_id , $vid = null ) {
-			
+
 			if ( $vid === null ) {
 				$vid = Inbound_Mailer_Variations::get_current_variation_id();
 			}
-			
+
 			$permalink = get_permalink($inbound_email_id);
-		
+
 			return add_query_arg( array('inbvid'=> $vid ) , $permalink ) ;
 		}
-		
+
 		/**
 		* Updates 'inbound-email-variations' meta key with json object
 		*
@@ -203,16 +226,16 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*
 		*/
 		public static function update_variations ( $inbound_email_id , $variations ) {
-			
+
 			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
 			$settings[ 'variations' ] = $variations;
 			Inbound_Email_Meta::update_settings( $inbound_email_id , $settings );
 
 		}
-		
-		
+
+
 		/**
-		* Returns array of variation specific meta data 
+		* Returns array of variation specific meta data
 		*
 		* @param INT $inbound_email_id ID of call to action
 		* @param INT $vid ID of variation belonging to call to action
@@ -221,12 +244,12 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*/
 		public static function get_variation_meta ( $inbound_email_id , $vid ) {
 			$meta = array();
-			
+
 			$inbound_email_meta = get_post_meta( $inbound_email_id );
 
 			$suffix = '-'.$vid;
 			$len = strlen($suffix);
-			
+
 			foreach ($inbound_email_meta as $key=>$value)
 			{
 				if (substr($key,-$len)==$suffix)
@@ -234,10 +257,10 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 					$meta[$key] = $value[0];
 				}
 			}
-			
+
 			return $meta;
 		}
-		
+
 		/**
 		* Gets the call to action variation notes
 		*
@@ -247,17 +270,17 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return STRING $notes variation notes.
 		*/
 		public static function get_variation_notes ( $inbound_email_id , $vid = null) {
-			
+
 			if ( $vid === null ) {
 				$vid = Inbound_Mailer_Variations::get_current_variation_id();
 			}
-			
+
 			$notes = get_post_meta( $inbound_email_id , 'inbound-mailer-variation-notes-' . $vid , true );
-			
+
 			return $notes;
-			
+
 		}
-		
+
 		/**
 		* Gets the call to action variation custom css
 		*
@@ -267,17 +290,17 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return STRING $custom_css.
 		*/
 		public static function get_variation_custom_css ( $inbound_email_id , $vid = null) {
-			
+
 			if ( $vid === null ) {
 				$vid = Inbound_Mailer_Variations::get_current_variation_id();
 			}
-			
+
 			$custom_css = get_post_meta( $inbound_email_id , 'inbound-mailer-custom-css-' . $vid , true );
-			
+
 			return $custom_css;
-			
-		}	
-		
+
+		}
+
 		/**
 		* Gets the call to action variation custom js
 		*
@@ -287,18 +310,18 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return STRING $custom_js.
 		*/
 		public static function get_variation_custom_js ( $inbound_email_id , $vid = null) {
-			
+
 			if ( $vid === null ) {
 				$vid = Inbound_Mailer_Variations::get_current_variation_id();
 			}
-			
+
 			$custom_js = get_post_meta( $inbound_email_id , 'inbound-mailer-custom-js-' . $vid , true );
-			
+
 			return $custom_js;
-			
+
 		}
-		
-		/* Adds variation id onto base meta key 
+
+		/* Adds variation id onto base meta key
 		*
 		* @param id STRING of meta key to store data into for given setting
 		* @param INT $vid id of variation belonging to call to action, will attempt to autodetect if left as null
@@ -306,82 +329,82 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @returns STRING of meta key appended with variation id
 		*/
 		public static function prepare_input_id( $id , $vid = null ) {
-			
+
 			if ( $vid === null ) {
 				$vid =	Inbound_Mailer_Variations::get_current_variation_id();
 			}
-		
+
 			return $id . '-' . $vid;
 		}
-		
-		/* 
+
+		/*
 		* Gets the current variation id
 		*
 		* @returns INT of variation id
 		*/
 		public static function get_current_variation_id() {
 			global $post;
-			
+
 			if (isset($_REQUEST['inbvid'])){
 				return $_REQUEST['inbvid'];
 			}
-			
+
 			(isset($post->ID)) ? $post_id = $post->ID : $post_id = $_REQUEST['post'];
 
-			if (isset($_SESSION[ $post_id . '-variation-id'])) {	
+			if (isset($_SESSION[ $post_id . '-variation-id'])) {
 				return $_SESSION[ $post_id . '-variation-id'];
 			}
 
 
 			return 0;
 		}
-		
-		/* 
+
+		/*
 		* Gets the next available variation id
 		*
 		* @returns INT of variation id
 		*/
 		public static function get_next_available_variation_id( $inbound_email_id ) {
-			
-			$variations = Inbound_Mailer_Variations::get_variations( $inbound_email_id );		
+
+			$variations = Inbound_Mailer_Variations::get_variations( $inbound_email_id );
 			$array_variations = $variations;
 
 			end($array_variations);
-			
+
 			$last_variation_id = key($array_variations);
-			
+
 			return $last_variation_id + 1;
 		}
-		
-		/* 
-		* Gets id of template given cta id 
+
+		/*
+		* Gets string id of template given email id
 		*
 		* @param INT $inbound_email_id of call to action
 		* @param INT $vid of variation id
 		*
 		* @returns STRING id of selected template
-		*/	
+		*/
 		public static function get_current_template( $inbound_email_id , $vid = null ) {
-		
+
 			if ( $vid === null ) {
 				$vid =	Inbound_Mailer_Variations::get_current_variation_id();
 			}
 
 			$settings = Inbound_Email_Meta::get_settings( $inbound_email_id );
 			$variations = ( isset($settings['variations']) ) ? $settings['variations'] : null;
-			
-			$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'blank-template';
-			
+
+			$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'simple-responsive';
+
 			/* If new variation use historic template id */
 			if ( isset($_GET['new-variation'] ) ) {
 				$vid = key($variations);
-				$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'blank-template';	
+				$template = ( isset( $variations[ $vid ][ 'selected_template' ] ) ) ? $variations[ $vid ][ 'selected_template' ] : 'simple-responsive';
 			}
-				
+
 			return $template;
-			
+
 		}
-		
+
 		/**
 		* Get Screenshot URL for Call to Action preview. If local environment show template thumbnail.
 		*
@@ -391,52 +414,53 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return STRING url of preview
 		*/
 		public static function get_screenshot_url( $inbound_email_id , $vid = null) {
-			
+
 			if ( $vid === null ) {
 				$vid =	Inbound_Mailer_Variations::get_current_variation_id();
 			}
-			
+
 			$template = Inbound_Mailer_Variations::get_current_template( $inbound_email_id , $vid);
-			
+
 			if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
-			
-				if (file_exists(INBOUND_EMAIL_UPLOADS_URLPATH . 'templates/' . $template . '/thumbnail.png')) {
-					$screenshot = INBOUND_EMAIL_UPLOADS_URLPATH . 'templates/' . $template . '/thumbnail.png';
-				}
-				else {
+
+				if (file_exists(INBOUND_EMAIL_PATH . 'templates/' . $template . '/thumbnail.png')) {
 					$screenshot = INBOUND_EMAIL_URLPATH . 'templates/' . $template . '/thumbnail.png';
+				} else if (file_exists(INBOUND_EMAIL_UPLOADS_PATH . 'templates/' . $template . '/thumbnail.png')) {
+					$screenshot = INBOUND_EMAIL_UPLOADS_URLPATH . 'templates/' . $template . '/thumbnail.png';
+				} else if (file_exists(INBOUND_EMAIL_THEME_TEMPLATES_PATH . 'templates/' . $template . '/thumbnail.png')) {
+					$screenshot = INBOUND_EMAIL_THEME_TEMPLATES_URLPATH . 'templates/' . $template . '/thumbnail.png';
 				}
 
 			} else {
 				$screenshot = 'http://s.wordpress.com/mshots/v1/' . urlencode(esc_url($permalink)) . '?w=140';
 			}
-			
+
 			return $screenshot;
 		}
-		
+
 		/**
 		* Appends current variation id onto a URL
 		*
 		* @param link STRING URL that param will be appended onto
-		* 
+		*
 		*
 		* @return STRING modified URL.
 		*/
 		public static function append_variation_id_to_url( $link ) {
 			global $post;
-			
+
 			if ( !isset($post) || $post->post_type != 'inbound-email' ) {
 				return $link;
 			}
-			
+
 			$current_variation_id =	Inbound_Mailer_Variations::get_current_variation_id();
 
-		
+
 			$link = add_query_arg( array('inbvid' => $current_variation_id ) , $link );
 
 			return $link;
 		}
-		
+
 		/**
 		* Discovers which alphabetic letter should be associated with a given cta's variation id.
 		*
@@ -447,7 +471,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*/
 		public static function vid_to_letter( $inbound_email_id , $vid ) {
 			$variations = Inbound_Mailer_Variations::get_variations( $inbound_email_id );
-			
+
 			$i = 0;
 			foreach ($variations as $key => $variation ) {
 				if ( $vid == $key ) {
@@ -455,8 +479,8 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 				}
 				$i++;
 			}
-			
-			$alphabet = array(	
+
+			$alphabet = array(
 				__( 'A' , 'inbound-email' ),
 				__( 'B' , 'inbound-email' ),
 				__( 'C' , 'inbound-email' ),
@@ -499,13 +523,13 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return INT impression count
 		*/
 		public static function get_impressions( $inbound_email_id , $vid ) {
-		
+
 			$impressions = get_post_meta( $inbound_email_id ,'inbound-mailer-ab-variation-impressions-'.$vid , true);
-			
+
 			if (!is_numeric($impressions)) {
 				$impressions = 0;
-			} 
-			
+			}
+
 			return $impressions;
 		}
 
@@ -517,9 +541,9 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*
 		*/
 		public static function record_impression( $inbound_email_id , $vid ) {
-		
+
 			$impressions = get_post_meta( $inbound_email_id ,'inbound-mailer-ab-variation-impressions-'.$vid, true);
-			
+
 			if (!is_numeric($impressions)) {
 				$impressions = 1;
 			} else {
@@ -528,7 +552,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 
 			update_post_meta( $inbound_email_id , 'inbound-mailer-ab-variation-impressions-'.$vid , $impressions);
 		}
-		
+
 		/**
 		* Manually sets conversion count for given cta id and variation id
 		*
@@ -540,7 +564,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 
 			update_post_meta( $inbound_email_id , 'inbound-mailer-ab-variation-impressions-'.$vid , $count);
 		}
-		
+
 		/**
 		* Returns impression for given cta and variation id
 		*
@@ -550,13 +574,13 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return INT impression count
 		*/
 		public static function get_conversions( $inbound_email_id , $vid ) {
-		
+
 			$conversions = get_post_meta( $inbound_email_id ,'inbound-mailer-ab-variation-conversions-'.$vid, true);
-			
+
 			if (!is_numeric($conversions)) {
 				$conversions = 0;
-			} 
-			
+			}
+
 			return $conversions;
 		}
 
@@ -569,10 +593,10 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		* @return INT conversion rate
 		*/
 		public static function get_conversion_rate( $inbound_email_id , $vid ) {
-			
+
 			$impressions = Inbound_Mailer_Variations::get_impressions( $inbound_email_id , $vid );
 			$conversions = Inbound_Mailer_Variations::get_conversions( $inbound_email_id , $vid );
-			
+
 			if ($impressions>0) {
 				$conversion_rate = $conversions / $impressions;
 				$conversion_rate_number = $conversion_rate * 100;
@@ -581,7 +605,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 			} else {
 				$conversion_rate = 0;
 			}
-			
+
 			return $conversion_rate;
 		}
 
@@ -593,18 +617,18 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 		*
 		*/
 		public static function record_conversion(	$inbound_email_id , $vid ) {
-			
+
 			$conversions = get_post_meta( $inbound_email_id , 'inbound-mailer-ab-variation-conversions-' . $vid , true);
-			
+
 			if (!is_numeric($conversions)) {
 				$conversions = 1;
 			} else {
 				$conversions++;
-			}		
+			}
 
 			update_post_meta( $inbound_email_id , 'inbound-mailer-ab-variation-conversions-'.$vid , $conversions);
 		}
-		
+
 		/**
 		* Manually sets conversion count for given cta id and variation id
 		*
@@ -616,7 +640,7 @@ if ( ! class_exists( 'Inbound_Mailer_Variations' ) ) {
 
 			update_post_meta( $inbound_email_id , 'inbound-mailer-ab-variation-conversions-'.$vid , $count);
 		}
-		
+
 	}
 
 	$GLOBALS['Inbound_Mailer_Variations'] = new Inbound_Mailer_Variations();

@@ -5,9 +5,12 @@ if ( ! class_exists( 'Inbound_Options_API' ) ) {
 		
 		/** 
 		*  Gets option value in name space object
+		*  @param STRING $namespace option_name
+		*  @param STRING $key target key in dataset to get data outof
+		*  @param MIXED $default default data to return if no data exists
 		*/
-		public static function get_option( $namespace , $key , $default = mull ) {
-			$options = json_decode( stripslashes( get_option( $namespace ) ) , true ) ;
+		public static function get_option( $namespace , $key , $default = null ) {
+			$options =  get_option( $namespace , array() ) ;
 			
 			if (!isset( $options[ $key ] )) {
 				add_option( $namespace , '', '', 'no' );
@@ -19,19 +22,23 @@ if ( ! class_exists( 'Inbound_Options_API' ) ) {
 		
 		/** 
 		*  Updates option value in name space object
+		*  @param STRING $namespace option_name
+		*  @param STRING $key target key in dataset to set data into
+		*  @param MIXED $value value to set into key
+		*  @param STRING $autoload (optional) defaults to no but can be set to yes for creating new cachable options. 
 		*/
-		public static function update_option( $namespace , $key , $value ) {
+		public static function update_option( $namespace , $key , $value , $autoload = 'no' ) {
 			
-			$options = json_decode( stripslashes( get_option( $namespace ) ) ) ;
+			$options = get_option( $namespace , array() );
 			
-			if (!$options) {
-				add_option( $namespace , '', '', 'no' );
+			if (!$options || !is_array( $options ) ) {
+				add_option( $namespace , '', '', $autoload  );
 				$options = array();
 			}
 			
 			$options[$key] = $value;
 			
-			update_option( $namespace , json_encode( $options ) );
+			update_option( $namespace ,  $options ) ;
 		}
 
 	}
