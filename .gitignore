@@ -31,3 +31,5 @@ shared/languages/leads/_get-translations.bat
 
 # Grunt
 node_modules
+.idea
+Desktop.ini
