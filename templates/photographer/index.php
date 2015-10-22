@@ -26,12 +26,10 @@ $post_id		  = get_the_ID();
 
 /* Header */
 $logo_image		  = get_field("logo_image", $post_id);
-$header_bg_color_array  = get_field("header_bg_color", $post_id);
-$header_bg_color  = $header_bg_color_array[1];
+$header_bg_color  = get_field("header_bg_color", $post_id);
 $header_bg_image  = get_field("header_bg_image", $post_id);
 $issue_date		  = get_field("issue_date", $post_id);
-$issue_date_color_array = get_field("issue_date_color", $post_id);
-$issue_date_color = $issue_date_color_array[1];
+$issue_date_color = get_field("issue_date_color", $post_id);
 $home_page_url	  = get_field("home_page_url", $post_id);
 
 
@@ -83,7 +81,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 			<div style="font-size:0pt; line-height:0pt; height:1px; background:#3d3e3e; "><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="1" style="height:1px" alt="" /></div>
 
 			<!-- END END 
-			<div style="font-size:0pt; line-height:0pt; height:30px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="30" style="height:30px" alt="" /></div> -->
+			<div style="font-size:0pt; line-height:0pt; height:30px"><img src="<?php //echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="30" style="height:30px" alt="" /></div> -->
 
 
 			<!-- Header -->
@@ -112,19 +110,14 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 							case 'featured_content' : 
 								$featured_image			= get_sub_field("featured_image");
 								$cta_side				= get_sub_field("cta_side");
-								$cta_bg_color_array			= get_sub_field("cta_bg_color");
-								$cta_bg_color			= substr($cta_bg_color_array[1],13,7);
-								$cta_border_color_array		= get_sub_field("cta_border_color");
-								$cta_border_color		= substr($cta_border_color_array[1],13,7);
+								$cta_bg_color			= get_sub_field("cta_bg_color");
+								$cta_border_color		= get_sub_field("cta_border_color");
 								$cta_title				= get_sub_field("cta_title");
 								$cta_text				= get_sub_field("cta_text");
-								$cta_text_color_array			= get_sub_field("cta_text_color");
-								$cta_text_color			= substr($cta_text_color_array[1],13,7);
+								$cta_text_color			= get_sub_field("cta_text_color");
 								$cta_button_text		= get_sub_field("cta_button_text");
-								$cta_button_text_color_array	= get_sub_field("cta_button_text_color");
-								$cta_button_text_color	= substr($cta_button_text_color_array[1],13,7);
-								$cta_button_color_array		= get_sub_field("cta_button_color");
-								$cta_button_color		= substr($cta_button_color_array[1],13,7);
+								$cta_button_text_color	= get_sub_field("cta_button_text_color");
+								$cta_button_color		= get_sub_field("cta_button_color");
 								$cta_button_url			= get_sub_field("cta_button_url");
 						?>
 
