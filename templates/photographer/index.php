@@ -181,8 +181,8 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 						<table width="620" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td bgcolor="#ffffff">
-									<div class="img" style="font-size:0pt; line-height:0pt; text-align:left"><img src="images/mainbox_top.jpg" alt="" border="0" width="620" height="3" /></div>
-									<div style="font-size:0pt; line-height:0pt; height:15px"><img src="images/empty.gif" width="1" height="15" style="height:15px" alt="" /></div>
+									<div class="img" style="font-size:0pt; line-height:0pt; text-align:left"><img src="<?php echo $urlpath . 'assets/images/mainbox_top.jpg'; ?>" alt="" border="0" width="620" height="3" /></div>
+									<div style="font-size:0pt; line-height:0pt; height:15px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="15" style="height:15px" alt="" /></div>
 
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
@@ -212,7 +212,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 													<div class="h2" style="color:#201f1f; font-family:'Trebuchet MS'; font-size:17px; line-height:21px; text-align:left; font-weight:bold; background:#ffffff !important">
 														<div><?php echo $title; ?></div>
 													</div>
-													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 
 													<table width="100%" border="0" cellspacing="0" cellpadding="1" bgcolor="#6f7070">
@@ -230,7 +230,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 															</td>
 														</tr>
 													</table>
-													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -314,23 +314,23 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 															</td>
 														</tr>
 													</table>
-													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 
 													<div>
 														<?php echo $description; ?>
 													</div>
-													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 
 													<div style="margin-top:5px ;font-size:14px;font-weight: 700; text-align:left">
 														<a style="padding:8px 20px; border:none; text-decoration: none; background-color: #A8A8A8; color:white;" href="<?php echo $button_url; ?>" target="_blank"><?php echo $button_text; ?></a>
 													</div>
-													<div style="font-size:0pt; line-height:0pt; height:30px"><img src="images/empty.gif" width="1" height="30" style="height:30px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:30px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="30" style="height:30px" alt="" /></div>
 
-													<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="images/empty.gif" width="1" height="1" style="height:1px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="1" style="height:1px" alt="" /></div>
 
-													<div style="font-size:0pt; line-height:0pt; height:25px"><img src="images/empty.gif" width="1" height="25" style="height:25px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:25px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="25" style="height:25px" alt="" /></div>
 
 												</div>	
 
@@ -365,14 +365,14 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 											<div class="h2" style="color:#201f1f; font-family:'Trebuchet MS'; font-size:17px; line-height:21px; text-align:left; font-weight:bold; background:#ffffff !important">
 												<div><?php echo $sidebar_title; ?></div>
 											</div>
-											<div style="font-size:0pt; line-height:0pt; height:5px"><img src="images/empty.gif" width="1" height="5" style="height:5px" alt="" /></div>
+											<div style="font-size:0pt; line-height:0pt; height:5px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="5" style="height:5px" alt="" /></div>
 
 											<div><?php echo $sidebar_description; ?></div>
-											<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+											<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
-											<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="images/empty.gif" width="1" height="1" style="height:1px" alt="" /></div>
+											<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="1" style="height:1px" alt="" /></div>
 
-											<div style="font-size:0pt; line-height:0pt; height:5px"><img src="images/empty.gif" width="1" height="5" style="height:5px" alt="" /></div>
+											<div style="font-size:0pt; line-height:0pt; height:5px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="5" style="height:5px" alt="" /></div>
 
 											<?php
 											if ( have_rows( "sidebar_links" ) )  { ?>
@@ -389,11 +389,11 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 															</td>
 														</tr>
 													</table>
-													<div style="font-size:0pt; line-height:0pt; height:7px"><img src="images/empty.gif" width="1" height="7" style="height:7px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:7px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="7" style="height:7px" alt="" /></div>
 
-													<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="images/empty.gif" width="1" height="1" style="height:1px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="1" style="height:1px" alt="" /></div>
 
-													<div style="font-size:0pt; line-height:0pt; height:5px"><img src="images/empty.gif" width="1" height="5" style="height:5px" alt="" /></div>
+													<div style="font-size:0pt; line-height:0pt; height:5px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="5" style="height:5px" alt="" /></div>
 			
 												
 
@@ -419,7 +419,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 										<div class="h2" style="color:#201f1f; font-family:'Trebuchet MS'; font-size:17px; line-height:21px; text-align:left; font-weight:bold; background:#ffffff !important">
 											<div><?php echo $extra_section_title; ?></div>
 										</div>
-										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 
 										<table width="100%" border="0" cellspacing="0" cellpadding="1" bgcolor="#ececec">
@@ -443,18 +443,18 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 												</td>
 											</tr>
 										</table>
-										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 
 										<div>
 											<?php echo $extra_content; ?>
 										</div>
-										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 										<div style="margin-top:5px ;font-size:14px;font-weight: 700; text-align:left">
 											<a style="padding:8px 20px; border:none; text-decoration: none; background-color: #A8A8A8; color:white;" href="<?php echo $extra_button_url; ?>" target="_blank"><?php echo $extra_button_text; ?></a>
 										</div>
-										<div style="font-size:0pt; line-height:0pt; height:25px"><img src="images/empty.gif" width="1" height="25" style="height:25px" alt="" /></div>
+										<div style="font-size:0pt; line-height:0pt; height:25px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="25" style="height:25px" alt="" /></div>
 
 									</div>
 
@@ -470,7 +470,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 										<div class="h2" style="color:#201f1f; font-family:'Trebuchet MS'; font-size:17px; line-height:21px; text-align:left; font-weight:bold; background:#ffffff !important">
 											<div><?php echo $advertising_title; ?></div>
 										</div>
-										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="images/empty.gif" width="1" height="10" style="height:10px" alt="" /></div>
+										<div style="font-size:0pt; line-height:0pt; height:10px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="10" style="height:10px" alt="" /></div>
 
 										<div class="img" style="font-size:0pt; line-height:0pt; text-align:left">
 											<a href="<?php echo $banner_url; ?>" target="_blank">
@@ -498,11 +498,11 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 											<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="23"></td>
 										</tr>
 									</table>
-									<div style="font-size:0pt; line-height:0pt; height:30px"><img src="images/empty.gif" width="1" height="30" style="height:30px" alt="" /></div>
+									<div style="font-size:0pt; line-height:0pt; height:30px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="30" style="height:30px" alt="" /></div>
 
-									<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="images/empty.gif" width="1" height="1" style="height:1px" alt="" /></div>
+									<div style="font-size:0pt; line-height:0pt; height:1px; background:#bfbfbf; "><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="1" style="height:1px" alt="" /></div>
 
-									<div style="font-size:0pt; line-height:0pt; height:1px"><img src="images/empty.gif" width="1" height="1" style="height:1px" alt="" /></div>
+									<div style="font-size:0pt; line-height:0pt; height:1px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="1" style="height:1px" alt="" /></div>
 
 									<!-- FOOTER SECTION -->
 									
@@ -510,7 +510,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 										<tr>
 											<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="25"></td>
 											<td>
-												<div style="font-size:0pt; line-height:0pt; height:15px"><img src="images/empty.gif" width="1" height="15" style="height:15px" alt="" /></div>
+												<div style="font-size:0pt; line-height:0pt; height:15px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="15" style="height:15px" alt="" /></div>
 
 												<table width="100%" border="0" cellspacing="0" cellpadding="0">
 													<tr>
@@ -546,13 +546,13 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 														</td>
 													</tr>
 												</table>
-												<div style="font-size:0pt; line-height:0pt; height:15px"><img src="images/empty.gif" width="1" height="15" style="height:15px" alt="" /></div>
+												<div style="font-size:0pt; line-height:0pt; height:15px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="15" style="height:15px" alt="" /></div>
 
 											</td>
 
 										</tr>
 									</table>
-									<div class="img" style="font-size:0pt; line-height:0pt; text-align:left"><img src="images/mainbox_bottom.jpg" alt="" border="0" width="620" height="3" /></div>
+									<div class="img" style="font-size:0pt; line-height:0pt; text-align:left"><img src="<?php echo $urlpath . 'assets/images/mainbox_bottom.jpg'; ?>" alt="" border="0" width="620" height="3" /></div>
 								</td>
 							</tr>
 						</table>
@@ -560,7 +560,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 				</tr>
 			</table>
 			<!-- END Content -->
-			<div style="font-size:0pt; line-height:0pt; height:15px"><img src="images/empty.gif" width="1" height="15" style="height:15px" alt="" /></div>
+			<div style="font-size:0pt; line-height:0pt; height:15px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="15" style="height:15px" alt="" /></div>
 
 			<!-- Bottom Content -->
 			
@@ -569,11 +569,11 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" >
 				<tr>
 					<td class="footer" style="color:#999999; font-family:Arial; font-size:11px; line-height:17px; text-align:center">
-						<div style="font-size:0pt; line-height:0pt; height:15px"><img src="images/empty.gif" width="1" height="15" style="height:15px" alt="" /></div>
+						<div style="font-size:0pt; line-height:0pt; height:15px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="15" style="height:15px" alt="" /></div>
 
 						<div><div>This newsletter was sent to you from <span><?php echo $your_company_name; ?></span> because you subscribed.</div></div>
 						Rather not receive our newsletter anymore? <a class="link3-u" style="color:#999999; text-decoration:underline" target="_blank" href="<?php echo do_shortcode('[unsubscribe-link]'); ?>">Unsubscribe instantly</a>
-						<div style="font-size:0pt; line-height:0pt; height:15px"><img src="images/empty.gif" width="1" height="15" style="height:15px" alt="" /></div>
+						<div style="font-size:0pt; line-height:0pt; height:15px"><img src="<?php echo $urlpath . 'assets/images/empty.gif'; ?>" width="1" height="15" style="height:15px" alt="" /></div>
 
 					</td>
 				</tr>
