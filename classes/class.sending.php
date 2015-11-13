@@ -117,8 +117,8 @@ class Inbound_Mail_Daemon {
 		/* Iterate over the extracted links and display their URLs */
 		foreach ($links[1] as $link){
 
-			/* Do not modify unsubscribe links */
-			if ( strstr( $link , '?token=') ) {
+			/* Do not modify unsubscribe links or non links */
+			if ( strstr( $link , '?token=') || !strstr($link,'//:') ) {
 				continue;
 			}
 
@@ -532,7 +532,7 @@ class Inbound_Mail_Daemon {
 
 		/* add tracking params to links */
 		$html = self::rebuild_links( $html );
-
+		error_log($html);
 		return $html;
 
 	}
