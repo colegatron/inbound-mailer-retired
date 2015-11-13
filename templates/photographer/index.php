@@ -40,7 +40,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<meta content="telephone=no" name="format-detection" />
-	<title>Photograhper Template</title>
+	<title>Photographer Template</title>
 
 	<style type="text/css" media="screen">
 		/* Linked Styles */
@@ -88,7 +88,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td align="center">
-						<table width="620" border="0" cellspacing="0" cellpadding="0" style="padding:30px 10px; background-image: url(<?php echo $header_bg_image; ?>); background-size: cover; background-color:<?php echo $header_bg_color; ?>; ">
+						<table width="620" border="0" cellspacing="0" cellpadding="0" style="padding:30px 10px; <?php ! $header_bg_image ? '' :'background-image: url(' . $header_bg_image . '); background-size: cover;'; ?> background-color:<?php echo $header_bg_color; ?>; ">
 							<tr>
 								<td class="img" style="max-width:274px; font-size:0pt; line-height:0pt; text-align:left"><a href="<?php echo $home_page_url; ?>" target="_blank"><img src="<?php echo $logo_image; ?>" alt="" border="0" /></a></td>
 								<td class="date" style="color:<?php echo $issue_date_color; ?>; font-family:'Trebuchet MS'; font-size:17px; line-height:21px; text-align:right"><?php echo $issue_date; ?></td>
@@ -136,7 +136,7 @@ $home_page_url	  = get_field("home_page_url", $post_id);
 													<?php
 													if ( 'Left' == $cta_side ) {
 														?>
-														<td style="border: 2px solid <?php echo $cta_border_color; ?>; width:240px; background-color:<?php echo $cta_bg_color; ?>; color:<?php echo $cta_text_color; ?>; text-align:left; padding:20px;">
+														<td style="border: 2px solid <?php echo $cta_border_color; ?>; width:240px; background-color:<?php echo $cta_bg_color; ?>; color:<?php echo $cta_text_color; ?>; text-align:left; padding:20px;" background="<?php echo $cta_bg_color; ?>">
 															<div>
 															<h2 style="color:<?php echo $cta_text_color; ?>;"><?php echo $cta_title; ?></h2>
 															<p style="font-size: 14px;"><?php echo $cta_text; ?></p></br>
