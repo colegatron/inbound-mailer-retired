@@ -250,42 +250,17 @@ class Inbound_Mailer_Unsubscribe {
 	*  @param ARRAY $params dataset included in unsubscribe token
 	*/
 	public static function add_unsubscribe_event( $lead_id , $list_id , $params ) {
-		$timezone_format = 'Y-m-d G:i:s T';
-		$wordpress_date_time =  date_i18n($timezone_format);
 
-		$events = Inbound_Mailer_Unsubscribe::get_unsubscribe_events( $lead_id  );
+		$args = array(
+				'email_id' => $params['email_id'],
+				'variation_id' => $params['variation_id'],
+				'lead_id' => $lead_id,
+				'event_details' => json_encode(Inbound_Leads::get_lead_list_by( 'id' , $list_id )),
+		);
 
-		$params['list_id'] = Inbound_Leads::get_lead_list_by( 'id' , $list_id );
-		$params['datetime'] = $wordpress_date_time;
-		$events[] = $params;
-
-		Inbound_Mailer_Unsubscribe::update_events_meta(  $lead_id , $events );
+		Inbound_Events::store_unsubscribe_event( $args );
 	}
 
-	/**
-	*  Get array of email unsubscribe events
-	*  @param INT $lead_id
-	*  @return ARRAY $events
-	*/
-	public static function get_unsubscribe_events( $lead_id ) {
-
-		$events = get_post_meta( $lead_id ,'wpleads_unsubscribe_events', true);
-
-		if (!$events) {
-			$events = array();
-		}
-
-		return $events;
-	}
-
-	/**
-	*  Updates email events meta pair
-	*  @param INT $lead_id
-	*  @param ARRAY $events new events array
-	*/
-	public static function update_events_meta( $lead_id , $events ) {
-		update_post_meta( $lead_id , 'wpleads_unsubscribe_events' , $events);
-	}
 }
 
 $Inbound_Mailer_Unsubscribe = new Inbound_Mailer_Unsubscribe();
