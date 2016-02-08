@@ -94,7 +94,7 @@ if (have_posts()) : while (have_posts()) : the_post();
                                             <?php if ($headline) {
                                                 ?>
 
-                                                <h1 style="margin-bottom:10px;margin-top:24px;padding:0;font-size:<?php echo $headline_size; ?>;font-weight:normal;color:<?php echo $content_color; ?>;">
+                                                <h1 style="margin-bottom:10px;margin-top:10px;padding:0;font-size:<?php echo $headline_size; ?>;font-weight:normal;color:<?php echo $content_color; ?>;">
                                                     <?php echo $headline; ?>
                                                 </h1>
                                                 <?php
@@ -108,18 +108,22 @@ if (have_posts()) : while (have_posts()) : the_post();
                                         </div>
                                     </td>
                                 </tr>
+                                <?php
+                                if ($featured_image) {
+                                    ?>
                                 <tr>
                                     <td align="center" style="padding:30px 0 25px 0;">
                                         <div  class="inbound-editable">
-                                            <?php
-                                            if ($featured_image) {
-                                                echo '<img src="'. $featured_image.'" width="'.$featured_image_width.'" height="'.$featured_image_height.'" alt=" ">';
-                                            }
-                                            ?>
+
+                                               <?php echo '<img src="'. $featured_image.'" width="'.$featured_image_width.'" height="'.$featured_image_height.'" alt=" ">'; ?>
+
 
                                         </div>
                                     </td>
                                 </tr>
+                                    <?php
+                                }
+                                ?>
 
                                 <tr>
                                     <td align="center" style="background-position:center top;background-repeat:no-repeat;padding:20px 15px 30px 48px;">
