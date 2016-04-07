@@ -102,7 +102,7 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 			define('INBOUND_EMAIL_CURRENT_VERSION', '2.2.1' );
 			define('INBOUND_EMAIL_URLPATH', WP_PLUGIN_URL.'/'.plugin_basename( dirname(__FILE__) ).'/' );
 			define('INBOUND_EMAIL_PATH', WP_PLUGIN_DIR.'/'.plugin_basename( dirname(__FILE__) ).'/' );
-			define('INBOUND_EMAIL_SLUG', plugin_basename( dirname(__FILE__) ) );
+			define('INBOUND_EMAIL_SLUG', 'inbound-mailer');
 			define('INBOUND_EMAIL_FILE', __FILE__ );
 
 			$uploads = wp_upload_dir();
@@ -148,8 +148,9 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 					include_once('classes/class.statistics.php');
 					include_once('classes/class.scheduling.php');
 					include_once('classes/class.cron-api.php');
-					include_once('classes/class.sending.php');
-					include_once('classes/class.mandrill.php');
+					include_once('classes/class.mailer.php');
+					include_once('classes/class.mailer.mandrill.php');
+					include_once('classes/class.connector.mandrill.php');
 					include_once('classes/class.unsubscribe.php');
 
 					BREAK;
@@ -174,8 +175,9 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 					include_once('classes/class.customizer.php');
 					include_once('classes/class.token-engine.php');
 					include_once('classes/class.cron-api.php');
-					include_once('classes/class.sending.php');
-					include_once('classes/class.mandrill.php');
+					include_once('classes/class.mailer.php');
+					include_once('classes/class.mailer.mandrill.php');
+					include_once('classes/class.connector.mandrill.php');
 					include_once('classes/class.scheduling.php');
 					include_once('classes/class.settings.php');
 
