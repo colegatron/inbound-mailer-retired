@@ -94,13 +94,18 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
          * Get Send Aggregate Statistics
          */
         public static function load_statistics() {
-            global $post;
+            global $post, $inbound_settings;
 
-            $stats = Inbound_Email_Stats::get_email_timeseries_stats();
+            switch ($inbound_settings['inbound-mailer']['mail-service']) {
+                case 'mandrill' :
+                    self::$statistics = Inbound_Mandrill_Stats::get_email_timeseries_stats();
+                    break;
+                case 'sparkpost' :
+                    break;
+            }
 
-            self::$statistics = $stats;
-            self::$campaign_stats = $stats['totals'];
-            self::$variation_stats = $stats['variations'];
+            self::$campaign_stats = self::$statistics['totals'];
+            self::$variation_stats = self::$statistics['variations'];
 
         }
 
@@ -109,8 +114,15 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
          *
          */
         public static function load_send_stream() {
-            global $post;
-            self::$sends = Inbound_Email_Stats::get_send_stream();
+            global $post, $inbound_settings;
+
+            switch ($inbound_settings['inbound-mailer']['mail-service']) {
+                case 'mandrill' :
+                    self::$sends = Inbound_Mandrill_Stats::get_send_stream();
+                    break;
+                case 'sparkpost' :
+                    break;
+            }
         }
 
         /**
@@ -618,10 +630,18 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                 </thead>
                 <tbody>
                 <?php
+                $lead_search = "edit.php?s=EMAIL&post_status=all&post_type=wp-lead";
                 foreach (self::$sends as $send) {
+
+                    /* use this opportunity to remove rejections */
+                    $search = str_replace('EMAIL',$send['email'],$lead_search);
                     ?>
                     <tr>
-                        <td class="lalign"><?php echo $send['email']; ?></td>
+                        <td class="lalign">
+                            <a href="<?php echo $search; ?>" target="_blank">
+                                <?php echo $send['email']; ?>
+                            </a>
+                        </td>
                         <td><?php echo $Inbound_Mailer_Variations->vid_to_letter( $post->ID , $send['metadata']['variation_id']); ?></td>
                         <td><?php echo $send['state']; ?></td>
                         <td><?php echo $send['opens']; ?></td>
@@ -1645,16 +1665,6 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                             /* Removes wp_content wysiwyg */
                             jQuery('#postdivrich').hide();
 
-                            /* Removes Permalink edit option */
-                            <?php
-
-                            if (!isset(self::$settings['customize-permalinks'])||self::$settings['customize-permalinks']!='yes' ) {
-
-                                ?>
-                            //jQuery('#slugdiv').hide();
-                            <?php
-                        }
-                        ?>
                             /* store current slug */
                             Settings.current_slug = jQuery('#post_name').val();
 
