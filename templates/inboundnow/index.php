@@ -40,7 +40,7 @@ if (have_posts()) : while (have_posts()) : the_post();
     ?>
     <html>
     <head>
-
+    <?php do_action('inbound-mailer/email/header'); ?>
     </head>
     <body bgcolor="<?php echo $contrast_background_color; ?>" style="">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $contrast_background_color; ?>" style="background-color:<?php echo $contrast_background_color; ?>;margin:0;padding:0;color:#444444;font-size:14px;font-family:Arial, Helvetica, sans-serif; ">
@@ -52,7 +52,7 @@ if (have_posts()) : while (have_posts()) : the_post();
                     <?php
                     if (!$hide_show_email_in_browser) {
                         ?>
-                        <tr>
+                        <tr class="view-in-browser">
                             <td valign="bottom" colspan="3" align="center" style="padding:30px 0 20px 0;">
                                 <a href="<?php echo get_permalink( $post_id ); ?>" style="font-size:12px;word-wrap: break-word;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #505050;font-weight: normal;text-decoration: underline;">View this email in your browser</a>
                             </td>
@@ -179,7 +179,7 @@ if (have_posts()) : while (have_posts()) : the_post();
         </tr>
         </tbody>
     </table>
-
+    <?php do_action('inbound-mailer/email/footer'); ?>
     </body>
     </html>
 

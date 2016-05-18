@@ -61,7 +61,6 @@ class Inbound_Mailer_Enqueues {
 	}
 
 
-
 	/**
 	 *  Load backened enqueues
 	 */
@@ -231,6 +230,7 @@ class Inbound_Mailer_Enqueues {
 	}
 
 }
+
 
 /**
 *  Loads Class Pre-Init
