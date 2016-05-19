@@ -131,7 +131,9 @@ print_r($settings);exit;
 
 }
 </style>
-<?php do_action('inbound-mailer/email/header'); ?>
+<?php
+	do_action('inbound-mailer/email/header');
+?>
 <body bgcolor="#f6f6f6" style="font-family: Arial; background-color: #f6f6f6;">
 
 <table style="max-width:630px;" align="center" cellpadding="0" cellspacing="0">

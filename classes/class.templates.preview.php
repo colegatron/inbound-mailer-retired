@@ -10,6 +10,7 @@ class Inbound_Email_Preview {
     static $smartbar_font_color;
     static $smartbar_padding;
     static $smartbar_js;
+    static $smartbar_css;
 
     /**
      *    Initializes class
@@ -22,6 +23,7 @@ class Inbound_Email_Preview {
      *    Loads hooks and filters
      */
     public function load_hooks() {
+
         add_action('plugins_loaded', array(__CLASS__, 'load_acf_definitions'), 11);
         add_action('inbound-mailer/email/header', array(__CLASS__, 'load_header_scripts'), 11);
         add_action('inbound-mailer/email/footer', array(__CLASS__, 'load_footer_scripts'), 11);
@@ -41,16 +43,21 @@ class Inbound_Email_Preview {
     public static function load_header_scripts() {
         global $post;
 
+
         self::$smartbar_enable = get_field("smartbar_enable", $post->ID);
 
         if (!self::$smartbar_enable) {
             return;
         }
 
-        self::$smartbar_content = get_field("smartbar_content", $post->ID );
+        self::$smartbar_content = str_replace( array("\n" , "\t"  ) , "" , get_field("smartbar_content", $post->ID ) );
+        self::$smartbar_content = stripslashes( self::$smartbar_content );
+        self::$smartbar_content = str_replace( "'" , '"' , self::$smartbar_content );
+        self::$smartbar_content = addslashes( self::$smartbar_content );
         self::$smartbar_background_color = get_field("smartbar_background_color", $post->ID );
         self::$smartbar_font_color = get_field("smartbar_font_color", $post->ID );
         self::$smartbar_padding = get_field("smartbar_padding", $post->ID );
+        self::$smartbar_css = str_replace( array("\n" , "\t"  ) , "" , strip_tags(get_field("smartbar_css", $post->ID )));
         self::$smartbar_js = get_field("smartbar_js", $post->ID );
 
         ?>
@@ -58,13 +65,20 @@ class Inbound_Email_Preview {
         <style type="text/css">
             nav {
                 transition: all .1s ease-in-out .1s;
-                background-color: #3FB7E4;
                 color: #fff;
                 padding: 0;
                 width: 100%;
                 position: fixed;
                 display:inline-flex;
             }
+
+            <?php
+            if (self::$smartbar_background_color) : ?>
+                nav {
+                    background-color: self::$smartbar_background_color;
+                }
+            <?php endif ?>
+
 
             body {
                 padding:0px;
@@ -83,11 +97,27 @@ class Inbound_Email_Preview {
         if (!self::$smartbar_enable) {
             return;
         }
-echo json_encode(self::$smartbar_content );exit;
+
+        do_action('wp_enqueue_scripts');
+
+        global $wp_scripts;
+
+        /* load inbound analytics */
+        if (isset($wp_scripts->registered['inbound-analytics'])) {
+
+            if (isset($wp_scripts->registered['inbound-analytics']->extra['data'])) {
+                echo '<script type="text/javascript">';
+                echo $wp_scripts->registered['inbound-analytics']->extra['data'];
+                echo '</script>';
+            }
+            echo '<script src="'.$wp_scripts->registered['inbound-analytics']->src.'"></script>';
+        }
+
         ?>
         <script type="text/javascript">
             var Subscribe = (function () {
                 var smartbar_content,
+                    smartbar_css,
                     smartbar_font_color,
                     smartbar_background_color,
                     smartbar_padding;
@@ -106,7 +136,8 @@ echo json_encode(self::$smartbar_content );exit;
                      * Setup Variables
                      */
                     setupVars: function () {
-                        Subscribe.smartbar_content = <?php echo json_encode(array('html'=>self::$smartbar_content) ); ?>;
+                        Subscribe.smartbar_content = JSON.parse('<?php echo json_encode(array('html'=>self::$smartbar_content) ); ?>');
+                        Subscribe.smartbar_css = JSON.parse('<?php echo json_encode(array('text'=>self::$smartbar_css) ); ?>');
                         Subscribe.smartbar_font_color = <?php echo json_encode(self::$smartbar_font_color ); ?>;
                         Subscribe.smartbar_background_color = <?php echo json_encode(self::$smartbar_background_color ); ?>;
 
@@ -122,14 +153,17 @@ echo json_encode(self::$smartbar_content );exit;
                      * Create Navigation Elements
                      */
                     createNav: function () {
-                        var nav = jQuery("<nav></nav>").attr('class', 'subscribe-container').text(JSON.parse(Subscribe.smartbar_content));
-                        var prompt = jQuery("<div></div>").attr('class', 'subscribe-prompt');
+                        var nav = jQuery("<nav></nav>").attr('class', 'subscribe-container');
+                        var prompt = jQuery("<div></div>").attr('class', 'subscribe-prompt').html(Subscribe.smartbar_content.html);
                         var content = jQuery("<div></div>").attr('class', 'subscribe-content');
+                        var css = jQuery("<style></style>").text(Subscribe.smartbar_css.text);
+                        var browser_link = jQuery('.view-in-browser').hide();
 
                         nav.prepend(prompt);
                         nav.prepend(content);
                         nav.prepend(content);
 
+                        jQuery('body').prepend(css);
                         jQuery('body').prepend(nav);
 
                         Subscribe.stickNav();
