@@ -26,6 +26,9 @@ class Inbound_SparkPost_Stats {
             add_action('wp_ajax_nopriv_sparkpost_webhook', array(__CLASS__, 'process_webhook'));
         }
 
+        /* process send event */
+        add_action( 'sparkpost/send/response' , array( __CLASS__ , 'process_send_event') , 10 , 2 );
+
         /* process rejection errors */
         add_action( 'sparkpost/send/response' , array( __CLASS__ , 'process_rejections') , 10 , 2 );
     }
@@ -621,6 +624,10 @@ class Inbound_SparkPost_Stats {
                 return;
             }
 
+            if ($event['type'] == 'delivery') {
+                continue;
+            }
+
             $args = array(
                 'event_name' => 'sparkpost_' . $event['type'],
                 'email_id' => $event['rcpt_meta']['email_id'],
@@ -662,6 +669,37 @@ class Inbound_SparkPost_Stats {
     }
 
     /**
+     * Check SparkPost Response for Errors and Handle them
+     */
+    public static function process_send_event( $transmission_args , $response ) {
+
+        /* skip if contains errors */
+        if (isset($response['errors'])) {
+            return;
+        }
+
+        if (isset($transmission_args['recipients'][0]['tags']) && in_array( 'test' , $transmission_args['recipients'][0]['tags']) ) {
+            return;
+        }
+
+        /* recipients */
+        $args = array(
+            'event_name' => 'sparkpost_delivery',
+            'email_id' => $transmission_args['metadata']['email_id'],
+            'variation_id' =>  $transmission_args['metadata']['variation_id'],
+            'form_id' => '',
+            'lead_id' => $transmission_args['metadata']['lead_id'],
+            'session_id' => '',
+            'event_details' => json_encode($transmission_args)
+        );
+
+        /* lets not spam our events table with repeat opens and clicks */
+        if (!Inbound_Events::event_exists($args)) {
+            Inbound_Events::store_event($args);
+        }
+
+    }
+ /**
      * Check SparkPost Response for Errors and Handle them
      */
     public static function process_rejections( $transmission_args , $response ) {
