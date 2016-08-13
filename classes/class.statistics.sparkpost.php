@@ -24,6 +24,8 @@ class Inbound_SparkPost_Stats {
 
             /* For processing webhooks */
             add_action('wp_ajax_nopriv_sparkpost_webhook', array(__CLASS__, 'process_webhook'));
+
+            add_action( 'inbound-mailer/unschedule-email' , array( __CLASS__, 'unschedule_email' ) , 10 , 1 );
         }
 
         /* process send event */
@@ -118,31 +120,43 @@ class Inbound_SparkPost_Stats {
     /**
      * Get all all custom event data by a certain indicator
      */
-    public static function get_sparkpost_inbound_events( $email_id , $variation_id = null ){
-        global $wpdb , $post, $inbound_settings;
+    public static function get_sparkpost_inbound_events( $email_id , $variation_id = null ) {
+        global $wpdb, $post, $inbound_settings;
 
         /* check if email id is set else use global post object */
-        if ( $email_id ) {
+        if ($email_id) {
             $post = get_post($email_id);
         }
 
         /* we do not collect stats for statuses not in this array */
-        if ( !in_array( $post->post_status , array( 'sent' , 'sending', 'automated' )) ) {
+        if (!in_array($post->post_status, array('sent', 'sending', 'automated'))) {
             return array();
         }
 
+        /* get email setup data */
+        $settings = Inbound_Email_Meta::get_settings($post->ID);
         $table_name = $wpdb->prefix . "inbound_events";
 
-        if ( is_numeric($variation_id) ) {
-            $variation_query = 'AND variation_id="'.$variation_id.'"';
+        if (is_numeric($variation_id)) {
+            $variation_query = 'AND variation_id="' . $variation_id . '"';
         } else {
             $variation_query = '';
         }
 
         /* get deliveries */
-        $query = 'SELECT DISTINCT(lead_id) FROM '.$table_name.' WHERE `email_id` = "'.$email_id.'"  '.$variation_query.' AND `event_name` =  "sparkpost_delivery"';
-        $results = $wpdb->get_results( $query );
-        $sent = $wpdb->num_rows;
+        $wordpress_date_time =  date_i18n('Y-m-d G:i:s');
+        $today = new DateTime($wordpress_date_time);
+        $schedule_date = new DateTime($settings['send_datetime']);
+        $interval = $today->diff($schedule_date);
+
+
+        if ( $interval->format('%R') == '-' ) {
+            $query = 'SELECT DISTINCT(lead_id) FROM ' . $table_name . ' WHERE `email_id` = "' . $email_id . '"  ' . $variation_query . ' AND `event_name` =  "sparkpost_delivery"';
+            $results = $wpdb->get_results($query);
+            $sent = $wpdb->num_rows;
+        } else {
+            $sent = 0;
+        }
 
         /* get opens */
         $query = 'SELECT DISTINCT(lead_id) FROM '.$table_name.' WHERE `email_id` = "'.$email_id.'"  '.$variation_query.' AND `event_name` =  "sparkpost_open"';
@@ -543,7 +557,6 @@ class Inbound_SparkPost_Stats {
         self::$results = $sparkpost->create_webhook( array(
             'name' => 'Inbound Now Webhook',
             'events' => array(
-                'delivery',
                 'bounce',
                 'open',
                 'click',
@@ -699,7 +712,8 @@ class Inbound_SparkPost_Stats {
         }
 
     }
- /**
+
+    /**
      * Check SparkPost Response for Errors and Handle them
      */
     public static function process_rejections( $transmission_args , $response ) {
@@ -746,6 +760,28 @@ class Inbound_SparkPost_Stats {
 
     }
 
+    public static function unschedule_email( $email_id ) {
+        global $Inbound_Mailer_Variations;
+        global $inbound_settings;
+        global $post;
+
+        $variations = $Inbound_Mailer_Variations->get_variations($post->ID, $vid = null);
+        $sparkpost = new Inbound_SparkPost(  $inbound_settings['inbound-mailer']['sparkpost-key'] );
+
+        foreach ($variations as $vid => $variation) {
+            $campaign_id =  $email_id	. '_'. $vid;
+            $results = $sparkpost->get_transmissions( $campaign_id );
+            print_r($results);exit;
+        }
+
+
+
+    }
+
+    /**
+     * Display API status inside settings area
+     * @param $field
+     */
     public static function display_api_status( $field ) {
         global $inbound_settings;
 
