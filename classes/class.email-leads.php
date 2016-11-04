@@ -69,6 +69,9 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                 'post_type' => 'inbound-email',
             ));
 
+            /*get the current user*/	
+			$user = wp_get_current_user();
+            
             /*put the email ids and names in an array for use in the email dropdown selector*/
             $template_id_and_name;
             foreach ($email_templates as $email_template) {
@@ -85,31 +88,31 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     'id' => 'subject',
                     'type' => 'text',
                     'default' => '',
-                    'class' => '',
+                    'class' => 'direct_email_lead_field',
                 ),
                 'from_name' => array(
                     'label' => __('From Name', 'inbound-pro'),
                     'description' => __('The name of the sender. This field is variation dependant!', 'inbound-pro'),
                     'id' => 'from_name',
                     'type' => 'text',
-                    'default' => '',
-                    'class' => '',
+                    'default' => $user->display_name,
+                    'class' => 'direct_email_lead_field',
                 ),
                 'from_email' => array(
                     'label' => __('From Email', 'inbound-pro'),
                     'description' => __('The email address of the sender. This field is variation dependant!', 'inbound-pro'),
                     'id' => 'from_email',
                     'type' => 'text',
-                    'default' => '',
-                    'class' => '',
+                    'default' => $user->user_email,
+                    'class' => 'direct_email_lead_field',
                 ),
                 'reply_email' => array(
                     'label' => __('Reply Email', 'inbound-pro'),
                     'description' => __('The email address recipients can reply to. This field is variation dependant!', 'inbound-pro'),
                     'id' => 'reply_email',
                     'type' => 'text',
-                    'default' => '',
-                    'class' => '',
+                    'default' => $user->user_email,
+                    'class' => 'direct_email_lead_field',
                 ),
                 'recipient_email_address' => array(
                     'label' => __('Recipient Email Address', 'inbound-pro'),
@@ -188,18 +191,21 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     jQuery('.email_variation_selector').css('visibility', 'hidden');
                     jQuery('.inbound-tooltip').css('display', 'none');
                     jQuery('#footer_address').attr('placeholder', "<?php _e('In order to be complaint with CAN-SPAM Act please enter a valid address.', 'inbound-pro') ?>");
-
+                    jQuery('.open-marketing-button-popup.inbound-marketing-button.button').css('display', 'none');
+                    
                     jQuery('#premade_template_chooser').on('change', function () {
                         if (jQuery('#premade_template_chooser').val() == 1) {
                             jQuery('div.email_message_box.inbound-wysiwyg-row.div-email_message_box.inbound-email-option-row.inbound-meta-box-row').css('display', 'none');
                             jQuery('.premade_template_selector').css('display', 'block');
                             jQuery('.email_variation_selector').css('display', 'block');
                             jQuery('#footer_address').css('display', 'none');
+                            jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', 'none');
                         } else {
                             jQuery('div.email_message_box.inbound-wysiwyg-row.div-email_message_box.inbound-email-option-row.inbound-meta-box-row').css('display', 'block');
                             jQuery('.premade_template_selector').css('display', 'none');
                             jQuery('#footer_address').css('display', 'block');
                             jQuery('.email_variation_selector').css('display', 'none');
+                            jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', 'block');
                         }
 
                     });
@@ -220,7 +226,6 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                                 //					console.log(response);
                                 variationSettings = response.variations;
                                 //					console.log(variationSettings);
-                                set_address_headers(0);
 
                                 jQuery('#email_variation_selector').find('option').remove();
                                 if (variationSettings.length > 1) {
@@ -253,16 +258,10 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
 
                     });
 
-                    jQuery('#email_variation_selector').on('change', function () {
-                        set_address_headers(jQuery('#email_variation_selector').val());
-
-                    });
-
-
                     /*Send the email*/
                     jQuery('#send-email-button').on('click', function () {
-                        var postId = inbound_settings.post_id;
-                        var userId = userSettings.uid;
+                        var postId = <?php echo $post->ID; ?>;
+                        var userId = <?php echo $user->ID; ?>;
                         var subject = jQuery('#subject').val();
                         var fromName = jQuery('#from_name').val();
                         var fromEmail = jQuery('#from_email').val();
@@ -359,25 +358,6 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                             return jQuery('textarea.email_message_box').val();
                         }
                     }
-
-
-                    function set_address_headers(variation) {
-                        headersToUse = variationSettings[variation];
-                        if (headersToUse.subject != '') {
-                            jQuery('#subject').val(headersToUse.subject)
-                        }
-                        if (headersToUse.from_name != '') {
-                            jQuery('#from_name').val(headersToUse.from_name)
-                        }
-                        if (headersToUse.from_email != '') {
-                            jQuery('#from_email').val(headersToUse.from_email)
-                        }
-                        if (headersToUse.reply_email != '') {
-                            jQuery('#reply_email').val(headersToUse.reply_email)
-                        }
-
-                    }
-
 
                 });
             </script>
