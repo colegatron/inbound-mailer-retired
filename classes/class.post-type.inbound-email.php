@@ -420,7 +420,7 @@ if ( !class_exists('Inbound_Mailer_Post_Type') ) {
 				'label_count' => _n_noop( 'Automated <span class="count">(%s)</span>', 'Automated <span class="count">(%s)</span>' )
 			));
       
-      /* direct_email */
+            /* direct_email */
 			register_post_status( 'direct_email', array(
 				'label'	=> __( 'Direct Emails', 'inbound-email' ),
 				'public' => true,
@@ -445,7 +445,7 @@ if ( !class_exists('Inbound_Mailer_Post_Type') ) {
 					'cancelled' => __( 'Cancelled' , 'inbound-pro' ) ,
 					'scheduled' => __( 'Scheduled' , 'inbound-email'),
 					'sending' => __( 'Sending' , 'inbound-email'),
-          'direct_email' => __( 'Direct Emails' , 'inbound-pro' ) ,
+                    'direct_email' => __( 'Direct Emails' , 'inbound-pro' ) ,
 				);
 
 				echo '<script type="text/javascript">';

@@ -72,10 +72,29 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 						'options' => Inbound_Mailer_Settings::get_pages_array()
 					),
 					array(
+						'id'  => 'unsubscribe-show-lists',
+						'label'  => __('Show Lists', 'inbound-pro' ),
+						'description'  => __( 'Leave this set to on to give the reader the option to unsubscribe from individual lists.' , 'inbound-pro' ),
+						'type'  => 'dropdown',
+						'default'  => 'on',
+						'options' => array(
+							'on' => __('On' , 'inbound-pro'),
+							'off' => __('Off' , 'inbound-pro'),
+						)
+					),
+					array(
 						'id'  => 'subheader-language',
 						'type'  => 'sub-header',
 						'default'  => __('Unsubscribe Labels', 'inbound-pro' ),
 						'options' => null
+					),
+					array(
+						'id'  => 'unsubscribe-header-text',
+						'label'  => __('Unsubscribe Header', 'inbound-pro' ),
+						'description'  => __( 'This text will display inside the unsubscribe button' , 'inbound-pro' ),
+						'type'  => 'text',
+						'default'  => __('Unsubscribe','inbound-pro')
+
 					),
 					array(
 						'id'  => 'unsubscribe-button-text',

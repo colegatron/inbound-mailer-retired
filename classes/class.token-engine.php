@@ -64,12 +64,20 @@ class Inbound_Mailer_Tokens {
 	public static function token_button() {
 		global $post;
 
-		if ( !isset($post) || $post->post_type!='inbound-email' ) {
+		if (
+			!isset($post)
+			||
+			(
+				$post->post_type!='inbound-email'
+					&&
+				$post->post_type!='wp-lead'
+			)
+		) {
 			return;
 		}
 
 		$html = '<a href="#" class="button lead-fields-button" id="lead-fields-button-'.rand ( 10 , 1200 ).'" style="padding-left: .4em;"  >';
-		$html .= '<span class="wp-media-buttons-icon" id="inbound_lead_fields_button"></span>'. __( 'Lead Fields' , 'inbound-email' ) .'</a>';
+		$html .= '<span class="wp-media-buttons-icon" id="inbound_lead_fields_button"></span>'. __( 'Lead Fields' , 'inbound-pro' ) .'</a>';
 
 		return $html;
 	}
@@ -130,7 +138,7 @@ class Inbound_Mailer_Tokens {
 				</tr>
 				<tr>
 					<td class='lf-submit' colspan='2'>
-						<span class='button-primary lf-submit-button' id="lf-insert-shortcode" href='#'><?php _e( 'Insert Shortcode' , 'inbound-email' ); ?></span>
+						<span class='button-primary lf-submit-button' id="lf-insert-shortcode" href='#'><?php _e( 'Insert Shortcode' , 'inbound-pro' ); ?></span>
 					</td>
 				</tr>
 			</table>
