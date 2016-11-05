@@ -422,10 +422,10 @@ if ( !class_exists('Inbound_Mailer_Post_Type') ) {
       
             /* direct_email */
 			register_post_status( 'direct_email', array(
-				'label'	=> __( 'Direct Emails', 'inbound-email' ),
-				'public' => true,
-				'show_in_admin_all_list' => true,
-				'show_in_admin_status_list' => true,
+				'label'	=> __( 'Direct Emails', 'inbound-pro' ),
+				'public' => current_user_can('administrator'),
+				'show_in_admin_all_list' => false,
+				'show_in_admin_status_list' => false,
 				'label_count' => _n_noop( 'Direct Emails <span class="count">(%s)</span>', 'Direct Emails <span class="count">(%s)</span>' )
 			));
 		}
@@ -443,8 +443,8 @@ if ( !class_exists('Inbound_Mailer_Post_Type') ) {
 					'unsent' => __( 'Unsent' , 'inbound-pro' ) ,
 					'sent' => __( 'Sent' , 'inbound-pro' ) ,
 					'cancelled' => __( 'Cancelled' , 'inbound-pro' ) ,
-					'scheduled' => __( 'Scheduled' , 'inbound-email'),
-					'sending' => __( 'Sending' , 'inbound-email'),
+					'scheduled' => __( 'Scheduled' , 'inbound-pro'),
+					'sending' => __( 'Sending' , 'inbound-pro'),
                     'direct_email' => __( 'Direct Emails' , 'inbound-pro' ) ,
 				);
 

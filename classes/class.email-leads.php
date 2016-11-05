@@ -26,7 +26,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
             add_action('wp_ajax_get_addressing_settings', array(__CLASS__, 'get_addressing_settings'));
 
             /*Add ajax listener for sending the email*/
-            add_action('wp_ajax_send_email_to_lead', array(__CLASS__, 'send_email_to_lead'));
+            add_action('wp_ajax_send_email_to_lead', array(__CLASS__, 'ajax_send_email_to_lead'));
 
         }
 
@@ -69,9 +69,9 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                 'post_type' => 'inbound-email',
             ));
 
-            /*get the current user*/	
-			$user = wp_get_current_user();
-            
+            /*get the current user*/
+            $user = wp_get_current_user();
+
             /*put the email ids and names in an array for use in the email dropdown selector*/
             $template_id_and_name;
             foreach ($email_templates as $email_template) {
@@ -82,6 +82,15 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
 
             /*these are the fields in the "Email Lead" tab*/
             $custom_fields = array(
+                'use_premade_template' => array(
+                    'label' => __('Use template?', 'inbound-pro'),
+                    'description' => __('Use this to choose whether to send a custom or a premade email', 'inbound-pro'),
+                    'id' => 'premade_template_chooser',
+                    'type' => 'dropdown',
+                    'default' => '0',
+                    'class' => 'premade_template_chooser',
+                    'options' => array('0' => 'No', '1' => 'Yes'),
+                ),
                 'subject' => array(
                     'description' => __('Subject line of the email. This field is variation dependant!', 'inbound-pro'),
                     'label' => __('Subject Line', 'inbound-pro'),
@@ -115,24 +124,15 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     'class' => 'direct_email_lead_field',
                 ),
                 'recipient_email_address' => array(
-                    'label' => __('Recipient Email Address', 'inbound-pro'),
+                    'label' => __('Recipient', 'inbound-pro'),
                     'description' => __('The email address of the recipient.', 'inbound-pro'),
                     'id' => 'recipient_email_address',
                     'type' => 'text',
                     'default' => $recipient_email_addr,
                     'class' => '',
                 ),
-                'use_premade_template' => array(
-                    'label' => __('Use a premade email template?', 'inbound-pro'),
-                    'description' => __('Use this to choose whether to send a custom or a premade email', 'inbound-pro'),
-                    'id' => 'premade_template_chooser',
-                    'type' => 'dropdown',
-                    'default' => '0',
-                    'class' => 'premade_template_chooser',
-                    'options' => array('0' => 'No', '1' => 'Yes'),
-                ),
                 'email_message_box' => array(
-                    'label' => __('Email Message', 'inbound-pro'),
+                    'label' => __('Message', 'inbound-pro'),
                     'description' => __('Use this editor to create a short custom email messages', 'inbound-pro'),
                     'id' => 'email_message_box',
                     'type' => 'wysiwyg',
@@ -141,7 +141,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     'disable_variants' => '1',
                 ),
                 'premade_email_templates' => array(
-                    'label' => __('Select a premade email', 'inbound-pro'),
+                    'label' => __('Select Template', 'inbound-pro'),
                     'description' => __('Use this to select which premade email to use.', 'inbound-pro'),
                     'id' => 'premade_template_selector',
                     'type' => 'dropdown',
@@ -150,22 +150,14 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     'options' => $template_id_and_name,
                 ),
                 'email_variation' => array(
-                    'label' => __('Select a varation', 'inbound-pro'),
+                    'label' => __('Choose varation', 'inbound-pro'),
                     'description' => __('Use this to select which variation of the premade email to use.', 'inbound-pro'),
                     'id' => 'email_variation_selector',
                     'type' => 'dropdown',
                     'default' => '0',
                     'class' => 'email_variation_selector',
                     'options' => array('0' => 'A'),
-                ),
-                'footer_address' => array(
-                    'label' => __('Footer Address', 'inbound-pro'),
-                    'description' => __('In order to be complaint with CAN-SPAM Act please enter a valid address.', 'inbound-pro'),
-                    'id' => 'footer_address',
-                    'type' => 'text',
-                    'default' => '',
-                    'class' => 'email_footer_address',
-                ),
+                )
             ); ?>
 
 
@@ -174,7 +166,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                 Inbound_Mailer_Metaboxes::render_settings('inbound-email', $custom_fields, $post); ?>
 
                 <button id="send-email-button" type="button" style="padding:15px;">
-                    <?php _e('Send Email' , 'inbound-pro'); ?>
+                    <?php _e('Send Email', 'inbound-pro'); ?>
                     <i class="fa fa-envelope" aria-hidden="true"></i>
                 </button>
             </div>
@@ -184,26 +176,22 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
             <script>
                 jQuery(document).ready(function () {
                     var variationSettings;
-                    console.log(variationSettings.post_id);
 
                     /*page load actions*/
                     jQuery('.premade_template_selector').css('display', 'none');
                     jQuery('.email_variation_selector').css('visibility', 'hidden');
                     jQuery('.inbound-tooltip').css('display', 'none');
-                    jQuery('#footer_address').attr('placeholder', "<?php _e('In order to be complaint with CAN-SPAM Act please enter a valid address.', 'inbound-pro') ?>");
                     jQuery('.open-marketing-button-popup.inbound-marketing-button.button').css('display', 'none');
-                    
+
                     jQuery('#premade_template_chooser').on('change', function () {
                         if (jQuery('#premade_template_chooser').val() == 1) {
                             jQuery('div.email_message_box.inbound-wysiwyg-row.div-email_message_box.inbound-email-option-row.inbound-meta-box-row').css('display', 'none');
                             jQuery('.premade_template_selector').css('display', 'block');
                             jQuery('.email_variation_selector').css('display', 'block');
-                            jQuery('#footer_address').css('display', 'none');
                             jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', 'none');
                         } else {
                             jQuery('div.email_message_box.inbound-wysiwyg-row.div-email_message_box.inbound-email-option-row.inbound-meta-box-row').css('display', 'block');
                             jQuery('.premade_template_selector').css('display', 'none');
-                            jQuery('#footer_address').css('display', 'block');
                             jQuery('.email_variation_selector').css('display', 'none');
                             jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', 'block');
                         }
@@ -272,7 +260,6 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                         var isPremadeTemplate = jQuery('#premade_template_chooser').val();
                         var premadeEmailId = jQuery('#premade_template_selector').val();
                         var variationSelected = jQuery('#email_variation_selector').val();
-                        var footerAddress = jQuery('#footer_address').val();
 
                         swal({
                             title: "<?php _e('Please wait', 'inbound-pro'); ?>",
@@ -297,9 +284,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                                 use_premade_template: usePremadeTemplate,
                                 is_premade_template: isPremadeTemplate,
                                 premade_email_id: premadeEmailId,
-                                variation_selected: variationSelected,
-                                footer_address: footerAddress,
-
+                                variation_selected: variationSelected
                             },
 
                             success: function (response) {
@@ -316,11 +301,23 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                                     });
                                     return false;
                                 }
+
                                 /*if it's a system error, like some data wasn't supplied*/
                                 if (response.system_error) {
                                     swal({
                                         title: response.title,
                                         text: response.system_error,
+                                        type: 'error',
+                                    });
+                                    return false;
+                                }
+
+                                /*if it's a Sparkpost error, like some data wasn't supplied*/
+                                console.log(response);
+                                if (response.errors) {
+                                    swal({
+                                        title: response.errors[0].message,
+                                        text: response.errors[0].description,
                                         type: 'error',
                                     });
                                     return false;
@@ -366,12 +363,14 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
         }
 
 
+        /**
+         *
+         */
         public static function get_addressing_settings() {
             if (isset($_POST['email_id']) && !empty($_POST['email_id'])) {
 
                 $id = intval($_POST['email_id']);
-                $inbound_email_meta = new Inbound_Email_Meta;
-                $email_settings = $inbound_email_meta->get_settings($id);
+                $email_settings = Inbound_Email_Meta::get_settings($id);
                 echo json_encode($email_settings);
             }
             die();
@@ -379,109 +378,133 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
         }
 
 
-        public static function send_email_to_lead() {
-            $inbound_email_meta = new Inbound_Email_Meta;
-            $inbound_mail_daemon = new Inbound_Mail_Daemon;
+        /**
+         *
+         */
+        public static function ajax_send_email_to_lead() {
 
             /*if the email is a premade auto one, make sure the info is provided to send it and send it*/
             if ($_POST['use_premade_template'] == '1') {
+                self::send_automated_email_to_lead();
+            } else {
+                self::send_direct_message_to_lead();
+            }
 
-                /*make sure the settings have been supplied*/
-                if (empty($_POST['post_id']) && $_POST['post_id'] != '0') {
-                    echo json_encode(array('system_error' => __('The lead id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
-                    die();
-                }
-                if (empty($_POST['recipient_email']) || !is_email($_POST['recipient_email'])) {
-                    echo json_encode(array('basic_error' => __('There\'s an error with the recipient email', 'inbound-pro'), 'title' => __('Field Error:', 'inbound-pro')));
-                    die();
-                }
-                if (empty($_POST['premade_email_id']) && $_POST['premade_email_id'] != '0') {
-                    echo json_encode(array('system_error' => __('The email template id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
-                    die();
-                }
-                if (empty($_POST['variation_selected']) && $_POST['variation_selected'] != '0') {
-                    echo json_encode(array('system_error' => __('The variation id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
-                    die();
-                }
+        }
 
-                $post_id = intval($_POST['post_id']);
-                $recipient_email = sanitize_text_field($_POST['recipient_email']);
-                $premade_email_id = intval($_POST['premade_email_id']);
-                $variation_selected = intval($_POST['variation_selected']);
-
-                /*sending args*/
-                $args = array('email_address' => $recipient_email,
-                    'email_id' => $premade_email_id,
-                    'vid' => $variation_selected,
-                    'lead_id' => $post_id,
-                    'is_test' => 0);
-
-                /*send the email!*/
-                $inbound_mail_daemon::send_solo_email($args);
-                echo json_encode(array('success' => __('Your email has been sent!', 'inbound-pro'), 'title' => __('SUCCESS!', 'inbound-pro')));
+        /**
+         * Sends an pre-fabricated automated email to the lead
+         */
+        public static function send_automated_email_to_lead() {
+            /*make sure the settings have been supplied*/
+            if (empty($_POST['post_id']) && $_POST['post_id'] != '0') {
+                echo json_encode(array('system_error' => __('The lead id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
+                die();
+            }
+            if (empty($_POST['recipient_email']) || !is_email($_POST['recipient_email'])) {
+                echo json_encode(array('basic_error' => __('There\'s an error with the recipient email', 'inbound-pro'), 'title' => __('Field Error:', 'inbound-pro')));
+                die();
+            }
+            if (empty($_POST['premade_email_id']) && $_POST['premade_email_id'] != '0') {
+                echo json_encode(array('system_error' => __('The email template id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
+                die();
+            }
+            if (empty($_POST['variation_selected']) && $_POST['variation_selected'] != '0') {
+                echo json_encode(array('system_error' => __('The variation id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
                 die();
             }
 
+            $post_id = intval($_POST['post_id']);
+            $recipient_email = sanitize_text_field($_POST['recipient_email']);
+            $premade_email_id = intval($_POST['premade_email_id']);
+            $variation_selected = intval($_POST['variation_selected']);
 
-            /***if the email is a custom one, create a new custom one***/
+            /*sending args*/
+            $args = array(
+                'email_address' => $recipient_email,
+                'email_id' => $premade_email_id,
+                'vid' => $variation_selected,
+                'lead_id' => $post_id,
+                'is_test' => 0
+            );
 
+            /*send the email!*/
+            Inbound_Mail_Daemon::send_solo_email($args);
+            echo json_encode(array('success' => __('Your email has been sent!', 'inbound-pro'), 'title' => __('SUCCESS!', 'inbound-pro')));
+            die();
+        }
 
-            /*these are the variables set by the user*/
-            $user_filled_vars = array(
-                __('Subject', 'inbound-pro') => $_POST['subject'],
-                __('From Name', 'inbound-pro') => $_POST['from_name'],
-                __('From Email', 'inbound-pro') => $_POST['from_email'],
-                __('Reply Email', 'inbound-pro') => $_POST['reply_email'],
-                __('Recipient Email', 'inbound-pro') => $_POST['recipient_email'],
-                __('Email Content', 'inbound-pro') => $_POST['email_content'],
-                __('Footer Address', 'inbound-pro') => $_POST['footer_address'],);
+        /**
+         *
+         */
+        public static function send_direct_message_to_lead() {
+
+            /* these are the variables set by the user */
+            $data = array(
+                'subject' => array(
+                    'label' => __('Subject', 'inbound-pro'),
+                    'value' => sanitize_text_field($_POST['subject'])
+                ),
+                'from_name' => array(
+                    'label' => __('From Name', 'inbound-pro'),
+                    'value' => sanitize_text_field($_POST['from_name'])
+                ),
+                'from_email' => array(
+                    'label' => __('From Email', 'inbound-pro'),
+                    'value' => sanitize_text_field($_POST['from_email'])
+                ),
+                'reply_email' => array(
+                    'label' => __('Reply Email', 'inbound-pro'),
+                    'value' => sanitize_text_field($_POST['reply_email'])
+                ),
+                'recipient_email' => array(
+                    'label' => __('Recipeient Email', 'inbound-pro'),
+                    'value' => sanitize_text_field($_POST['recipient_email'])
+                ),
+                'email_content' => array(
+                    'label' => __('Email Content', 'inbound-pro'),
+                    'value' => strip_tags($_POST['email_content'],'<br><i><b><strong><div><span><h1><h2><h3><h4><table><tr><td><tbody>')
+                )
+            );
 
             /*check to make sure the variables are set*/
-            foreach ($user_filled_vars as $key => $value) {
-                if (empty($value)) {
-                    echo json_encode(array('basic_error' => __('Please fill in the ' . $key, 'inbound-pro'), 'title' => __('Empty field', 'inbound-pro')));
+            foreach ($data as $key => $value) {
+                if (empty($value['value'])) {
+                    echo json_encode(array('basic_error' => __('Please fill in the ' . $value['label'], 'inbound-pro'), 'title' => __('Empty field', 'inbound-pro')));
                     die();
                 }
 
             }
 
+            /* sanitise hidden values */
+            $data['post_id'] = (int) $_POST['post_id'];
+            $data['user_id'] = (int) $_POST['user_id'];
+
             /*check to make sure the email addresses are setup correctly*/
-            if (!is_email($_POST['recipient_email'])) {
+            if (!is_email($data['recipient_email']['value'])) {
                 echo json_encode(array('basic_error' => __('There\'s an error with the Recipient Email Address', 'inbound-pro'), 'title' => __('Field Error:', 'inbound-pro')));
                 die();
             }
 
-            if (!is_email($_POST['from_email'])) {
+            if (!is_email($data['from_email']['value'])) {
                 echo json_encode(array('basic_error' => __('There\'s an error with the From Email', 'inbound-pro'), 'title' => __('Field Error:', 'inbound-pro')));
                 die();
             }
 
-            if (!is_email($_POST['reply_email'])) {
+            if (!is_email($data['reply_email']['value'])) {
                 echo json_encode(array('basic_error' => __('There\'s an error with the Reply Email', 'inbound-pro'), 'title' => __('Field Error:', 'inbound-pro')));
                 die();
             }
 
             /*check to make sure the post and user ids have been supplied*/
-            if (empty($_POST['post_id'])) {
+            if (empty($data['post_id'])) {
                 echo json_encode(array('system_error' => __('The post id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
                 die();
             }
-            if (empty($_POST['user_id'])) {
+            if (empty($data['user_id'])) {
                 echo json_encode(array('system_error' => __('The user id was not supplied', 'inbound-pro'), 'title' => __('System Error:', 'inbound-pro')));
                 die();
             }
-
-
-            /*set the variables*/
-            $post_id = intval($_POST['post_id']); //$post_id is also used as the lead id
-            $user_id = intval($_POST['user_id']); //$user_id is the id of the wp user who's sending the email
-            $subject = sanitize_text_field($_POST['subject']);
-            $from_name = sanitize_text_field($_POST['from_name']);
-            $from_email = sanitize_text_field($_POST['from_email']);
-            $reply_email = sanitize_text_field($_POST['reply_email']);
-            $recipient_email = sanitize_text_field($_POST['recipient_email']);
-            $email_content = $_POST['email_content'];
-            $footer_address = sanitize_text_field($_POST['footer_address']);
 
 
             /*get the current time according to the wp format*/
@@ -491,92 +514,87 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
 
             /*assemble the post data*/
             $direct_email = array(
-                'post_title' => __('Direct email to ', 'inbound-pro') . $recipient_email . __(' on ', 'inbound-pro') . $time->format($format),
-                'post_content' => '',
+                'post_title' => __('Direct email to ', 'inbound-pro') . $data['recipient_email']['value'] . __(' on ', 'inbound-pro') . $time->format($format),
+                'post_content' => $data['email_content']['value'],
                 'post_status' => 'direct_email',
-                'post_author' => $user_id,
+                'post_author' => $data['user_id'],
                 'post_type' => 'inbound-email',
             );
 
             /*create the email*/
-            $direct_email_id = wp_insert_post($direct_email);
+            $data['direct_email_id'] = wp_insert_post($direct_email);
 
-            /*add the settings needed for the email to render*/
-            $the_meta_to_add = array(
-                //Use the template config.php field "names" for the keys
-                'logo' => '',
-                'logo_positioning' => '',
-                'logo_url' => '',
-                'email_font' => 'serif',
-                'headline' => '',  /*$subject*/
-                'headline_size' => '24px',
-                'sub_headline_size' => '',
-                'sub_headline' => '',
-                'featured_image' => '',
-                'image_width' => '',
-                'image_height' => '',
-                'message_content' => $email_content,
-                'align_message_content' => '',
-                'footer_address' => $footer_address,
-                'contrast_background_color' => '#e8e8e8',
-                'content_background_color' => '#ffffff',
-                'content_color' => '#000000',
-                'show_email_content_border' => '',
-                'hide_show_email_in_browser' => '',
-            );
-
-            foreach ($the_meta_to_add as $key => $value) {
-                update_post_meta($direct_email_id, $key, $value);
-            }
-
-
-            /*assemble the settings inbound-mailer uses for sending the email*/
+            /* assemble the settings inbound-mailer uses for sending the email */
             $mailer_settings = array(
                 'variations' => array(
                     0 => array(
-                        'selected_template' => 'inboundnow',
-                        'user_ID' => $user_id,
-                        'subject' => $subject,
-                        'from_name' => $from_name,
-                        'from_email' => $from_email,
-                        'reply_email' => $reply_email,
+                        'selected_template' => '',
+                        'user_ID' => $data['user_id'],
+                        'subject' => $data['subject']['value'],
+                        'from_name' => $data['from_name']['value'],
+                        'from_email' => $data['from_email']['value'],
+                        'reply_email' => $data['reply_email']['value'],
                         'variation_status' => 'active',
                     ),
                 ),
-                'email_type' => 'automated',
+                'email_type' => 'direct',
             );
 
             /*add the settings to the email*/
-            $inbound_email_meta::update_settings($direct_email_id, $mailer_settings);
-
+            Inbound_Email_Meta::update_settings($data['direct_email_id'], $mailer_settings);
+error_log(print_r($data,true));
             /*sending args*/
             $args = array(
-                'email_address' => $recipient_email,
-                'email_id' => $direct_email_id,
+                'email_address' => $data['recipient_email']['value'],
+                'email_id' => $data['direct_email_id'],
                 'vid' => 0,
-                'lead_id' => $post_id,
+                'lead_id' => $data['post_id'],
                 'is_test' => 0,
+                'is_direct' => true
             );
 
-
             /*and send*/
-            $inbound_mail_daemon::send_solo_email($args);
-            //		wp_delete_post($direct_email_id, true); //uncomment to stop saving direct emails
-            echo json_encode(array('success' => __('Your custom email has been sent!', 'inbound-pro'), 'title' => __('SUCCESS!', 'inbound-pro')));
+            $response = Inbound_Mail_Daemon::send_solo_email($args);
+            $repsonse = wp_remote_retrieve_body( $response );
+
+
+            if (isset($response['errors'])) {
+                wp_delete_post($data['direct_email_id'], true);
+                echo json_encode($response);
+            } else {
+                echo json_encode(array('success' => __('Your custom email has been sent!', 'inbound-pro'), 'title' => __('SUCCESS!', 'inbound-pro')));
+                $data['response'] = $response;
+                self::store_direct_mail_event( $data );
+            }
 
             //		echo json_encode(error_get_last()); //debug
             die();
-
         }
 
+        /**
+         * @param $data
+         */
+        public static function store_direct_mail_event( $data ) {
+            /* recipients */
+            $args = array(
+                'event_name' => 'inbound_direct_message',
+                'email_id' => $data['direct_email_id'],
+                'variation_id' =>  0,
+                'form_id' => 0,
+                'lead_id' => $data['post_id'],
+                'event_details' => json_encode($data)
+            );
 
+            Inbound_Events::store_event($args);
+        }
     }
 
 
+    add_action('admin_init', 'inbound_confirm_email_service_provider');
     /**
      *    Only load Inbound_Mailer_Direct_Email_Leads if an email service provider has been selected
      */
-    function confirm_email_service_provider() {
+    function inbound_confirm_email_service_provider() {
         $Inbound_Mailer_Settings = new Inbound_Mailer_Settings;
         $email_settings = $Inbound_Mailer_Settings::get_settings();
         if ($email_settings['mail-service'] != 'none') {
@@ -584,11 +602,5 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
             new Inbound_Mailer_Direct_Email_Leads;
         }
     }
-
-    add_action('admin_init', 'confirm_email_service_provider');
-
-
 }
 
-
-?>
