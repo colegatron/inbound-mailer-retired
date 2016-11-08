@@ -96,7 +96,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                 ),
                 'subject' => array(
                     'description' => __('Subject line of the email. This field is variation dependant!', 'inbound-pro'),
-                    'label' => __('Subject Line', 'inbound-pro'),
+                    'label' => __('Subject', 'inbound-pro'),
                     'id' => 'subject',
                     'type' => 'text',
                     'default' => '',
