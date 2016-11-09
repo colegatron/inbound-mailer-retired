@@ -374,8 +374,8 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                    float:right;
                    width:70%;
                }
-               #wpleads_lead_tab_direct_email ..inbound-meta-box-label {
-                   width:200px;
+               #wpleads_lead_tab_direct_email .inbound-meta-box-label {
+                   width:98px;
                }
 
                 #send-email-button {
