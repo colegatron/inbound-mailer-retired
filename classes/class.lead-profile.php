@@ -54,8 +54,6 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
         public static function add_direct_email_tab_contents() {
             global $post;
 
-            $email_settings = new Inbound_Email_Meta;
-            $metaboxes = new Inbound_Mailer_Metaboxes;
 
             /* Enqueue Sweet Alert support  */
             wp_enqueue_script('sweet-alert-js', INBOUND_EMAIL_URLPATH . 'assets/libraries/SweetAlert/sweet-alert.js');
@@ -74,6 +72,51 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
 
             /*get the current user*/
             $user = wp_get_current_user();
+            
+            /*get the current user's email*/
+            $user_email = $user->user_email;
+
+            /*get the mail service settings*/
+            $inbound_settings = Inbound_Mailer_Settings::get_settings();
+            
+            /***setup the sending domains dropdown***/
+            /*get the available Sparkpost sending domains*/
+            if($inbound_settings['mail-service'] == 'sparkpost'){
+				$sparkpost = new Inbound_SparkPost(  $inbound_settings['sparkpost-key'] );
+				$domain_query = $sparkpost->get_domains();
+				/*if there are no errors*/
+				if(!isset($domain_query['errors']) && empty($domain_query['errors'])){
+					$user_email = '';
+					$sending_dropdown = '<option value="null">'.__('Please select a sending domain', 'inbound-pro').'</option>';
+
+					foreach($domain_query as $domains){
+						foreach($domains as $domain){
+							/*if the sending domain is owned, or has DKIM or SPF setup*/
+							if($domain['status']['ownership_verified'] == 1 || $domain['status']['spf_status'] == 'valid' || $domain['status']['dkim_status'] == 'valid'){
+								
+								/*if the user's email is hosted on a verified sending domain*/
+								if(substr($user->email, strpos($user->email, '@') +1) == $domain['domain']){
+									
+									/*set that domain as the selected one for the domain selector dropdown*/
+									$sending_dropdown .= '<option value="' . '@' . $domain['domain'] . '" selected="selected">' . '@' . $domain['domain'] . '</option>';
+									
+									/*set the "From Email" text field for the mailbox portion of the email*/
+									$user_email = strstr($user->email, '@', true);
+									
+								}else{
+
+									$sending_dropdown .= '<option value="' . '@' . $domain['domain'] . '">' . '@' . $domain['domain'] . '</option>';
+									
+								}
+							}
+						}
+					}
+					$sending_dropdown .= '<option value="">' . __('Type out full address', 'inbound-pro') . '</option>';
+					echo '<select id="sending-domain-selector">'.$sending_dropdown.'</select>';
+				}else{
+
+				}
+			}
 
             /*put the email ids and names in an array for use in the email dropdown selector*/
             $template_id_and_name;
@@ -114,7 +157,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     'description' => __('The email address of the sender. This field is variation dependant!', 'inbound-pro'),
                     'id' => 'from_email',
                     'type' => 'text',
-                    'default' => $user->user_email,
+                    'default' => $user_email,
                     'class' => 'direct_email_lead_field',
                 ),
                 'reply_email' => array(
@@ -184,24 +227,28 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
             <script>
                 jQuery(document).ready(function () {
                     var variationSettings;
+                    var sendingDomainSelector = jQuery('#sending-domain-selector').remove();
 
                     /*page load actions*/
                     jQuery('.premade_template_selector').css('display', 'none');
                     jQuery('.email_variation_selector').css('visibility', 'hidden');
                     jQuery('.inbound-tooltip').css('display', 'none');
-                    jQuery('.open-marketing-button-popup.inbound-marketing-button.button').css('display', 'none');
+                    jQuery('.open-marketing-button-popup.inbound-marketing-button.button, a.button.lead-fields-button').css('display', 'none');
+
+					if(jQuery(sendingDomainSelector).val() != undefined){
+						jQuery('.from_email > .inbound-email-option-td.inbound-meta-box-option.inbound-text-option').append(sendingDomainSelector);
+						jQuery('input#from_email').css({'width' : '34%'});
+					}
 
                     jQuery('#premade_template_chooser').on('change', function () {
                         if (jQuery('#premade_template_chooser').val() == 1) {
                             jQuery('div.email_message_box.inbound-wysiwyg-row.div-email_message_box.inbound-email-option-row.inbound-meta-box-row').css('display', 'none');
-                            jQuery('.premade_template_selector').css('display', 'block');
-                            jQuery('.email_variation_selector').css('display', 'block');
+                            jQuery('.premade_template_selector, .email_variation_selector').css('display', 'block');
                             jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', 'none');
                         } else {
                             jQuery('div.email_message_box.inbound-wysiwyg-row.div-email_message_box.inbound-email-option-row.inbound-meta-box-row').css('display', 'block');
-                            jQuery('.premade_template_selector').css('display', 'none');
-                            jQuery('.email_variation_selector').css('display', 'none');
-                            jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', 'block');
+                            jQuery('.premade_template_selector, .email_variation_selector').css('display', 'none');
+                            jQuery('.direct_email_lead_field, .div-direct_email_lead_field').css('display', '');
                         }
 
                     });
@@ -260,7 +307,8 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                         var userId = <?php echo $user->ID; ?>;
                         var subject = jQuery('#subject').val();
                         var fromName = jQuery('#from_name').val();
-                        var fromEmail = jQuery('#from_email').val();
+                        var sendingDomain = (jQuery('#sending-domain-selector').val() != undefined) ? jQuery('#sending-domain-selector').val() : '';
+                        var fromEmail = jQuery('#from_email').val() + sendingDomain;
                         var replyEmail = jQuery('#reply_email').val();
                         var emailContent = get_tinymce_content();
                         var recipientEmail = jQuery('#recipient_email_address').val();
@@ -359,6 +407,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     function get_tinymce_content() {
                         if (jQuery('#wp-inbound_email_message_box-wrap').hasClass('tmce-active')) {
                             return tinyMCE.activeEditor.getContent();
+                            
                         } else {
                             return jQuery('textarea.email_message_box').val();
                         }
@@ -378,14 +427,18 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                    width:98px;
                }
 
-                #send-email-button {
+               #send-email-button {
                     text-align:center;
                     margin-left:auto;
                     margin-right:auto;
                     width:100%;
                     padding:10px;
                     cursor:pointer
-                }
+               }
+                
+				#sending-domain-selector{
+				   width: 45%;
+				}
             </style>
 
             <?php
