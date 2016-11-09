@@ -78,7 +78,6 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
             /*put the email ids and names in an array for use in the email dropdown selector*/
             $template_id_and_name;
             foreach ($email_templates as $email_template) {
-
                 $template_id_and_name[$email_template->ID] = $email_template->post_title;
             }
 
@@ -161,14 +160,20 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                     'class' => 'email_variation_selector',
                     'options' => array('0' => 'A'),
                 )
-            ); ?>
+            );
+
+            ?>
 
 
             <div class="lead-profile-section" id="wpleads_lead_tab_direct_email">
                 <?php
-                Inbound_Mailer_Metaboxes::render_settings('inbound-email', $custom_fields, $post); ?>
 
-                <button id="send-email-button" type="button" style="padding:15px;cursor:pointer">
+                Inbound_Mailer_Metaboxes::render_settings('inbound-email', $custom_fields, $post);
+                Inbound_Metaboxes_Leads::display_profile_image();
+                ?>
+
+
+                <button id="send-email-button" type="button" style="">
                     <?php _e('Send Email', 'inbound-pro'); ?>
                     <i class="fa fa-envelope" aria-hidden="true"></i>
                 </button>
@@ -361,6 +366,27 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
 
                 });
             </script>
+            <style type="text/css">
+               #wpleads_lead_tab_direct_email #show-hidden-fields, #wpleads_lead_tab_direct_email #show-edit-user {
+                   display:none;
+               }
+               #wpleads_lead_tab_direct_email .form-table {
+                   float:right;
+                   width:70%;
+               }
+               #wpleads_lead_tab_direct_email ..inbound-meta-box-label {
+                   width:200px;
+               }
+
+                #send-email-button {
+                    text-align:center;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:100%;
+                    padding:10px;
+                    cursor:pointer
+                }
+            </style>
 
             <?php
         }
