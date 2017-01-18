@@ -339,6 +339,15 @@ class Inbound_Mail_Daemon {
         /* If direct email we won't load from template */
         if (isset($args['is_direct']) && $args['is_direct']) {
             $email = get_post($args['email_id']);
+            
+            /* add args to the double opt in shortcode */
+            $shortcode_args = array( 'lead_id' => self::$row->lead_id,
+                            'list_ids' => self::$email_settings['recipients'],
+                            'email_id' => self::$email['send_address'],
+            );
+        
+            $email->post_content = apply_filters('process_inbound_list_double_optin_confirm_link', $email->post_content, $shortcode_args);
+ 
             self::$email['body'] = self::rebuild_links(do_shortcode($email->post_content));
         } else {
             self::$email['body'] = self::get_email_body();
@@ -475,9 +484,19 @@ class Inbound_Mail_Daemon {
 
         /* add lead id & list ids to unsubscribe shortcode */
         $html = str_replace('[unsubscribe-link]' , $unsubscribe , $html );
-
+ 
         /* clean mal formatted quotations */
         $html = str_replace('&#8221;', '"' , $html);
+        
+        /* add args to the double opt in shortcode */
+        $args = array(  'lead_id' => self::$row->lead_id,
+                        'list_ids' => self::$email_settings['recipients'],
+                        'email_id' => self::$email['send_address'],
+        );
+        $html = apply_filters('process_inbound_list_double_optin_confirm_link', $html, $args);
+      
+
+     
 
         /* process shortcodes */
         $html = do_shortcode( $html );

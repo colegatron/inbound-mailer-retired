@@ -18,13 +18,13 @@ class Inbound_Mailer_Forms_Integration {
      */
     public static function extend_inbound_forms( $email_template ) {
         global $post;
-
-        $email_template =	get_post_meta( $post->ID, 'inbound_email_send_notification_template' , TRUE );
+        
+        $email_template = get_post_meta( $post->ID, 'inbound_email_send_notification_template' , TRUE );
         $emails = Inbound_Mailer_Post_Type::get_automation_emails_as( 'ARRAY' );
         if (!$emails) {
             $emails[] = __( 'No Automation emails detected. Please create an automated email first.' , 'inbound-pro' );
         }
-
+    
         ?>
 
         <div style='display:block; overflow: auto;'>
@@ -71,8 +71,10 @@ class Inbound_Mailer_Forms_Integration {
             'email_address' => $form_post_data['wpleads_email_address'],
             'lead_id' => $lead_id,
             'tags' => array('inbound-forms'),
-            'email_recipients' => explode(',' , $form_post_data['inbound_form_lists'])
+            'lead_lists' => explode(',' , $form_post_data['inbound_form_lists'])
         );
+
+
 
         $response = Inbound_Mail_Daemon::send_solo_email( $args );
 
