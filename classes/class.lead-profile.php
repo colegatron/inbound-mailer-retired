@@ -459,7 +459,7 @@ if (!class_exists('Inbound_Mailer_Direct_Email_Leads')) {
                    width:20%;
                }
 
-               .email-message-box .inbound-wysiwyg-option {
+               .email_message_box .inbound-wysiwyg-option {
                    display:table-row-group;
                }
             </style>
