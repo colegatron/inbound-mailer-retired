@@ -652,11 +652,11 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
             <table id="stream" cellspacing="0" cellpadding="0">
                 <thead>
                 <tr>
-                    <th class='stream-recipient'><span><?php _e('Recipient', 'inbound-mailer'); ?></span></th>
-                    <th class='stream-variation'><span><?php _e('Variation', 'inbound-mailer'); ?></span></th>
-                    <th class='stream-sent'><span><?php _e('Status', 'inbound-mailer'); ?></span></th>
-                    <th class='stream-recipient'><span><?php _e('Opens', 'inbound-mailer'); ?></span></th>
-                    <th class='stream-opened'><span><?php _e('Cicked', 'inbound-mailer'); ?></span></th>
+                    <th class='stream-recipient'><span><?php _e('Recipient', 'inbound-pro'); ?></span></th>
+                    <th class='stream-variation'><span><?php _e('Variation', 'inbound-pro'); ?></span></th>
+                    <th class='stream-sent'><span><?php _e('Status', 'inbound-pro'); ?></span></th>
+                    <th class='stream-recipient'><span><?php _e('Opens', 'inbound-pro'); ?></span></th>
+                    <th class='stream-opened'><span><?php _e('Cicked', 'inbound-pro'); ?></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -830,6 +830,10 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
                 .email-details-td-info {
                     padding-left: 20px;
+                }
+
+                .email-details-td-info .label-default{
+                    display:flex;
                 }
             </style>
             <div class='email-send-details'>
@@ -1154,8 +1158,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
 
                     /* do not show multiple events from same lead */
                     if (in_array($event['lead_id'],$added)) {
-                        //continue;
-                        //continue;
+                        continue;
                     }
 
                     $added[] = $event['lead_id'];
@@ -1749,6 +1752,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     Settings.show_template_settings();
                                     Settings.show_graphs();
                                     Settings.show_clear_stats_button();
+                                    jQuery('#hidden_post_status').val('automated');
                                     jQuery('#post_status').val('automated');
                                     break;
                                 default: /* unsent */
@@ -1762,6 +1766,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     Settings.show_template_settings();
                                     Settings.show_trash_button();
                                     Settings.show_save_button();
+                                    jQuery('#hidden_post_status').val('unsent');
                                     jQuery('#post_status').val('unsent');
                                     break;
 
@@ -1901,7 +1906,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                         url: ajaxurl,
                                         data: {
                                             action: 'inbound_mark_sent',
-                                            email_id: '<?php echo $post->ID; ?>'
+                                            email_id: '<?php echo (isset($_GET['post'])) ? $_GET['post'] : $post->ID; ?>'
                                         },
                                         success: function (result) {
                                             window.location.reload();
@@ -2057,7 +2062,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     data: {
                                         action: 'inbound_send_test_email',
                                         email_address: email_address,
-                                        email_id: '<?php echo $post->ID; ?>',
+                                        email_id: '<?php echo (isset($_GET['post'])) ? $_GET['post'] : $post->ID; ?>',
                                         variation_id: jQuery('#open_variation').val()
                                     },
                                     dataType: 'html',
@@ -2101,6 +2106,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 });
 
                                 jQuery('#email_action').val('schedule');
+                                jQuery('#hidden_post_status').val('sending');
                                 jQuery('#post_status').val('sending');
 
                                 /* save the email and schedule it */
@@ -2132,6 +2138,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     imageUrl: '<?php echo INBOUND_EMAIL_URLPATH; ?>/assets/images/loading_colorful.gif'
                                 });
 
+                                jQuery('#hidden_post_status').val('unsent');
                                 jQuery('#post_status').val('unsent');
 
                                 /* save the email and schedule it */
@@ -2142,7 +2149,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     url: ajaxurl,
                                     data: {
                                         action: 'inbound_unschedule_email',
-                                        email_id: '<?php echo $post->ID; ?>'
+                                        email_id: '<?php echo (isset($_GET['post'])) ? $_GET['post'] : $post->ID; ?>'
                                     },
                                     success: function (result) {
                                         window.location.reload();
@@ -2159,7 +2166,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 url: ajaxurl,
                                 data: {
                                     action: 'inbound_schedule_email',
-                                    email_id: '<?php echo $post->ID; ?>'
+                                    email_id: '<?php echo (isset($_GET['post'])) ? $_GET['post'] : $post->ID; ?>'
                                 },
                                 success: function (result) {
                                     window.location.reload();
@@ -2193,6 +2200,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                 });
 
                                 jQuery('#email_action').val('unschedule');
+                                jQuery('#hidden_post_status').val('cancelled');
                                 jQuery('#post_status').val('cancelled');
 
                                 /* unschedule transmissions from email server */
@@ -2201,7 +2209,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     url: ajaxurl,
                                     data: {
                                         action: 'inbound_unschedule_email',
-                                        email_id: '<?php echo $post->ID; ?>'
+                                        email_id: '<?php echo (isset($_GET['post'])) ? $_GET['post'] : $post->ID; ?>'
                                     },
                                     success: function (result) {
                                         /* save the email and reload */
@@ -2242,6 +2250,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     value: 'trash',
                                     text: 'Trash'
                                 }));
+                                jQuery('#hidden_post_status').val('trash');
                                 jQuery('#post_status').val('trash');
                                 jQuery('#post').submit();
                             });
@@ -2406,7 +2415,7 @@ if (!class_exists('Inbound_Mailer_Metaboxes')) {
                                     url: ajaxurl,
                                     data: {
                                         'action' : 'clear_email_stats',
-                                        'email_id': '<?php echo $post->ID; ?>'
+                                        'email_id': '<?php echo (isset($_GET['post'])) ? $_GET['post'] : $post->ID; ?>'
                                     },
                                     success: function (result) {
 
