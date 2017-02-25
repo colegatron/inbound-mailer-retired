@@ -863,6 +863,10 @@ class Inbound_SparkPost_Stats {
                                     echo '<pre>'.__('invalid' , 'inbound-pro') . '</pre>';
 
                                     break;
+                                case 'Forbidden.':
+                                    echo '<pre>'.__('API Key does not have correct permissions checked. Try creating a new key and checking all the available permissions.' , 'inbound-pro') . '</pre>';
+
+                                    break;
                             }
                         }
                     }
@@ -905,21 +909,6 @@ class Inbound_SparkPost_Stats {
                                             echo '<span style="color:green !important;">'.__('confirmed','inbound-pro').'</span>';
                                         } else {
                                             echo '<span style="color:red !important;">'.__('not confirmed','inbound-pro').'</span>';
-                                        }
-                                        ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="inbound-label-field" style=''>
-                                        <?php _e('spf','inbound-pro'); ?>:
-                                    </td>
-
-                                    <td class="status-value">
-                                        <?php
-                                        if ($domains['status']['spf_status'] == 'valid' ) {
-                                            echo '<span style="color:green !important;">'.__('valid','inbound-pro').'</span>';
-                                        } else {
-                                            echo '<span style="color:red !important;">'.__('invalid','inbound-pro').'</span>';
                                         }
                                         ?>
                                     </td>
