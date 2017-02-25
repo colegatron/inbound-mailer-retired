@@ -1,0 +1,382 @@
+<?php
+/**
+ * Template Name: Cerberus Fluid
+ * @package  Inbound Email
+ * @author   Inbound Now
+ */
+
+/* Declare Template Key */
+$key = basename(dirname(__FILE__));
+
+/* do global action */
+do_action('inbound_mail_header');
+
+/* Load post */
+if (have_posts()) : while (have_posts()) : the_post();
+
+    $post_id = get_the_ID();
+
+    /*Logo and Main images*/
+    $logo_image = get_field("logo_image", $post_id);
+    $main_image = get_field("featured_image", $post_id);
+
+    /*Main content*/
+    $optional_email_header_text = get_field("optional_email_header_text", $post_id);
+    $main_content_a = get_field("main_content_a", $post_id);
+    $email_button_text = get_field("email_button_text", $post_id);
+    $email_button_link = get_field("email_button_link", $post_id);
+    $email_button_color = get_field("email_button_color", $post_id);
+    $email_button_text_color = get_field("email_button_text_color", $post_id);
+    $email_button_hover_color = get_field("email_button_hover_color", $post_id);
+    $button_font_size = get_field("button_font_size", $post_id);
+    $main_content_b = get_field("main_content_b", $post_id);
+    $main_content_font_size = get_field("main_content_font_size", $post_id);
+
+    /*Columns*/
+    $footer_text_font_size = get_field("footer_text_font_size", $post_id);
+    $column_display_single_column_or_double_column = get_field("column_display_single_column_or_double_column", $post_id);
+    $footer_column_width = get_field("footer_column_width", $post_id);
+
+    /*View online*/
+    $view_email_online_link_text = get_field("view_email_online_link_text", $post_id);
+    $view_online_link_color = get_field("view_online_link_color", $post_id);
+    $view_online_link_text_size = get_field("view_online_link_text_size", $post_id);
+
+    /*Email colors tab*/
+    $email_background_color = get_field("email_background_color", $post_id);
+    $email_content_background_color = get_field("email_content_background_color", $post_id);
+    $email_text_color = get_field("email_text_color", $post_id);
+
+
+    /*Contact Info tab*/
+    $contact_information_content = get_field("contact_information_content", $post_id);
+    $contact_information_text_color = get_field("contact_information_text_color", $post_id);
+    $contact_information_font_size = get_field("contact_information_font_size", $post_id);
+    $unsubscribe_link_text = get_field("unsubscribe_link_text", $post_id);
+    $unsubscribe_link_color = get_field("unsubscribe_link_color", $post_id);
+    $unsubscribe_link_text_size = get_field("unsubscribe_link_text_size", $post_id);
+
+
+    $email_width = /*wp_get_attachment_metadata*/($logo_image);
+
+    /*Get the logo size. And if it's bigger than 200, set it for 200*/
+    $unknown_logo_width = getimagesize($logo_image);
+    if($unknown_logo_width[0] >= 200){ $logo_width = 200; }else{ $logo_width = $unknown_logo_width;}
+
+
+
+    ?>
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8"> <!-- utf-8 works for most cases -->
+        <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+        <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+
+        <!-- Web Font / @font-face : BEGIN -->
+        <!-- NOTE: If web fonts are not required, lines 9 - 26 can be safely removed. -->
+
+        <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
+        <!--[if mso]>
+        <style>
+            * {
+                font-family: sans-serif !important;
+            }
+        </style>
+        <![endif]-->
+
+        <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
+        <!--[if !mso]><!-->
+        <!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+        <!--<![endif]-->
+
+        <!-- Web Font / @font-face : END -->
+
+        <!-- CSS Reset -->
+        <style type="text/css">
+
+            /* What it does: Remove spaces around the email design added by some email clients. */
+            /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+            html,
+            body {
+                margin: 0 auto !important;
+                padding: 0 !important;
+                height: 100% !important;
+                width: 100% !important;
+            }
+
+            /* What it does: Stops email clients resizing small text. */
+            * {
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+            }
+
+            /* What is does: Centers email on Android 4.4 */
+            div[style*="margin: 16px 0"] {
+                margin:0 !important;
+            }
+
+            /* What it does: Stops Outlook from adding extra spacing to tables. */
+            table,
+            td {
+                mso-table-lspace: 0pt !important;
+                mso-table-rspace: 0pt !important;
+            }
+
+            /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the first 2 tables then removes for anything nested deeper. */
+            table {
+                border-spacing: 0 !important;
+                border-collapse: collapse !important;
+                table-layout: fixed !important;
+                Margin: 0 auto !important;
+            }
+            table table table {
+                table-layout: auto;
+            }
+
+            /* What it does: Uses a better rendering method when resizing images in IE. */
+            img {
+                -ms-interpolation-mode:bicubic;
+            }
+
+            /* What it does: A work-around for iOS meddling in triggered links. */
+            .mobile-link--footer a,
+            a[x-apple-data-detectors] {
+                color:inherit !important;
+                text-decoration: underline !important;
+            }
+
+        </style>
+
+        <!-- Progressive Enhancements -->
+        <style>
+
+            /* What it does: Hover styles for buttons */
+            .button-td,
+            .button-a {
+                transition: all 100ms ease-in;
+            }
+            .button-td:hover,
+            .button-a:hover {
+                background: <?php echo $email_button_hover_color; ?> !important;
+            }
+
+
+            .button-a:hover {
+                border: 15px solid <?php echo $email_button_hover_color; ?> !important;
+            }
+
+        </style>
+        <?php do_action('inbound-mailer/email/header'); ?>
+    </head>
+    <body width="100%" bgcolor="#222222" style="Margin: 0;">
+    <center style="width: 100%; background: <?php echo $email_background_color; ?>;">
+
+        <!-- Visually Hidden Preheader Text : BEGIN -->
+        <div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family: sans-serif;">
+            <?php echo $optional_email_header_text; ?>
+        </div>
+        <!-- Visually Hidden Preheader Text : END -->
+
+        <!--
+            Set the email width. Defined in two places:
+            1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 600px.
+            2. MSO tags for Desktop Windows Outlook enforce a 600px width.
+        -->
+        <div style="max-width: 600px; margin: auto;">
+            <!--[if (gte mso 9)|(IE)]>
+            <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+                <tr>
+                    <td>
+            <![endif]-->
+
+            <!-- Email Header : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+                <tr>
+                    <td style="padding: 20px 0; text-align: center">
+                        <img src="<?php echo $logo_image; ?>" width="<? echo $logo_width; ?>" alt="logo_image" border="0" style="width: 100%; max-width: 200px;">
+                    </td>
+                </tr>
+            </table>
+            <!-- Email Header : END -->
+
+            <!-- Email Body : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px; background-color:<?php echo $email_content_background_color;?>;">
+
+                <!-- Hero Image, Flush : BEGIN -->
+                <?php
+                if ($main_image) {
+                    ?>
+                    <tr>
+                        <td>
+                            <img src="<?php echo $main_image; ?>" width="600" height="" alt="main_image" border="0" align="center" style="width: 100%; max-width: 600px;">
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                <!-- Hero Image, Flush : END -->
+
+                <!-- 1 Column Text + Button : BEGIN -->
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td style="padding: 40px; font-family: sans-serif; font-size: <?php echo $main_content_font_size; ?>; mso-height-rule: exactly; line-height: 20px; color: <?php echo $email_text_color;?>;">
+                                    <?php echo $main_content_a; ?>
+                                    <br><br>
+                                    <!-- Button : Begin -->
+                                    <table cellspacing="0" cellpadding="0" border="0" align="center" style="Margin: auto;">
+                                        <tr>
+                                            <td style="border-radius: 3px; background: <?php echo $email_button_color; ?>; text-align: center;" class="button-td">
+                                                <a href="<?php echo $email_button_link; ?>" style="background: <?php echo $email_button_color; ?>; border: 15px solid <?php echo $email_button_color; ?>; font-family: sans-serif; font-size: <?php echo $button_font_size; ?>; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: <?php echo $email_button_text_color; ?>"><?php echo $email_button_text; ?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- Button : END -->
+                                    <br>
+                                    <?php echo $main_content_b; ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- 1 Column Text + Button : BEGIN -->
+
+                <!-- 2 Even Columns : BEGIN -->
+                <!--if-single-->
+                <?php if($column_display_single_column_or_double_column == 'single_column'){ ?>
+                    <tr>
+                        <td align="center" height="100%" valign="top" width="100%" style="padding-bottom: 40px; background-color: <?php echo $email_content_background_color; ?>;">
+                            <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:560px;">
+                                <tr>
+                                    <td align="center" valign="top" width="<?php echo ($footer_column_width * 100) . '%' ; ?>">
+                                        <?php
+                                        /* Start footer_column_blocks Repeater Output.*/
+                                        if ( have_rows( "footer_column_blocks" ) )  {
+
+
+
+                                            while ( have_rows( "footer_column_blocks" ) ) : the_row();
+                                                $column_block_image = get_sub_field("column_block_image");
+                                                $column_block_content = get_sub_field("column_block_content");
+                                                ?>
+
+                                                <table cellspacing="0" cellpadding="0" border="0" width="<?php echo ($footer_column_width * 100) . '%' ; ?>" style="font-size: 14px;text-align: left;">
+                                                    <tr>
+                                                        <td style="text-align: center; padding: 0 10px;">
+                                                            <img src="<?php echo $column_block_image; ?>" width="<?php echo (540 * $footer_column_width); ?>" alt="footer-column-image" style="border: 0; width: 100%; max-width: <?php echo (540 * $footer_column_width) . 'px'; ?>;" class="center-on-narrow">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align: center;font-family: sans-serif; font-size: <?php echo $footer_text_font_size; ?>; mso-height-rule: exactly; line-height: 20px; color: <?php echo $email_text_color;?>; padding: 10px 10px 0;" class="stack-column-center">
+                                                            <?php echo $column_block_content; ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            <?php endwhile; ?>
+
+                                        <?php } /* end if have_rows(footer_column_blocks) */
+                                        /* End footer_column_blocks Repeater Output */
+                                        ?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                <?php }; ?>
+                <!--/if-single-->
+
+                <!--if-double-->
+                <?php if($column_display_single_column_or_double_column == 'double_column'){
+                $counter_num = 2;
+
+                /* Start footer_column_blocks Repeater Output.*/
+                if ( have_rows( "footer_column_blocks" ) )  {
+
+                    while ( have_rows( "footer_column_blocks" ) ) : the_row();
+                        $column_block_image = get_sub_field("column_block_image");
+                        $column_block_content = get_sub_field("column_block_content");
+                        ?>
+
+                        <?php if($counter_num % 2 == 0) { ?>
+                            <tr>
+                            <td align="center" height="100%" valign="top" width="100%" style="padding-bottom: 40px; background-color: <?php echo $email_content_background_color; ?>;">
+                            <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:560px;">
+                            <tr>
+                        <?php }; ?>
+
+                        <td align="center" valign="top" width="<?php echo ($footer_column_width * 50) . '%' ; ?>"> <!--orig: 50%-->
+                            <table cellspacing="0" cellpadding="0" border="0" width="<?php echo ($footer_column_width * 100) . '%' ; ?>" style="font-size: 14px;text-align: left;">
+                                <tr>
+                                    <td style="text-align: center; padding: 0 10px;">
+                                        <img src="<?php echo $column_block_image; ?>" width="<?php echo (540 * $footer_column_width * .5); ?>" alt="footer-column-image" style="border: 0; width: 100%; max-width: <?php echo (540 * $footer_column_width * .5) . 'px'; ?>;" class="center-on-narrow">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;font-family: sans-serif; font-size: <?php echo $footer_text_font_size; ?>; mso-height-rule: exactly; line-height: 20px; color: <?php echo $email_text_color;?>; padding: 10px 10px 0;" class="stack-column-center">
+                                        <?php echo $column_block_content; ?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <?php  if($counter_num % 2 == 1) { ?>
+                            </tr>
+                            </table>
+                            </td>
+                            </tr>
+                        <?php }; ?>
+
+                        <?php $counter_num++;?>
+                    <?php endwhile; ?>
+
+                <?php } /* end if have_rows(footer_column_blocks) */
+                /* End footer_column_blocks Repeater Output */
+                ?>
+
+                </tr>
+            </table>
+            </td>
+            </tr>
+
+            <?php }; ?>
+            <!--/if-double-->
+
+            <!-- Two Even Columns : END -->
+
+            </table>
+            <!-- Email Body : END -->
+
+            <!-- Email Footer : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px; text-align: center;">
+                <tr>
+                    <td style="padding: 40px 10px;width: 100%; font-family: sans-serif; mso-height-rule: exactly; /*line-height:18px*/; text-align: center; color: <?php echo $contact_information_text_color;?>;">
+                        <div style="font-size:<?php echo $contact_information_font_size; ?>;  color: <?php echo $contact_information_text_color;?>;";><?php echo $contact_information_content; ?></div>
+                        <br><br>
+                        <unsubscribe style="text-decoration:underline;"><a href="<?php echo do_shortcode('[unsubscribe-link]'); ?>" style="color: <?php echo $unsubscribe_link_color;?> ; font-size: <?php echo $unsubscribe_link_text_size; ?> ; text-decoration:none;margin: 0;padding: 0;font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;"><?php echo $unsubscribe_link_text; ?></a></unsubscribe>
+
+                    </td>
+                </tr>
+            </table>
+            <!-- Email Footer : END -->
+
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </div>
+    </center>
+    <?php do_action('inbound-mailer/email/footer'); ?>
+    </body>
+    </html>
+
+
+    <?php
+
+endwhile; endif;
