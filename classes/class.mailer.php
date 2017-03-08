@@ -71,7 +71,6 @@ class Inbound_Mail_Daemon {
         /* For debugging */
         add_filter('init', array(__CLASS__, 'process_mail_queue'), 12);
 
-
     }
 
 
@@ -330,12 +329,14 @@ class Inbound_Mail_Daemon {
         self::$row->lead_id = (isset($args['lead_id'])) ? $args['lead_id'] : 0;
         self::$row->datetime = gmdate('Y-m-d h:i:s \G\M\T');
         self::$row->rule_id = (isset($args['rule_id'])) ? $args['rule_id'] : 0;
+        self::$row->job_id = (isset($args['job_id'])) ? $args['job_id'] : 0;
 
         /* load extras */
         self::$email_settings = Inbound_Email_Meta::get_settings(self::$row->email_id);
         self::$email_settings['recipients'] = (isset($args['lead_lists'])) ? $args['lead_lists'] : array();
         self::get_templates(self::$row->variation_id);
         self::toggle_dom_parser();
+
 
         /* build email */
         self::$email['send_address'] = $args['email_address'];
@@ -480,7 +481,8 @@ class Inbound_Mail_Daemon {
         /* add lead id to all shortcodes before processing */
         $html = str_replace('[lead-field ', '[lead-field lead_id="' . self::$row->lead_id . '" ', $html);
 
-        $unsubscribe = do_shortcode('[unsubscribe-link lead_id="' . self::$row->lead_id . '" list_ids="' . implode(',', self::$email_settings['recipients']) . '" email_id="' . self::$row->email_id . '" rule_id="' . self::$row->rule_id . '"]');
+
+        $unsubscribe = do_shortcode('[unsubscribe-link lead_id="' . self::$row->lead_id . '" list_ids="' . implode(',', self::$email_settings['recipients']) . '" email_id="' . self::$row->email_id . '" rule_id="' . self::$row->rule_id . '" job_id="' . self::$row->job_id . '"]');
 
         /* add lead id & list ids to unsubscribe shortcode */
         $html = str_replace('[unsubscribe-link]', $unsubscribe, $html);
@@ -505,7 +507,7 @@ class Inbound_Mail_Daemon {
     }
 
     /**
-     *    Generate HTML for email
+     * Generate HTML for email
      * @param STRING $permalink
      * @return STRING
      */
