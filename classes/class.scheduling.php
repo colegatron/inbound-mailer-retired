@@ -69,11 +69,12 @@ class Inbound_Mailer_Scheduling {
 
     /**
      * Schedules email
-     * @param $email_id
-     * @param array $tokens
+     * @param $email_id Post ID of automated email to send
+     * @param array $tokens Tokens belonging to Automation Rule Trigger
+     * @param array $action Action information belonging to Automation Rule
      * @return int
      */
-    public static function schedule_email($email_id , $tokens = array() ) {
+    public static function schedule_email($email_id , $tokens = array() , $action = array() ) {
         global $wpdb;
 
         /* load email settings into static variable */
