@@ -69,7 +69,7 @@ class Inbound_Mailer_Activation_Update_Routines {
 
 		dbDelta( $sql );
 	}
-	
+
 
 	/**
 	 * Alerter table
