@@ -151,15 +151,6 @@ class Inbound_Mail_Daemon {
     }
 
 
-    public static function replace_attached_tokens($html) {
-        if (isset(self::$row->tokens)) {
-
-        }
-
-        return $html;
-    }
-
-
     /**
      *    Sends scheduled automated emails
      */
@@ -182,6 +173,11 @@ class Inbound_Mail_Daemon {
         /* Get email settings if they have not been loaded yet */
         self::$email_settings = Inbound_Email_Meta::get_settings(self::$row->email_id);
 
+        /* set list ids if available */
+        if (isset($row->list_ids)) {
+            self::$email_settings['recipients'] = json_decode($row->list_ids ,true);
+        }
+
         /* Build array of html content for variations */
         self::get_templates();
 
@@ -202,7 +198,7 @@ class Inbound_Mail_Daemon {
 
             switch (self::$email_service) {
                 case "sparkpost":
-                    Inbound_Mailer_SparkPost::send_email();
+                    Inbound_Mailer_SparkPost::send_email( true ); /* send immediately */
                     break;
             }
 
@@ -330,6 +326,7 @@ class Inbound_Mail_Daemon {
         self::$row->datetime = gmdate('Y-m-d h:i:s \G\M\T');
         self::$row->rule_id = (isset($args['rule_id'])) ? $args['rule_id'] : 0;
         self::$row->job_id = (isset($args['job_id'])) ? $args['job_id'] : 0;
+        self::$row->tokens = (isset($args['tokens'])) ? $args['tokens'] : '';
 
         /* load extras */
         self::$email_settings = Inbound_Email_Meta::get_settings(self::$row->email_id);
@@ -363,7 +360,6 @@ class Inbound_Mail_Daemon {
                 Inbound_Mailer_SparkPost::send_email(true);
                 break;
         }
-
 
         /* return response */
         return self::$response;
@@ -425,8 +421,13 @@ class Inbound_Mail_Daemon {
             /* get permalink */
             $permalink = get_post_permalink(self::$row->email_id);
 
+            /* encode tokens */
+            if (self::$row->tokens) {
+                $token = Inbound_Mailer_Unsubscribe::encode_unsubscribe_token(json_decode(self::$row->tokens,true));
+            }
+
             /* add param */
-            $permalink = add_query_arg(array('inbvid' => $vid, 'disable_shortcodes' => true), $permalink);;
+            $permalink = add_query_arg(array('inbvid' => $vid, 'disable_shortcodes' => true , 'tokens' => $token ), $permalink);
 
             /* Stash variation template in static array */
             self::$templates[self::$row->email_id][$vid] = self::get_variation_html($permalink);
@@ -481,7 +482,6 @@ class Inbound_Mail_Daemon {
         /* add lead id to all shortcodes before processing */
         $html = str_replace('[lead-field ', '[lead-field lead_id="' . self::$row->lead_id . '" ', $html);
 
-
         $unsubscribe = do_shortcode('[unsubscribe-link lead_id="' . self::$row->lead_id . '" list_ids="' . implode(',', self::$email_settings['recipients']) . '" email_id="' . self::$row->email_id . '" rule_id="' . self::$row->rule_id . '" job_id="' . self::$row->job_id . '"]');
 
         /* add lead id & list ids to unsubscribe shortcode */
@@ -489,9 +489,6 @@ class Inbound_Mail_Daemon {
 
         /* clean mal formatted quotations */
         $html = str_replace('&#8221;', '"', $html);
-
-        /* check for appended tokens */
-        $html = self::replace_attached_tokens($html);
 
         /* process shortcodes */
         $html = do_shortcode($html);
@@ -501,6 +498,7 @@ class Inbound_Mail_Daemon {
 
         /* remove script tags */
         $html = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $html);
+
 
         return $html;
 
@@ -531,6 +529,10 @@ class Inbound_Mail_Daemon {
     public static function get_variation_subject() {
         /* add lead id to all shortcodes before processing */
         $subject = str_replace('[lead-field ', '[lead-field lead_id="' . self::$row->lead_id . '" ', self::$email_settings['variations'] [self::$row->variation_id] ['subject']);
+
+        /* process tokens */
+        $subject = Inbound_Mailer_Tokens::process_tokens($subject , json_decode(self::$row->tokens , true));
+
         return do_shortcode($subject);
     }
 
@@ -617,7 +619,8 @@ class Inbound_Mail_Daemon {
     public static function check_response() {
         global $current_user, $post;
         $user_id = $current_user->ID;
-
+//error_log(print_r(self::$email,true));
+//error_log(print_r(self::$response,true));
         /* check if there is an error and if there is then exit */
         if (isset(self::$response['status']) && self::$response['status'] == 'error' || isset(self::$response['error'])) {
             if (isset($resonse['description'])) {
@@ -634,6 +637,7 @@ class Inbound_Mail_Daemon {
             Inbound_Options_API::update_option('inbound-email', 'errors-detected', false);
             self::$error_mode = false;
         }
+
     }
 }
 
