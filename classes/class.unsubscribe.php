@@ -187,7 +187,9 @@ class Inbound_Mailer_Unsubscribe {
 	 */
 	public static function encode_unsubscribe_token( $params ) {
 
-		unset($params['doing_wp_cron']);
+		if (isset($params['doing_wp_cron'])) {
+			unset($params['doing_wp_cron']);
+		}
 		$json = json_encode($params);
 
 		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
