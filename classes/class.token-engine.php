@@ -9,9 +9,6 @@ class Inbound_Mailer_Tokens {
      */
     public function __construct() {
 
-        if (isset($_GET['disable_shortcodes'])) {
-            return;
-        }
 
         self::load_hooks();
     }
@@ -20,6 +17,14 @@ class Inbound_Mailer_Tokens {
      *  Loads hooks and filters
      */
     public function load_hooks() {
+
+
+        /* Listen for and process email tokens for email previews */
+        add_filter('acf/format_value', array(__CLASS__, 'process_tokens'));
+
+        if (isset($_GET['disable_shortcodes'])) {
+            return;
+        }
 
         /* Add button  */
         add_action('media_buttons_context', array(__class__, 'token_button'), 99);
@@ -53,9 +58,6 @@ class Inbound_Mailer_Tokens {
 
         /* Add shortcode handler for [unsubscribe-link] */
         add_shortcode('unsubscribe-link', array(__CLASS__, 'process_unsubscribe_link'));
-
-        /* Listen for and process email tokens for email previews */
-        add_filter('acf/format_value', array(__CLASS__, 'process_tokens'));
 
         /* Add information to posts/pages on how to use content shortcodes */
         add_action('add_meta_boxes', array(__CLASS__, 'load_metaboxes'));
@@ -402,13 +404,15 @@ class Inbound_Mailer_Tokens {
 
     /**
      * Hooks into acf/format_value and decodes string is tokens are available via URL
+     * Also is callable directly
      * @param $field_value
+     * @param $tokens
      * @return mixed|void
      */
-    public static function process_tokens($field_value) {
+    public static function process_tokens($field_value , $tokens = array() ) {
         global $post, $email_tokens;
 
-        if (!isset($post->post_type) || $post->post_type != 'inbound-email') {
+        if ( !$tokens && ( !isset($post->post_type) || $post->post_type != 'inbound-email' )) {
             return $field_value;
         }
 
@@ -416,9 +420,16 @@ class Inbound_Mailer_Tokens {
             return $field_value;
         }
 
+
+        if ($tokens) {
+            $email_tokens = $tokens;
+            $email_tokens = self::flatten_array($email_tokens);
+        }
+
         if (!$email_tokens) {
             if (isset($_GET['tokens'])) {
                 $email_tokens = Inbound_Mailer_Unsubscribe::decode_unsubscribe_token($_GET['tokens']);
+                $email_tokens = self::flatten_array($email_tokens);
             }
         }
 
@@ -429,12 +440,34 @@ class Inbound_Mailer_Tokens {
         }
 
         foreach ($matches[1] as $token_key) {
+
             if (isset($email_tokens[$token_key])) {
                 $field_value = str_replace('{{' . $token_key . '}}', $email_tokens[$token_key], $field_value);
+            } else {
+                $field_value = str_replace('{{' . $token_key . '}}', '', $field_value);
             }
         }
 
         return $field_value;
+    }
+
+
+    public static function flatten_array($array) {
+        $flatten = array();
+
+        foreach ($array as $k => $value) {
+
+            if (is_array($value)) {
+                foreach ($value as $k1 => $v1) {
+
+                    $flatten[$k1] = $v1;
+                }
+            } else {
+                $flatten[$k] = $value;
+            }
+        }
+
+        return $flatten;
     }
 
 
