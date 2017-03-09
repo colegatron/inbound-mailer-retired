@@ -243,8 +243,8 @@ if (have_posts()) : while (have_posts()) : the_post();
                     <td>
                         <table cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tr>
-                                <td style="padding-left: 40px; padding-right: 40px; padding-bottom: 40px;padding-top: 25px; font-family: sans-serif; font-size: <?php echo $main_content_font_size; ?>; mso-height-rule: exactly; line-height: 20px; color: <?php echo $email_text_color; ?>;">
-                                    <?php echo $main_content_a; ?>
+                                <td  style="padding-left: 40px; padding-right: 40px; padding-bottom: 40px;padding-top: 25px; font-family: sans-serif; font-size: <?php echo $main_content_font_size; ?>; mso-height-rule: exactly; line-height: 20px; color: <?php echo $email_text_color; ?>;">
+                                    <div style="text-align:center;width:100%"><?php echo $main_content_a; ?></div>
                                     <br><br>
                                     <!-- Button : Begin -->
                                     <table cellspacing="0" cellpadding="0" border="0" align="center" style="Margin: auto;">
@@ -423,8 +423,8 @@ if (have_posts()) : while (have_posts()) : the_post();
                                                 <tbody>
                                                 <!-- image -->
                                                 <tr>
-                                                    <td width="280" height="155" align="center" class="devicewidth">
-                                                        <img src="<?php echo $thumbnail; ?>" alt="" border="0" width="280" height="155" style="display:block; border:none; outline:none; text-decoration:none;" class="col2img">
+                                                    <td width="280" height="191" align="center" class="devicewidth">
+                                                        <img src="<?php echo $thumbnail; ?>" alt="" border="0" width="280" height="191" style="display:block; border:none; outline:none; text-decoration:none;" class="col2img">
                                                     </td>
                                                 </tr>
                                                 <!-- /image -->
