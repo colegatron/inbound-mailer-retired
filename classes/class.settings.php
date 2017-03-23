@@ -120,6 +120,7 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 						'default'  => __('Thank you!','inbound-pro')
 
 					),
+					/*
 					array(
 						'id'  => 'unsubscribe-notice-automation-series',
 						'label'  => __('Confirmation Message #2', 'inbound-pro' ),
@@ -127,7 +128,7 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 						'type'  => 'text',
 						'default'  => __( 'You have unsubscribed!<br>Additional options below.', 'inbound-pro')
 
-					),
+					),*/
 					array(
 						'id'  => 'unsubscribe-comments-header-1',
 						'label'  => __('Comment Prompt', 'inbound-pro' ),
@@ -189,6 +190,13 @@ if ( !class_exists('Inbound_Mailer_Settings') ) {
 						'description'  => __( 'We will schedule/process this many emails to be sent to your email service every two minutes. If your server is having trouble handling 100 emails at once, please try reducing the number. Note that this will slow down the send process. To make up for delayed sends please schedule your email to be sent in the future. ' , 'inbound-pro' ),
 						'type'  => 'number',
 						'default'  => '100'
+					),
+					array(
+						'id'  => 'processing-threads',
+						'label'  => __('Processing Threads', 'inbound-pro' ),
+						'description'  => __( 'We can increase this number to multiply our processing powers. Be very careful though, this could cause your server to overwork and damage your sending efforts. If you\'re not sure what you are doing leave this to 1.' , 'inbound-pro' ),
+						'type'  => 'number',
+						'default'  => '1'
 					),
 
 					array(
