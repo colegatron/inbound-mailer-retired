@@ -116,8 +116,8 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 			switch (is_admin()) :
 				case true :
 					/* loads admin files */
-					include_once('classes/class.activation.php');
 					include_once('classes/class.activation.database-routines.php');
+					include_once('classes/class.activation.php');
 					include_once('classes/class.options-api.php');
 					include_once('classes/class.postmeta.php');
 					include_once('classes/class.post-type.inbound-email.php');
@@ -143,7 +143,6 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 					include_once('classes/class.tracking.php');
 					include_once('classes/class.statistics.sparkpost.php');
 					include_once('classes/class.scheduling.php');
-					include_once('classes/class.cron-api.php');
 					include_once('classes/class.mailer.php');
 					include_once('classes/class.mailer.sparkpost.php');
 					include_once('classes/class.connector.sparkpost.php');
@@ -171,7 +170,6 @@ if ( !class_exists('Inbound_Mailer_Plugin')	) {
 					include_once('modules/module.utils.php');
 					include_once('classes/class.customizer.php');
 					include_once('classes/class.token-engine.php');
-					include_once('classes/class.cron-api.php');
 					include_once('classes/class.mailer.php');
 					include_once('classes/class.mailer.sparkpost.php');
 					include_once('classes/class.connector.sparkpost.php');
