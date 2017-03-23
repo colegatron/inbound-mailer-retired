@@ -20,7 +20,7 @@ class Inbound_Mailer_Tokens {
 
 
         /* Listen for and process email tokens for email previews */
-        add_filter('acf/format_value', array(__CLASS__, 'process_tokens'));
+        add_filter('acf/format_value', array(__CLASS__, 'process_tokens') , 10 , 1);
 
         if (isset($_GET['disable_shortcodes'])) {
             return;
@@ -61,6 +61,12 @@ class Inbound_Mailer_Tokens {
 
         /* Add information to posts/pages on how to use content shortcodes */
         add_action('add_meta_boxes', array(__CLASS__, 'load_metaboxes'));
+
+        /* Saves all all incoming POST data as meta pairs */
+        add_action('save_post', array(__CLASS__, 'action_save_data'));
+
+        /* on draft to publish update post locked status to pending */
+        // to do
     }
 
     /**
@@ -415,22 +421,38 @@ class Inbound_Mailer_Tokens {
         if ( !$tokens && ( !isset($post->post_type) || $post->post_type != 'inbound-email' )) {
             return $field_value;
         }
-
         if (!is_string($field_value) || !strstr($field_value,'{{')) {
             return $field_value;
         }
 
+        if ( !$email_tokens ) {
+            $email_tokens = array();
 
-        if ($tokens) {
-            $email_tokens = $tokens;
-            $email_tokens = self::flatten_array($email_tokens);
-        }
-
-        if (!$email_tokens) {
-            if (isset($_GET['tokens'])) {
-                $email_tokens = Inbound_Mailer_Unsubscribe::decode_unsubscribe_token($_GET['tokens']);
+            if ($tokens) {
+                $email_tokens = $tokens;
                 $email_tokens = self::flatten_array($email_tokens);
+                $email_tokens = (is_array($email_tokens)) ? $email_tokens : array();
             }
+
+            /* if post id is present lets set the global email_tokens variable */
+            if (isset($_GET['post_id']) && $_GET['post_id']) {
+                $post = get_post((int) $_GET['post_id']);
+                $email_tokens = (array) $post;
+                $email_tokens['permalink'] = get_the_permalink((int) $_GET['post_id']);
+                $email_tokens['featured_image'] = wp_get_attachment_url(get_post_thumbnail_id((int)$post->ID));
+
+                wp_reset_query();
+            }
+
+            /* if tokens are set let's see if we can make use of them. Token strings will fail if they exceed 2000 characters */
+            if (isset($_GET['tokens']) && !isset($_GET['tokens'])) {
+                $tokens = Inbound_Mailer_Unsubscribe::decode_unsubscribe_token($_GET['tokens']);
+                $tokens = self::flatten_array($tokens);
+                if (is_array($tokens)) {
+                    $email_tokens = $email_tokens + $tokens;
+                }
+            }
+
         }
 
         preg_match_all("/{{(.*?)}}/", $field_value, $matches );
@@ -439,8 +461,8 @@ class Inbound_Mailer_Tokens {
             return $field_value;
         }
 
-        foreach ($matches[1] as $token_key) {
 
+        foreach ($matches[1] as $token_key) {
             if (isset($email_tokens[$token_key])) {
                 $field_value = str_replace('{{' . $token_key . '}}', $email_tokens[$token_key], $field_value);
             } else {
@@ -485,10 +507,35 @@ class Inbound_Mailer_Tokens {
         add_meta_box('inbound-email-content-shortcodes', __('Email Setup', 'inbound-pro'), array(__CLASS__, 'display_email_shortcodes'), $post->post_type, 'side', 'low');
     }
 
+    /**
+     * Updates email variation data on post save
+     *
+     * @param INT $inbound_email_id of email id
+     *
+     */
+    public static function action_save_data($post_id) {
+
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
+
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        if (isset($_POST['inbound_automation_email_sent']) && $_POST['inbound_automation_email_sent'] ) {
+            update_post_meta( $post_id, 'inbound_automation_email_sent' , (bool) $_POST['inbound_automation_email_sent'] , false );
+        } else  {
+            delete_post_meta( $post_id , 'inbound_automation_email_sent');
+        }
+
+    }
+
     public static function display_email_shortcodes() {
         global $post;
 
-        $permalink = get_permalink($post->ID);
+        $has_been_sent = get_post_meta($post->ID , 'inbound_automation_email_sent' , true);
+
         $automated_emails = Inbound_Mailer_Post_Type::get_automation_emails_as('ARRAY');
         if (!$automated_emails) {
             $automated_emails['#no-email-selected'] = __('No Automation emails detected. Please create an automated email first.', 'inbound-pro');
@@ -503,33 +550,26 @@ class Inbound_Mailer_Tokens {
             $permalink_array[urlencode($email_permalink)] = $email_name;
         }
 
-        $tokens = (array)$post;
-        $tokens['permalink'] = $permalink;
-        $tokens['featured_image'] = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
-
-        $tokens_compressed = Inbound_Mailer_Unsubscribe::encode_unsubscribe_token( $tokens );
+        $tokens = array('{{post_title}}', '{{post_content}}', '{{post_excerpt}}', '{{permalink}}', '{{featured_image}}', '{{author_name}}');
+        $tokens_string = implode('' , $tokens );
         ?>
         <div>
             <table style='width:100%'>
 
                 <tr>
                     <td style='width:22%'>
-                        <div class="lp_tooltip" style="display:inline" title="<?php _e('Use thesetokens inside email an automated email.', 'inbound-pro'); ?>">
+                        <div class="lp_tooltip" style="display:inline" title="<?php echo sprintf(__('Use these tokens inside email an automated email: %s', 'inbound-pro') , $tokens_string ); ?>">
                             <?php _e('Post Tokens', 'inbound-pro'); ?>
-                            <i class="fa fa-question-circle"></i></div>
-
+                            <i class="fa fa-question-circle"></i>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <?php
-                        $tokens = array('post_title', 'post_content', 'post_excerpt', 'permalink', 'featured_image', 'author_name');
-
-                        foreach ($tokens as $token) {
-                            echo '{{' . $token . '}}' . "<br>";
-                        }
-
-                        ?>
+                        <input type="checkbox" name="inbound_automation_email_sent" value="true" <?php checked($has_been_sent, true); ?>> <?php _e('Locked' , 'inbound-pro'); ?>
+                        <div class="lp_tooltip" style="display:inline" title="<?php _e('If our Marketing Automation component sends this post as an email to a lead list then this checkbox will enable automatically. Enabling this checkbox will prevent Marketing Automation component from sending it again. This prevents accidental double sending', 'inbound-pro'); ?>">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -584,7 +624,7 @@ class Inbound_Mailer_Tokens {
                                 return;
                             }
 
-                            window.prompt("Copy to clipboard: Ctrl+C, Enter", decodeURIComponent(email_permalink) + '?tokens=<?php echo $tokens_compressed; ?>');
+                            window.prompt("Copy to clipboard: Ctrl+C, Enter", decodeURIComponent(email_permalink) + '?post_id=<?php echo $post->ID; ?>');
 
 
                         });

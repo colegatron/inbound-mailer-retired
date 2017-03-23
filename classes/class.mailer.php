@@ -8,6 +8,7 @@ class Inbound_Mail_Daemon {
     static $table_name; /* name of the mysql table we use for querying queued emails */
     static $email_service; /* number of emails we send during a processing job	(wp_mail only) */
     static $send_limit; /* number of emails we send during a processing job	(wp_mail only) */
+    static $thread_limit; /* number of emails we send during a processing job	(wp_mail only) */
     static $timestamp; /* the current date time in ISO 8601 gmdate() */
     static $dom; /* reusable object for parsing html for link modification */
     static $row; /* current mysql row object being processed */
@@ -44,6 +45,9 @@ class Inbound_Mail_Daemon {
         /* Set send limit */
         self::$send_limit = (isset($inbound_settings['inbound-mailer']['processing-limit'])) ? $inbound_settings['inbound-mailer']['processing-limit'] : 100;
 
+        /* Set thread limit */
+        self::$thread_limit = (isset($inbound_settings['inbound-mailer']['thread-limit'])) ? $inbound_settings['inbound-mailer']['thread-limit'] : 1;
+
         /* Set target mysql table name */
         self::$table_name = $wpdb->prefix . "inbound_email_queue";
 
@@ -66,7 +70,7 @@ class Inbound_Mail_Daemon {
         }
 
         /* Adds mail processing to Inbound Heartbeat */
-        add_action('inbound_heartbeat', array(__CLASS__, 'process_mail_queue'));
+        add_action('inbound_mailer_heartbeat', array(__CLASS__, 'process_mail_queue'));
 
         /* For debugging */
         add_filter('init', array(__CLASS__, 'process_mail_queue'), 12);
@@ -174,8 +178,8 @@ class Inbound_Mail_Daemon {
         self::$email_settings = Inbound_Email_Meta::get_settings(self::$row->email_id);
 
         /* set list ids if available */
-        if (isset($row->list_ids)) {
-            self::$email_settings['recipients'] = json_decode($row->list_ids ,true);
+        if (isset(self::$row->list_ids)) {
+            self::$email_settings['recipients'] = json_decode(self::$row->list_ids ,true);
         }
 
         /* Build array of html content for variations */
@@ -404,6 +408,7 @@ class Inbound_Mail_Daemon {
      */
     public static function get_templates($variation_id = null) {
 
+
         /* setup static var as empty array */
         self::$templates = array();
 
@@ -421,13 +426,22 @@ class Inbound_Mail_Daemon {
             /* get permalink */
             $permalink = get_post_permalink(self::$row->email_id);
 
+            /* query args */
+            $query_args = array('inbvid' => $vid, 'disable_shortcodes' => true);
+
+            /* encode post_id */
+            if (isset(self::$row->post_id)) {
+                $query_args['post_id'] = self::$row->post_id ;
+            }
+
             /* encode tokens */
-            if (self::$row->tokens) {
+            if (self::$row->tokens && strlen(self::$row->tokens) < 1000 )  {
                 $token = Inbound_Mailer_Unsubscribe::encode_unsubscribe_token(json_decode(self::$row->tokens,true));
+                $query_args['tokens'] = $token ;
             }
 
             /* add param */
-            $permalink = add_query_arg(array('inbvid' => $vid, 'disable_shortcodes' => true , 'tokens' => $token ), $permalink);
+            $permalink = add_query_arg( $query_args , $permalink);
 
             /* Stash variation template in static array */
             self::$templates[self::$row->email_id][$vid] = self::get_variation_html($permalink);

@@ -98,17 +98,23 @@ class Inbound_Mailer_Scheduling {
             $action['job_id'] = 0;
         }
 
+        /* prepare tokens for MySQL */
+        $tokens_encoded = mysql_real_escape_string(json_encode($tokens));
+
+        /* check for a post id inside of tokens */
+        $post_id =  (isset($tokens['post_object']) && isset($tokens['post_object']['ID'])) ? $tokens['post_object']['ID'] : 0;
+
         /* prepare multi insert query string - limit to 1000 inserts at a time */
         $send_count = 0;
         foreach (self::$batches as $vid => $leads) {
             $send_count = $send_count + count($leads);
 
             $query_values_array = array();
-            $query_prefix = "INSERT INTO {$table_name} ( `email_id` , `variation_id` , `lead_id` , `type` , `tokens` ,`status` , `datetime` , `rule_id` , `job_id`, `list_ids` )";
+            $query_prefix = "INSERT INTO {$table_name} ( `email_id` , `variation_id` , `lead_id` , `type` , `tokens` ,`status` , `datetime` , `rule_id` , `job_id`, `list_ids`, `post_id` )";
             $query_prefix .= "VALUES";
 
             foreach ($leads as $ID) {
-                $query_values_array[] = "( {$email_id} , {$vid} , {$ID} , '" . Inbound_Mailer_Scheduling::$settings['email_type'] . "' , '".json_encode($tokens)."' ,'waiting' , '{$timestamp}' , '{$action['rule_id']}' , '{$action['job_id']}', '".json_encode(Inbound_Mailer_Scheduling::$recipients)."')";
+                $query_values_array[] = "( {$email_id} , {$vid} , {$ID} , '" . Inbound_Mailer_Scheduling::$settings['email_type'] . "' , '".$tokens_encoded."' ,'waiting' , '{$timestamp}' , '{$action['rule_id']}' , '{$action['job_id']}', '".json_encode(Inbound_Mailer_Scheduling::$recipients)."' , '".$post_id."')";
             }
 
             $value_batches = array_chunk($query_values_array, 500);
