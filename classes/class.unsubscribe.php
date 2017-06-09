@@ -36,6 +36,7 @@ class Inbound_Mailer_Unsubscribe {
 		$usubscribe_button_text = (isset($inbound_settings['inbound-mailer']['unsubscribe-button-text'])) ? $inbound_settings['inbound-mailer']['unsubscribe-button-text'] : __( 'Unsubscribe', 'inbound-pro');
 		$usubscribe_show_lists = (isset($inbound_settings['inbound-mailer']['unsubscribe-show-lists'])) ? $inbound_settings['inbound-mailer']['unsubscribe-show-lists'] : 'on';
 		$mute_header_text = (isset($inbound_settings['inbound-mailer']['mute-header-text'])) ? $inbound_settings['inbound-mailer']['mute-header-text'] : __( 'Mute:', 'inbound-pro');
+		$automation_unsubscribed_confirmation_message = (isset($inbound_settings['inbound-mailer']['automation-unsubscribe-confirmation-message'])) ? $inbound_settings['inbound-mailer']['automation-unsubscribe-confirmation-message'] : __( 'You have been unsubscribed from this series!', 'inbound-pro');
 		$unsubscribed_confirmation_message = (isset($inbound_settings['inbound-mailer']['unsubscribe-confirmation-message'])) ? $inbound_settings['inbound-mailer']['unsubscribe-confirmation-message'] : __( 'Thank You!', 'inbound-pro');
 		$comments_header_1 = (isset($inbound_settings['inbound-mailer']['unsubscribe-comments-header-1'])) ? $inbound_settings['inbound-mailer']['unsubscribe-comments-header-1'] : __( 'Please help us improve by providing us with feedback.' , 'inbound-pro' );
 		$comments_header_2 = (isset($inbound_settings['inbound-mailer']['unsubscribe-comments-header-2'])) ? $inbound_settings['inbound-mailer']['unsubscribe-comments-header-2'] : __( 'Comments:' , 'inbound-pro' );
@@ -45,6 +46,8 @@ class Inbound_Mailer_Unsubscribe {
 		$month_6 = (isset($inbound_settings['inbound-mailer']['unsubscribe-6-months'])) ? $inbound_settings['inbound-mailer']['unsubscribe-6-months'] : __( '6 Month' , 'inbound-pro' );
 		$month_12 = (isset($inbound_settings['inbound-mailer']['unsubscribe-12-months'])) ? $inbound_settings['inbound-mailer']['unsubscribe-12-months'] : __( '12 Month' , 'inbound-pro' );
 
+		/* create/get maintenance list id - returns array */
+		$maintenance_lists = Inbound_Maintenance_Lists::get_lists();
 
 
 		if ( isset( $_GET['unsubscribed'] ) ) {
@@ -53,31 +56,52 @@ class Inbound_Mailer_Unsubscribe {
 			return $confirm;
 		}
 
-		if ( !isset( $_GET['token'] ) ) {
-			return __( 'Invalid token' , 'inbound-pro' );
-		}
+		$token = ( isset( $_GET['token'] ) ) ? sanitize_text_field($_GET['token']) : '';
 
 		/* get all lead lists */
 		$lead_lists = Inbound_Leads::get_lead_lists_as_array();
 
 		/* decode token */
-		$params = self::decode_unsubscribe_token( sanitize_text_field($_GET['token']) );
+		$params = self::decode_unsubscribe_token( $token );
 
+		/* if token has failed or isn't present check for logged in user */
+		if (!$params) {
+			$params = array();
 
-		if ( !isset( $params['lead_id'] ) ) {
-			return __( 'Oops. Something is wrong with the unsubscribe link. Are you logged in?' , 'inbound-pro' );
+			/* get logged in user object */
+			$current_user = wp_get_current_user();
+
+			/* Get lead id from email */
+			$params['lead_id'] = Inbound_Leads::get_lead_id_by_email($current_user->user_email);
+			$params['list_ids'] = array();
+
+			/* retrieve lists from lead id if available */
+			$params['list_ids'] = array();
+			if ($params['lead_id']) {
+				$params['list_ids'] = array_flip(Inbound_Leads::get_lead_lists_by_lead_id($params['lead_id']));
+				$usubscribe_show_lists = 'on';
+			}
 		}
 
-		/* check if lead is coming from automation seriest */
-		if (isset($params['job_id']) && $params['job_id'] ) {
-			/*
-			$html .= "<blockquote class='unsubscribe-notice'>";
-			$html .= $usubscribe_notice_automation_series;
-			$html .= "</blockquote>";
-			*/
+		if ( !isset( $params['lead_id'] ) || !$params['lead_id'] ) {
+			return __( 'Oops. Something is wrong with the unsubscribe token. Please log in and reload this page.' , 'inbound-pro' );
+		}
 
-			/* delete remaining automation tasks for automation rule */
-			Inbound_Automation_Post_Type::delete_rule_tasks( array('job_id' => $params['job_id']) );
+
+		/* check email was sent directly to lead via automation series and cancel event if so */
+		if (isset($params['job_id']) && $params['job_id'] && (!isset($params['lead_lists']) || !$params['lead_lists'] ) ) {
+
+			Inbound_Automation_Post_Type::mark_jobs_cancelled( array('job_id' => $params['job_id']) );
+
+			$params['event_details'] = array();
+			$params['event_details']['comments'] = __('Lead unsubscribed from automated email series' , 'inbound-pro');
+			$params['event_details']['job_id'] = $params['job_id'];
+			$params['event_details']['rule_id'] = $params['rule_id'];
+
+			/* record unsubscribe event */
+			Inbound_Events::store_unsubscribe_event( $params );
+
+			echo '<div class="inbound-automation-unsubscribe-message success">'. $automation_unsubscribed_confirmation_message.'</div><br>';
 		}
 
 		/* Add header */
@@ -85,13 +109,18 @@ class Inbound_Mailer_Unsubscribe {
 
 		/* Begin unsubscribe html inputs */
 		$html .= "<form action='?unsubscribed=true' name='unsubscribe' method='post'>";
-		$html .= "<input type='hidden' name='token' value='".strip_tags($_GET['token'])."' >";
+		$html .= "<input type='hidden' name='token' value='".strip_tags($token)."' >";
 		$html .= "<input type='hidden' name='action' value='inbound_unsubscribe_event' >";
 
 		/* loop through lists and show unsubscribe inputs */
 		if ( isset($params['list_ids']) && $usubscribe_show_lists == 'on' ) {
 			foreach ($params['list_ids'] as $list_id ) {
 				if ($list_id == '-1' || !$list_id ) {
+					continue;
+				}
+
+				/* ignore lists belonging to maintenance list */
+				if (term_is_ancestor_of( $maintenance_lists['parent']['id'] , $list_id , 'wplead_list_category')) {
 					continue;
 				}
 
@@ -192,6 +221,10 @@ class Inbound_Mailer_Unsubscribe {
 		if (isset($params['doing_wp_cron'])) {
 			unset($params['doing_wp_cron']);
 		}
+
+		/* empty arrays break the encoding process */
+		$params['list_ids'] = (isset($params['list_ids']) && array_filter($params['list_ids'])) ? $params['list_ids'] : '';
+
 		$json = json_encode($params);
 
 		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
@@ -205,9 +238,12 @@ class Inbound_Mailer_Unsubscribe {
 				)
 			);
 
-		$decode_test = self::decode_unsubscribe_token($encrypted_string);
 
-		return  str_replace(array('+', '/', '='), array('-', '_', '^'), $encrypted_string);
+		$encrypted_string = str_replace(array('+', '/', '='), array('-', '_', '^'), $encrypted_string);
+
+		//$decode_test = self::decode_unsubscribe_token($encrypted_string);
+
+		return  $encrypted_string;
 	}
 
 	/**
@@ -217,12 +253,14 @@ class Inbound_Mailer_Unsubscribe {
 	 */
 	public static function decode_unsubscribe_token( $token ) {
 
+		$token = str_replace( array('-', '_', '^'), array('+', '/', '=') , $token);
+
 		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
 		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 		$decrypted_string =
 			trim(
 				mcrypt_decrypt(
-					MCRYPT_RIJNDAEL_256 ,  substr( SECURE_AUTH_KEY , 0 , 16 )   ,  base64_decode( str_replace(array('-', '_', '^'), array('+', '/', '='), $token ) ) , MCRYPT_MODE_ECB, $iv
+					MCRYPT_RIJNDAEL_256 ,  substr( SECURE_AUTH_KEY , 0 , 16 )   ,  base64_decode( $token ) , MCRYPT_MODE_ECB, $iv
 				)
 			);
 
@@ -261,13 +299,23 @@ class Inbound_Mailer_Unsubscribe {
 			return;
 		}
 
-		/* determine if anything is selected */
-		if (!isset($_POST['list_id'])) {
+		/* cancel if nothing selected */
+		if (!isset($_POST['list_id']) && !isset($_POST['lists_all'])) {
 			return;
 		}
 
+
 		/* decode token */
 		$params = self::decode_unsubscribe_token( $_POST['token'] );
+
+		/* if no token is present or is a bad token then automatically discover lead id */
+		if (!isset($params['lead_id']) || !$params['lead_id'] || !$params ) {
+			/* get logged in user object */
+			$current_user = wp_get_current_user();
+
+			/* Get lead id from email */
+			$params['lead_id'] = Inbound_Leads::get_lead_id_by_email($current_user->user_email);
+		}
 
 		/* prepare all token */
 		$all = (isset($_POST['lists_all']) && $_POST['lists_all']  ) ? true : false;
