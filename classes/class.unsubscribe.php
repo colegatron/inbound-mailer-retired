@@ -64,6 +64,11 @@ class Inbound_Mailer_Unsubscribe {
 		/* decode token */
 		$params = Inbound_API::get_args_from_token( $token );
 
+		/* legacy token backup */
+		if (!$params) {
+			$params = self::legacy_decode_unsubscribe_token($token);
+		}
+
 		/* if token has failed or isn't present check for logged in user */
 		if (!$params) {
 			$params = array();
@@ -212,6 +217,29 @@ class Inbound_Mailer_Unsubscribe {
 		$base_url = get_permalink( $settings['unsubscribe_page']  );
 
 		return add_query_arg( array( 'token'=>$token ) , $base_url );
+
+	}
+
+
+	/**
+	 *  Decodes unsubscribe encoded reader id into a lead id
+	 *  @param STRING $reader_id Encoded lead id.
+	 *  @return ARRAY $unsubscribe array of unsubscribe data
+	 */
+	public static function legacy_decode_unsubscribe_token( $token ) {
+
+		$token = str_replace( array('-', '_', '^'), array('+', '/', '=') , $token);
+
+		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+		$decrypted_string =
+			trim(
+				mcrypt_decrypt(
+					MCRYPT_RIJNDAEL_256 ,  substr( SECURE_AUTH_KEY , 0 , 16 )   ,  base64_decode( $token ) , MCRYPT_MODE_ECB, $iv
+				)
+			);
+
+		return json_decode($decrypted_string , true);
 
 	}
 
