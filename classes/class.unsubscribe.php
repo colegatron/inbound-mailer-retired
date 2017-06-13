@@ -68,6 +68,7 @@ class Inbound_Mailer_Unsubscribe {
 		if (!$params) {
 			$params = self::legacy_decode_unsubscribe_token($token);
 		}
+		//print_r($params);
 
 		/* if token has failed or isn't present check for logged in user */
 		if (!$params) {
@@ -95,7 +96,7 @@ class Inbound_Mailer_Unsubscribe {
 
 		/* check email was sent directly to lead via automation series and cancel event if so */
 
-		if (isset($params['job_id']) && $params['job_id'] && (!isset($params['list_ids']) || !$params['list_ids'] ) ) {
+		if (isset($params['job_id']) && $params['job_id'] && (!isset($params['list_ids']) || !array_filter($params['list_ids']) ) ) {
 
 			Inbound_Automation_Post_Type::mark_jobs_cancelled( array('job_id' => $params['job_id']) );
 
